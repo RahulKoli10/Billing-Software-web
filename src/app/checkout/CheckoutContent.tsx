@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -322,9 +322,5 @@ function CheckoutForm() {
 }
 
 export default function CheckoutContent() {
-  return (
-    <Suspense fallback={<div>Loading checkout...</div>}>
-      <CheckoutForm />
-    </Suspense>
-  );
+  return <CheckoutForm />;
 }
