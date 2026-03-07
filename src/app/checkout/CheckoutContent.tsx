@@ -6,23 +6,16 @@ import { toast } from "sonner";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
+
 interface RazorpayResponse {
   razorpay_payment_id: string;
   razorpay_order_id: string;
   razorpay_signature: string;
-}
-
-interface RazorpayWindow extends Window {
-  Razorpay: {
-    new (options: {
-      key: string;
-      amount: number;
-      currency: string;
-      order_id: string;
-      handler: (response: RazorpayResponse) => void;
-      theme: { color: string };
-    }) => { open: () => void };
-  };
 }
 
 interface Plan {
@@ -57,26 +50,34 @@ function CheckoutForm() {
     pincode: "",
   });
 
+  /* LOAD RAZORPAY SCRIPT */
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
+
     script.onload = () => setScriptLoaded(true);
+
     document.body.appendChild(script);
   }, []);
 
+  /* FETCH PLAN */
   useEffect(() => {
     const fetchPlan = async () => {
       if (!planId) return;
+
       try {
         const res = await fetch(`${API}/api/pricing/${planId}`);
+
         if (!res.ok) throw new Error("Failed to load plan");
+
         const data = await res.json();
         setPlan(data);
       } catch {
         toast.error("Failed to load plan details");
       }
     };
+
     fetchPlan();
   }, [planId]);
 
@@ -89,7 +90,10 @@ function CheckoutForm() {
     }));
   };
 
+  /* PRICE CALCULATION */
+
   let basePrice = 0;
+
   if (plan) {
     basePrice =
       billing === "yearly"
@@ -99,6 +103,8 @@ function CheckoutForm() {
 
   const gstAmount = (basePrice * GST_PERCENT) / 100;
   const totalAmount = basePrice + gstAmount;
+
+  /* PAYMENT */
 
   const handlePayment = async () => {
     try {
@@ -125,6 +131,8 @@ function CheckoutForm() {
       setLoading(true);
       const loadingToast = toast.loading("Processing payment...");
 
+      /* SAVE CUSTOMER */
+
       const customerRes = await fetch(`${API}/api/customer`, {
         method: "POST",
         credentials: "include",
@@ -135,6 +143,8 @@ function CheckoutForm() {
       if (!customerRes.ok) {
         throw new Error("Customer save failed");
       }
+
+      /* CREATE ORDER */
 
       const orderRes = await fetch(`${API}/api/subscription/create-order`, {
         method: "POST",
@@ -147,24 +157,29 @@ function CheckoutForm() {
       });
 
       const orderData = await orderRes.json();
+
       if (!orderRes.ok) throw new Error(orderData.message);
 
-      const rzp = new (window as unknown as RazorpayWindow).Razorpay({
+      const rzp = new window.Razorpay({
         key: orderData.key,
         amount: orderData.amount,
         currency: "INR",
         order_id: orderData.orderId,
+
         handler: async function (response: RazorpayResponse) {
-          const verifyRes = await fetch(`${API}/api/subscription/verify-payment`, {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              ...response,
-              plan_id: Number(planId),
-              billing_cycle: billing,
-            }),
-          });
+          const verifyRes = await fetch(
+            `${API}/api/subscription/verify-payment`,
+            {
+              method: "POST",
+              credentials: "include",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...response,
+                plan_id: Number(planId),
+                billing_cycle: billing,
+              }),
+            }
+          );
 
           toast.dismiss(loadingToast);
 
@@ -175,18 +190,25 @@ function CheckoutForm() {
           }
 
           toast.success("Subscription activated successfully!");
+
           setTimeout(() => {
             router.push("/dashboard/subscription");
           }, 1500);
         },
-        theme: { color: "#2563eb" },
+
+        theme: {
+          color: "#2563eb",
+        },
       });
 
       rzp.open();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Payment failed";
+
       toast.error(message);
+
       router.push(`/checkout?planId=${planId}&billing=${billing}`);
+
       setLoading(false);
     }
   };
@@ -194,20 +216,27 @@ function CheckoutForm() {
   return (
     <div className="min-h-screen bg-white py-16 px-4">
       <div className="max-w-4xl mx-auto">
+
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-black">Complete Your Setup</h2>
+          <h2 className="text-4xl font-bold text-black">
+            Complete Your Setup
+          </h2>
           <p className="mt-3 text-black">
             Tell us about your business before activating your subscription.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-12">
+
+          {/* FORM */}
+
           <div className="space-y-6">
             {Object.keys(form).map((key) => (
               <div key={key}>
                 <label className="text-sm text-gray-700 capitalize">
                   {key.replace("_", " ")}
                 </label>
+
                 <input
                   name={key}
                   value={form[key as keyof typeof form]}
@@ -223,6 +252,7 @@ function CheckoutForm() {
                 checked={accepted}
                 onChange={() => setAccepted(!accepted)}
               />
+
               <span>
                 I agree to the{" "}
                 <a href="/terms" className="underline text-blue-600">
@@ -236,29 +266,41 @@ function CheckoutForm() {
             </div>
           </div>
 
+          {/* SUMMARY */}
+
           <div className="border border-[#7D9AEE] rounded-2xl p-8 space-y-6">
-            <h3 className="text-xl font-semibold">Subscription Summary</h3>
+
+            <h3 className="text-xl font-semibold">
+              Subscription Summary
+            </h3>
+
             <div className="flex justify-between">
               <span>Plan</span>
               <span>{plan?.name || "Loading..."}</span>
             </div>
+
             <div className="flex justify-between">
               <span>Billing</span>
               <span className="capitalize">{billing}</span>
             </div>
+
             <div className="flex justify-between">
               <span>Subtotal</span>
               <span>₹{basePrice.toFixed(2)}</span>
             </div>
+
             <div className="flex justify-between">
               <span>GST</span>
               <span>₹{gstAmount.toFixed(2)}</span>
             </div>
+
             <hr />
+
             <div className="flex justify-between text-lg font-semibold">
               <span>Total</span>
               <span>₹{totalAmount.toFixed(2)}</span>
             </div>
+
             <button
               onClick={handlePayment}
               disabled={loading || !plan}
@@ -266,10 +308,13 @@ function CheckoutForm() {
             >
               {loading ? "Processing..." : "Activate & Pay"}
             </button>
+
             <p className="text-xs text-gray-400 text-center">
               Secure payment powered by Razorpay
             </p>
+
           </div>
+
         </div>
       </div>
     </div>
@@ -278,18 +323,8 @@ function CheckoutForm() {
 
 export default function CheckoutContent() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-white py-16 px-4 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading checkout...</p>
-          </div>
-        </div>
-      }
-    >
+    <Suspense fallback={<div>Loading checkout...</div>}>
       <CheckoutForm />
     </Suspense>
   );
 }
-
