@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Logo */}
           <div className="flex items-center gap-2 font-bold text-xl  ">
             <Image
-              src="/logo.png"
+              src="/logo1.png"
               alt="logo"
               width={150}
               height={150}
@@ -23,12 +23,24 @@ export default function Footer() {
             <Link href={`https://x.com/`}>
               <Icon icon="ri:twitter-x-line" width={20} />{" "}
             </Link>
-            <Icon icon="mdi:facebook" width={20} />
-            <Icon icon="mdi:whatsapp" width={20} />
-            <Icon icon="mdi:instagram" width={20} />
-            <Icon icon="mdi:linkedin" width={20} />
-            <Icon icon="mdi:telegram" width={20} />
-            <Icon icon="mdi:youtube" width={20} />
+            <Link href={`https://www.facebook.com/`}>
+              <Icon icon="mdi:facebook" width={20} />
+            </Link>
+            <Link href={`https://wa.me/`}>
+              <Icon icon="mdi:whatsapp" width={20} />
+            </Link>
+            <Link href={`https://www.instagram.com/`}>
+              <Icon icon="mdi:instagram" width={20} />
+            </Link>
+            <Link href={`https://www.linkedin.com/`}>
+              <Icon icon="mdi:linkedin" width={20} />
+            </Link>
+            <Link href={`https://t.me/`}>
+              <Icon icon="mdi:telegram" width={20} />
+            </Link>
+            <Link href={`https://www.youtube.com/`}>
+              <Icon icon="mdi:youtube" width={20} />
+            </Link>
           </div>
         </div>
 
@@ -51,19 +63,19 @@ export default function Footer() {
                 <Link href="/download">Download</Link>
               </li>
               <li>
-                <Link href="/resources">Resources</Link>
+                <Link href="/">Resources</Link>
               </li>
               <li>
-                <Link href="/faq">FAQs</Link>
+                <Link href="/">FAQs</Link>
               </li>
               <li>
                 <Link href="/blog">Blog</Link>
               </li>
               <li>
-                <Link href="/testimonials">Testimonials</Link>
+                <Link href="/">Testimonials</Link>
               </li>
               <li>
-                <Link href="/about">About Us</Link>
+                <Link href="/">About Us</Link>
               </li>
               <li>
                 <Link href="/help">Help Centre</Link>
@@ -107,8 +119,10 @@ export default function Footer() {
           <div>
             <h4 className="font-medium text-black mb-4 text-xl">Support</h4>
             <ul className="space-y-1 ">
-              <li>Contact Us</li>
-              <li>Help & Support</li>
+               
+              <li><Link href="/help">Contact Us</Link></li>
+              <li><Link href="/help">Help & Support</Link></li>
+              
             </ul>
           </div>
 

@@ -1,4 +1,10 @@
 "use client";
+import { Montserrat } from "next/font/google";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400" , "500",  "600", "700"],
+});
 
 import Image from "next/image";
 import { useEffect, useState, useRef } from "react";
@@ -88,14 +94,21 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-16">
           {/* LOGO */}
-          <Image
-            src="/logo.png"
-            alt="Billing"
-            width={203}
-            height={32}
-            priority
-          />
+          <div className="flex items-center gap-2">
+  <Image
+    src="/logo.png"
+    alt="Billing"
+    width={40}
+    height={20}
+    priority
+  />
 
+  <h1
+    className={`${montserrat.className} text-xl font-bold text-[#2B3282] tracking-tight`}
+  >
+    BissBill
+  </h1>
+</div>
           {/* DESKTOP MENU */}
           <nav className="hidden lg:flex gap-8 text-base">
             <Link href="/" className={linkClass("/")}>

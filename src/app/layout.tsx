@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import { DM_Sans, Open_Sans } from "next/font/google";
+import { DM_Sans, Open_Sans,Montserrat } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "sonner";
+import { Toaster } from "sonner"; 
 
+export const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+});
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",
