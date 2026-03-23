@@ -12,6 +12,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { buildApiUrl } from "@/lib/api";
+import {
+  AUTH_STATE_CHANGED_EVENT,
+  notifyAuthStateChanged,
+} from "@/lib/auth-events";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -24,6 +28,30 @@ export default function Navbar() {
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
 
+  const checkAuth = async () => {
+    try {
+      const res = await fetch(buildApiUrl("/api/auth/me"), {
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        setIsLoggedIn(false);
+        setUser(null);
+        return;
+      }
+
+      const data = await res.json();
+      setIsLoggedIn(data.authenticated === true);
+      setUser(data.user ?? null);
+    } catch {
+      setIsLoggedIn(false);
+      setUser(null);
+    } finally {
+      setAuthChecked(true);
+    }
+  };
+
   const linkClass = (path: string) =>
     `block font-medium transition ${
       pathname === path ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
@@ -31,31 +59,20 @@ export default function Navbar() {
 
   /* AUTH CHECK */
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch(buildApiUrl("/api/auth/me"), {
-          credentials: "include",
-        });
+    checkAuth();
 
-        if (!res.ok) {
-          setIsLoggedIn(false);
-          setUser(null);
-        } else {
-          const data = await res.json();
-
-          setIsLoggedIn(data.authenticated === true);
-          setUser(data.user); // ✅ THIS WAS MISSING
-        }
-      } catch {
-        setIsLoggedIn(false);
-        setUser(null);
-      } finally {
-        setAuthChecked(true);
-      }
+    const handleAuthChanged = () => {
+      checkAuth();
     };
 
-    checkAuth();
-  }, []);
+    window.addEventListener(AUTH_STATE_CHANGED_EVENT, handleAuthChanged);
+    window.addEventListener("focus", handleAuthChanged);
+
+    return () => {
+      window.removeEventListener(AUTH_STATE_CHANGED_EVENT, handleAuthChanged);
+      window.removeEventListener("focus", handleAuthChanged);
+    };
+  }, [pathname]);
 
   /*  CLOSE DROPDOWN ON OUTSIDE CLICK   */
   useEffect(() => {
@@ -81,8 +98,10 @@ export default function Navbar() {
     } catch {}
 
     setIsLoggedIn(false);
+    setUser(null);
     setMenuOpen(false);
     setOpen(false);
+    notifyAuthStateChanged();
     router.push("/login");
   };
 

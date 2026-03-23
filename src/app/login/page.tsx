@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { buildApiUrl } from "@/lib/api";
+import { notifyAuthStateChanged } from "@/lib/auth-events";
 
 export default function SigninPage() {
   const router = useRouter();
@@ -40,7 +41,13 @@ export default function SigninPage() {
         return;
       }
 
-      router.push("/");
+      await fetch(buildApiUrl("/api/auth/me"), {
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      notifyAuthStateChanged();
+      router.replace("/");
       router.refresh();
     } catch (err) {
       console.error(err);
