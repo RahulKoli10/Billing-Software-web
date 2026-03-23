@@ -41,11 +41,6 @@ export default function SigninPage() {
         return;
       }
 
-      await fetch(buildApiUrl("/api/auth/me"), {
-        credentials: "include",
-        cache: "no-store",
-      });
-
       notifyAuthStateChanged();
       router.replace("/");
       router.refresh();

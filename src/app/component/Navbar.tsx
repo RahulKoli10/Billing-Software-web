@@ -72,7 +72,7 @@ export default function Navbar() {
       window.removeEventListener(AUTH_STATE_CHANGED_EVENT, handleAuthChanged);
       window.removeEventListener("focus", handleAuthChanged);
     };
-  }, [pathname]);
+  }, []);
 
   /*  CLOSE DROPDOWN ON OUTSIDE CLICK   */
   useEffect(() => {

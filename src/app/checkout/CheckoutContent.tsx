@@ -6,8 +6,39 @@ import { toast } from "sonner";
 import { buildApiUrl } from "@/lib/api";
 
 declare global {
+  interface RazorpayErrorResponse {
+    code?: string;
+    description?: string;
+    source?: string;
+    step?: string;
+    reason?: string;
+    metadata?: {
+      order_id?: string;
+      payment_id?: string;
+    };
+  }
+
+  interface RazorpayInstance {
+    open: () => void;
+    on: (event: string, handler: (response: { error: RazorpayErrorResponse }) => void) => void;
+  }
+
+  interface RazorpayOptions {
+    key: string;
+    amount: number;
+    currency: string;
+    order_id: string;
+    handler: (response: RazorpayResponse) => Promise<void>;
+    theme: {
+      color: string;
+    };
+    modal?: {
+      ondismiss?: () => void;
+    };
+  }
+
   interface Window {
-    Razorpay: any;
+    Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
   }
 }
 
@@ -21,6 +52,17 @@ interface Plan {
   name: string;
   monthly_price: number;
   yearly_discount: number;
+}
+
+async function readErrorMessage(response: Response) {
+  try {
+    const data = await response.json();
+    if (typeof data?.message === "string" && data.message.trim()) {
+      return data.message;
+    }
+  } catch {}
+
+  return "Payment verification failed";
 }
 
 function CheckoutForm() {
@@ -51,6 +93,15 @@ function CheckoutForm() {
 
   /* LOAD RAZORPAY SCRIPT */
   useEffect(() => {
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
+    );
+
+    if (existingScript) {
+      setScriptLoaded(true);
+      return;
+    }
+
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
@@ -58,6 +109,10 @@ function CheckoutForm() {
     script.onload = () => setScriptLoaded(true);
 
     document.body.appendChild(script);
+
+    return () => {
+      script.onload = null;
+    };
   }, []);
 
   /* FETCH PLAN */
@@ -106,6 +161,9 @@ function CheckoutForm() {
   /* PAYMENT */
 
   const handlePayment = async () => {
+    let loadingToast: string | number | undefined;
+    let paymentCompleted = false;
+
     try {
       if (!scriptLoaded) {
         toast.error("Payment system loading...");
@@ -128,7 +186,7 @@ function CheckoutForm() {
       }
 
       setLoading(true);
-      const loadingToast = toast.loading("Processing payment...");
+      loadingToast = toast.loading("Processing payment...");
 
       /* SAVE CUSTOMER */
 
@@ -166,44 +224,76 @@ function CheckoutForm() {
         order_id: orderData.orderId,
 
         handler: async function (response: RazorpayResponse) {
-          const verifyRes = await fetch(
-            buildApiUrl("/api/subscription/verify-payment"),
-            {
-              method: "POST",
-              credentials: "include",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                ...response,
-                plan_id: Number(planId),
-                billing_cycle: billing,
-              }),
+          try {
+            paymentCompleted = true;
+            const verifyRes = await fetch(
+              buildApiUrl("/api/subscription/verify-payment"),
+              {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  ...response,
+                  plan_id: Number(planId),
+                  billing_cycle: billing,
+                }),
+              }
+            );
+
+            toast.dismiss(loadingToast);
+
+            if (!verifyRes.ok) {
+              const message = await readErrorMessage(verifyRes);
+              throw new Error(message);
             }
-          );
 
-          toast.dismiss(loadingToast);
+            toast.success("Subscription activated successfully!");
 
-          if (!verifyRes.ok) {
-            toast.error("Payment verification failed");
+            window.setTimeout(() => {
+              router.push("/dashboard/subscription");
+            }, 1500);
+          } catch (error) {
+            const message =
+              error instanceof Error
+                ? error.message
+                : "Payment verification failed";
+
+            toast.error(message);
             setLoading(false);
-            return;
           }
-
-          toast.success("Subscription activated successfully!");
-
-          setTimeout(() => {
-            router.push("/dashboard/subscription");
-          }, 1500);
         },
 
         theme: {
           color: "#2563eb",
         },
+
+        modal: {
+          ondismiss: () => {
+            if (paymentCompleted) {
+              return;
+            }
+
+            toast.dismiss(loadingToast);
+            toast.error("Payment window closed before completion");
+            setLoading(false);
+          },
+        },
+      });
+
+      rzp.on("payment.failed", (event) => {
+        paymentCompleted = false;
+        toast.dismiss(loadingToast);
+        toast.error(
+          event.error.description || "Payment failed. Please try again."
+        );
+        setLoading(false);
       });
 
       rzp.open();
     } catch (err) {
       const message = err instanceof Error ? err.message : "Payment failed";
 
+      toast.dismiss(loadingToast);
       toast.error(message);
 
       router.push(`/checkout?planId=${planId}&billing=${billing}`);

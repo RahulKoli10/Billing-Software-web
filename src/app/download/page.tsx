@@ -24,37 +24,54 @@ export default function DownloadPage() {
   const [loading, setLoading] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [requestId, setRequestId] = useState(0);
 
   /* ================= FETCH ================= */
   const fetchDownloads = async (platform?: "windows" | "mac") => {
-    try {
-      setIsTransitioning(true);
-
-      setTimeout(async () => {
-        setLoading(true);
-        setSelectedPlatform(platform ?? null);
-
-        const url = platform
-          ? buildApiUrl(`/api/downloads?platform=${platform}`)
-          : buildApiUrl("/api/downloads");
-
-        const res = await fetch(url);
-        const data = await res.json();
-
-        setDownloads(data);
-        setLoading(false);
-        setIsTransitioning(false);
-      }, 200);
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-      setIsTransitioning(false);
-    }
+    setRequestId((prev) => prev + 1);
+    setIsTransitioning(true);
+    setSelectedPlatform(platform ?? null);
   };
 
   useEffect(() => {
     fetchDownloads("windows"); // ✅ default
   }, []);
+
+  useEffect(() => {
+    if (requestId === 0) {
+      return;
+    }
+
+    const controller = new AbortController();
+    const timer = window.setTimeout(async () => {
+      try {
+        setLoading(true);
+
+        const url = selectedPlatform
+          ? buildApiUrl(`/api/downloads?platform=${selectedPlatform}`)
+          : buildApiUrl("/api/downloads");
+
+        const res = await fetch(url, { signal: controller.signal });
+        const data = await res.json();
+
+        setDownloads(data);
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") {
+          console.error(err);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+          setIsTransitioning(false);
+        }
+      }
+    }, 200);
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timer);
+    };
+  }, [requestId, selectedPlatform]);
 
   /* ================= DOWNLOAD HANDLER ================= */
   const handleDownload = (item: DownloadItem) => {

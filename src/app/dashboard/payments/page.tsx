@@ -3,11 +3,18 @@
 import { useEffect, useState } from "react";
 import { buildApiUrl } from "@/lib/api";
 
+type PaymentHistoryItem = {
+  id: number;
+  amount: number;
+  payment_status: string | null;
+  payment_date: string | null;
+};
+
 export default function PaymentHistory() {
-  const [payments, setPayments] = useState([]);
+  const [payments, setPayments] = useState<PaymentHistoryItem[]>([]);
 
   useEffect(() => {
-    fetch(buildApiUrl("/api/subscription/payments"), {
+    fetch(buildApiUrl("/api/subscription/history"), {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -29,12 +36,14 @@ export default function PaymentHistory() {
           </tr>
         </thead>
         <tbody>
-          {payments.map((p: any) => (
+          {payments.map((p) => (
             <tr key={p.id}>
               <td>₹{p.amount}</td>
               <td>{p.payment_status}</td>
               <td>
-                {new Date(p.created_at).toLocaleDateString()}
+                {p.payment_date
+                  ? new Date(p.payment_date).toLocaleDateString()
+                  : "N/A"}
               </td>
             </tr>
           ))}
