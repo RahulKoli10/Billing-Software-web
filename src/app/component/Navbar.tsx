@@ -11,8 +11,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+import { buildApiUrl } from "@/lib/api";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -34,7 +33,7 @@ export default function Navbar() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/auth/me`, {
+        const res = await fetch(buildApiUrl("/api/auth/me"), {
           credentials: "include",
         });
 
@@ -75,7 +74,7 @@ export default function Navbar() {
   /* = LOGOUT  */
   const handleLogout = async () => {
     try {
-      await fetch(`${API_URL}/api/auth/logout`, {
+      await fetch(buildApiUrl("/api/auth/logout"), {
         method: "POST",
         credentials: "include",
       });

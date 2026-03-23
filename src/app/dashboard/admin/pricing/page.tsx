@@ -1,6 +1,7 @@
 "use client";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
+import { buildApiUrl } from "@/lib/api";
 
 type PricingPlan = {
   id: number;
@@ -29,7 +30,7 @@ export default function AdminPricingPage() {
   const fetchPlans = async () => {
     try {
       setError(null);
-      const res = await fetch("http://localhost:5000/api/pricing/admin", {
+      const res = await fetch(buildApiUrl("/api/pricing/admin"), {
         credentials: "include",
       });
 
@@ -68,8 +69,8 @@ export default function AdminPricingPage() {
 
     try {
       const url = editingId
-        ? `http://localhost:5000/api/pricing/${editingId}`
-        : "http://localhost:5000/api/pricing";
+        ? buildApiUrl(`/api/pricing/${editingId}`)
+        : buildApiUrl("/api/pricing");
 
       const method = editingId ? "PUT" : "POST";
 
@@ -116,7 +117,7 @@ export default function AdminPricingPage() {
     setError(null);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/pricing/${id}`, {
+      const res = await fetch(buildApiUrl(`/api/pricing/${id}`), {
         method: "DELETE",
         credentials: "include",
       });
@@ -137,7 +138,7 @@ export default function AdminPricingPage() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/pricing/${id}/status`,
+        buildApiUrl(`/api/pricing/${id}/status`),
         {
           method: "PATCH",
           credentials: "include",
@@ -161,7 +162,7 @@ export default function AdminPricingPage() {
   const toggleFeatured = async (id: number, highlighted: boolean) => {
     setLoading(true);
 
-    await fetch(`http://localhost:5000/api/pricing/${id}/featured`, {
+    await fetch(buildApiUrl(`/api/pricing/${id}/featured`), {
       method: "PATCH",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

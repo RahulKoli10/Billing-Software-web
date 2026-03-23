@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+import { buildApiUrl } from "@/lib/api";
 
 type SoftwareItem = {
   id: number;
@@ -25,7 +23,7 @@ export default function AdminUploadSoftware() {
   /* ================= FETCH SOFTWARE ================= */
   const fetchSoftwares = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/downloads`, {
+      const res = await fetch(buildApiUrl("/api/downloads"), {
         credentials: "include",
       });
       const data = await res.json();
@@ -53,7 +51,7 @@ export default function AdminUploadSoftware() {
       setLoading(true);
 
       const res = await fetch(
-        `${API_URL}/api/downloads/upload`,
+        buildApiUrl("/api/downloads/upload"),
         {
           method: "POST",
           credentials: "include",
@@ -85,7 +83,7 @@ export default function AdminUploadSoftware() {
     try {
       setLoading(true);
 
-      await fetch(`${API_URL}/api/downloads/${id}`, {
+      await fetch(buildApiUrl(`/api/downloads/${id}`), {
         method: "DELETE",
         credentials: "include",
       });
@@ -186,7 +184,7 @@ export default function AdminUploadSoftware() {
 
                 <td className="p-4 text-right space-x-4">
                   <a
-                    href={`${API_URL}${item.download_url}`}
+                    href={buildApiUrl(item.download_url)}
                     target="_blank"
                     className="text-blue-600 hover:underline"
                   >

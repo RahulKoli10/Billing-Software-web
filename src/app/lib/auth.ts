@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { buildApiUrl } from "@/lib/api";
 
 export async function getAuthUser() {
   const cookieStore = await cookies();
@@ -6,7 +7,7 @@ export async function getAuthUser() {
 
   if (!token) return null;
 
-  const res = await fetch("http://localhost:5000/api/auth/me", {
+  const res = await fetch(buildApiUrl("/api/auth/me"), {
     headers: {
       Cookie: cookieStore.toString(),
     },

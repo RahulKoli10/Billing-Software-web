@@ -6,6 +6,7 @@ import Navbar from "../component/Navbar";
 import Footer from "../component/Footer";
 import Link from "next/link";
 import Image from "next/image";
+import { buildApiUrl } from "@/lib/api";
 
 type DownloadItem = {
   id: number;
@@ -17,8 +18,6 @@ type DownloadItem = {
   file_type?: "exe" | "clickonce";
   platform?: "windows" | "mac"; // ✅ important
 };
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export default function DownloadPage() {
   const [downloads, setDownloads] = useState<DownloadItem[]>([]);
@@ -36,8 +35,8 @@ export default function DownloadPage() {
         setSelectedPlatform(platform ?? null);
 
         const url = platform
-          ? `${API_URL}/api/downloads?platform=${platform}`
-          : `${API_URL}/api/downloads`;
+          ? buildApiUrl(`/api/downloads?platform=${platform}`)
+          : buildApiUrl("/api/downloads");
 
         const res = await fetch(url);
         const data = await res.json();
@@ -59,7 +58,7 @@ export default function DownloadPage() {
 
   /* ================= DOWNLOAD HANDLER ================= */
   const handleDownload = (item: DownloadItem) => {
-    const url = `${API_URL}${item.download_url}`;
+    const url = buildApiUrl(item.download_url);
 
     if (item.file_type === "clickonce") {
       window.location.href = url;

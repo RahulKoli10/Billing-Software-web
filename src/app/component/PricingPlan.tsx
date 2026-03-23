@@ -3,8 +3,7 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+import { buildApiUrl } from "@/lib/api";
 
 type PricingPlan = {
   id: number;
@@ -26,7 +25,7 @@ export default function PricingSection() {
   const handleChoosePlan = async (planId: number) => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/subscription/start-trial",
+        buildApiUrl("/api/subscription/start-trial"),
         {
           method: "POST",
           credentials: "include",
@@ -57,7 +56,7 @@ export default function PricingSection() {
   useEffect(() => {
     const fetchPricing = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/pricing`);
+        const res = await fetch(buildApiUrl("/api/pricing"));
         if (!res.ok) throw new Error("Failed to fetch pricing");
 
         const data = await res.json();

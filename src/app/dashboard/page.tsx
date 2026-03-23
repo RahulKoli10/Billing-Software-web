@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+import { buildApiUrl } from "@/lib/api";
 
 export default function DashboardHome() {
   const [subscription, setSubscription] = useState<any>(null);
@@ -31,7 +29,7 @@ export default function DashboardHome() {
 
   const fetchSubscription = async () => {
     const res = await fetch(
-      `${API_URL}/api/subscription/my`,
+      buildApiUrl("/api/subscription/my"),
       { credentials: "include" }
     );
     const data = await res.json();

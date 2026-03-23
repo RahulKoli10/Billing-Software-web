@@ -1,15 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+import { buildApiUrl } from "@/lib/api";
 
 export default function PaymentHistory() {
   const [payments, setPayments] = useState([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/subscription/payments`, {
+    fetch(buildApiUrl("/api/subscription/payments"), {
       credentials: "include",
     })
       .then((res) => res.json())

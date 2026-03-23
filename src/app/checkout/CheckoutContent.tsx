@@ -3,8 +3,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { buildApiUrl } from "@/lib/api";
 
 declare global {
   interface Window {
@@ -67,7 +66,7 @@ function CheckoutForm() {
       if (!planId) return;
 
       try {
-        const res = await fetch(`${API}/api/pricing/${planId}`);
+        const res = await fetch(buildApiUrl(`/api/pricing/${planId}`));
 
         if (!res.ok) throw new Error("Failed to load plan");
 
@@ -133,7 +132,7 @@ function CheckoutForm() {
 
       /* SAVE CUSTOMER */
 
-      const customerRes = await fetch(`${API}/api/customer`, {
+      const customerRes = await fetch(buildApiUrl("/api/customer"), {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -146,7 +145,7 @@ function CheckoutForm() {
 
       /* CREATE ORDER */
 
-      const orderRes = await fetch(`${API}/api/subscription/create-order`, {
+      const orderRes = await fetch(buildApiUrl("/api/subscription/create-order"), {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -168,7 +167,7 @@ function CheckoutForm() {
 
         handler: async function (response: RazorpayResponse) {
           const verifyRes = await fetch(
-            `${API}/api/subscription/verify-payment`,
+            buildApiUrl("/api/subscription/verify-payment"),
             {
               method: "POST",
               credentials: "include",

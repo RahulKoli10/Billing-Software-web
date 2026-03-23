@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-
-const API = process.env.NEXT_PUBLIC_API_URL;
+import { buildApiUrl } from "@/lib/api";
 
 export default function AdminCustomersPage() {
   const [customers, setCustomers] = useState<any[]>([]);
@@ -17,7 +16,7 @@ export default function AdminCustomersPage() {
 
   const fetchCustomers = async () => {
     try {
-      const res = await fetch(`${API}/api/customer/admin/all`, {
+      const res = await fetch(buildApiUrl("/api/customer/admin/all"), {
         credentials: "include",
       });
       const data = await res.json();
@@ -205,7 +204,7 @@ function ExpandedHistory({ userId }: { userId: number }) {
   useEffect(() => {
     const fetchHistory = async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/customer/admin/history?userId=${userId}`,
+        buildApiUrl(`/api/customer/admin/history?userId=${userId}`),
         { credentials: "include" }
       );
       const data = await res.json();

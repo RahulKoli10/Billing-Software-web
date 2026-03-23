@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { buildApiUrl } from "@/lib/api";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -39,7 +40,7 @@ export default function SignupPage() {
       setLoading(true);
 
       const res = await fetch(
-        "http://localhost:5000/api/auth/register",
+        buildApiUrl("/api/auth/register"),
         {
           method: "POST",
           credentials: "include",
@@ -177,7 +178,7 @@ export default function SignupPage() {
               type="button"
               onClick={() =>
                 (window.location.href =
-                  "http://localhost:5000/api/auth/google")
+                  buildApiUrl("/api/auth/google"))
               }
               className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
             >

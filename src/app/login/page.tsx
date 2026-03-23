@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { buildApiUrl } from "@/lib/api";
 
 export default function SigninPage() {
   const router = useRouter();
@@ -24,7 +23,7 @@ export default function SigninPage() {
     setError("");
 
     try {
-      const res = await fetch(`${API_URL}/api/auth/login`, {
+      const res = await fetch(buildApiUrl("/api/auth/login"), {
         method: "POST",
         credentials: "include",
         headers: {
@@ -153,7 +152,7 @@ export default function SigninPage() {
               type="button"
               disabled={loading}
               onClick={() =>
-                (window.location.href = `${API_URL}/api/auth/google`)
+                (window.location.href = buildApiUrl("/api/auth/google"))
               }
               className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50"
             >

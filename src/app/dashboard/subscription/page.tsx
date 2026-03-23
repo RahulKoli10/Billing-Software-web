@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const API =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+import { buildApiUrl } from "@/lib/api";
 
 export default function SubscriptionPage() {
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
@@ -14,7 +12,7 @@ export default function SubscriptionPage() {
   }, []);
 
   const fetchHistory = async () => {
-    const res = await fetch(`${API}/api/subscription/history`, {
+    const res = await fetch(buildApiUrl("/api/subscription/history"), {
       credentials: "include",
     });
     const data = await res.json();
