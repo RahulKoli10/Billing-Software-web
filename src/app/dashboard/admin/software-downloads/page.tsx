@@ -17,6 +17,9 @@ export default function AdminUploadSoftware() {
   const [file, setFile] = useState<File | null>(null);
   const [platform, setPlatform] = useState("windows");
   const [version, setVersion] = useState("");
+  const [externalUrl, setExternalUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [fileSize, setFileSize] = useState("");
   const [softwares, setSoftwares] = useState<SoftwareItem[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -39,13 +42,24 @@ export default function AdminUploadSoftware() {
 
   /* ================= UPLOAD ================= */
   const handleUpload = async () => {
-    if (!file) return alert("Please select a file");
     if (!version) return alert("Please enter version");
+    if (!file && !externalUrl.trim()) {
+      return alert("Please select a file or enter an external URL");
+    }
 
     const formData = new FormData();
-    formData.append("file", file);
     formData.append("platform", platform);
     formData.append("version", version);
+
+    if (file) {
+      formData.append("file", file);
+    }
+
+    if (externalUrl.trim()) {
+      formData.append("externalUrl", externalUrl.trim());
+      formData.append("fileName", fileName.trim());
+      formData.append("fileSize", fileSize.trim());
+    }
 
     try {
       setLoading(true);
@@ -67,6 +81,9 @@ export default function AdminUploadSoftware() {
       alert("Software uploaded successfully!");
       setFile(null);
       setVersion("");
+      setExternalUrl("");
+      setFileName("");
+      setFileSize("");
       fetchSoftwares();
     } catch (err) {
       console.error(err);
@@ -130,6 +147,30 @@ export default function AdminUploadSoftware() {
             onChange={(e) =>
               setFile(e.target.files?.[0] || null)
             }
+            className="border px-4 py-2 rounded-md"
+          />
+
+          <input
+            type="url"
+            placeholder="External URL (optional)"
+            value={externalUrl}
+            onChange={(e) => setExternalUrl(e.target.value)}
+            className="border px-4 py-2 rounded-md md:col-span-2"
+          />
+
+          <input
+            type="text"
+            placeholder="File name for external URL (optional)"
+            value={fileName}
+            onChange={(e) => setFileName(e.target.value)}
+            className="border px-4 py-2 rounded-md"
+          />
+
+          <input
+            type="text"
+            placeholder="File size label (optional)"
+            value={fileSize}
+            onChange={(e) => setFileSize(e.target.value)}
             className="border px-4 py-2 rounded-md"
           />
         </div>
