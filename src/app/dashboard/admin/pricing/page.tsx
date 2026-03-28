@@ -1,7 +1,21 @@
 "use client";
-import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import { buildApiUrl } from "@/lib/api";
+import { Card, Badge, Button } from "@/components/ui/atoms";
+import { 
+  CreditCard, 
+  Plus, 
+  Search, 
+  Filter,
+  DollarSign,
+  Layers,
+  Zap,
+  Edit2,
+  Trash2,
+  Star,
+  Power,
+  X
+} from "lucide-react";
 
 type PricingPlan = {
   id: number;
@@ -11,12 +25,14 @@ type PricingPlan = {
   description: string;
   highlighted: boolean;
   is_active: boolean;
+  created_at?: string;
 };
 
 export default function AdminPricingPage() {
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
   /* FORM STATE */
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -58,7 +74,8 @@ export default function AdminPricingPage() {
   };
 
   /* CREATE / UPDATE */
-  const submitPlan = async () => {
+  const submitPlan = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!name || !price) {
       alert("Name and price are required");
       return;
@@ -101,6 +118,7 @@ export default function AdminPricingPage() {
 
   /* EDIT */
   const editPlan = (plan: PricingPlan) => {
+    document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' });
     setEditingId(plan.id);
     setName(plan.name);
     setPrice(String(plan.monthly_price));
@@ -162,288 +180,239 @@ export default function AdminPricingPage() {
   const toggleFeatured = async (id: number, highlighted: boolean) => {
     setLoading(true);
 
-    await fetch(buildApiUrl(`/api/pricing/${id}/featured`), {
-      method: "PATCH",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ highlighted: !highlighted }),
-    });
+    try {
+      await fetch(buildApiUrl(`/api/pricing/${id}/featured`), {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ highlighted: !highlighted }),
+      });
 
-    await fetchPlans();
-    setLoading(false);
+      await fetchPlans();
+    } catch (e) {
+      // ignore
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const filteredPlans = plans.filter(p => p.name?.toLowerCase().includes(search.toLowerCase()));
+
   return (
-    <main className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen space-y-8">
-      <h1 className="text-3xl font-bold">Pricing Management</h1>
+    <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-700">
+      <div className="flex justify-between items-end">
+        <div>
+          <h2 className="text-3xl font-black font-headline text-gray-900 tracking-tighter">Pricing Architect</h2>
+          <p className="text-gray-500 font-medium">Design and deploy financial commitment structures.</p>
+        </div>
+        <Button size="sm" className="flex items-center gap-2" onClick={() => { resetForm(); document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' }); }}>
+          <Plus className="w-4 h-4" />
+          Create New Plan
+        </Button>
+      </div>
 
       {error && (
-        <div className="bg-red-100 text-red-700 px-4 py-2 rounded">{error}</div>
+        <div className="bg-red-50 text-red-600 px-4 py-3 rounded-xl border border-red-100 flex items-center justify-between font-medium text-sm">
+          <span>{error}</span>
+          <button onClick={() => setError(null)}><X className="w-4 h-4" /></button>
+        </div>
       )}
 
-      {/* FORM */}
-      <div className="bg-white p-6 rounded-xl shadow">
-        <h2
-          className={`text-xl font-semibold mb-4 ${
-            editingId ? "text-blue-600" : ""
-          }`}
-        >
-          {editingId ? "Edit Pricing Plan" : "Create New Pricing Plan"}
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            placeholder="Plan name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="border rounded-md px-4 py-2"
-            disabled={loading}
-          />
-          <input
-            type="number"
-            placeholder="Monthly price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="border rounded-md px-4 py-2"
-            disabled={loading}
-          />
-          <input
-            type="number"
-            placeholder="Yearly discount (%)"
-            value={discount}
-            onChange={(e) => setDiscount(e.target.value)}
-            className="border rounded-md px-4 py-2"
-            disabled={loading}
-          />
-          <input
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="border rounded-md px-4 py-2"
-            disabled={loading}
-          />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-col-reverse lg:flex-row">
+        <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
+          <Card className="p-0 overflow-hidden overflow-x-auto">
+             <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-white flex-wrap gap-4">
+              <h3 className="font-bold font-headline text-lg">Active Ledger</h3>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input 
+                  type="text" 
+                  placeholder="Filter plans..." 
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="bg-gray-50 border-none rounded-lg pl-10 pr-4 py-2 text-sm w-48 md:w-64 focus:ring-2 focus:ring-blue-600/20 transition-all outline-none" 
+                />
+              </div>
+            </div>
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-gray-50/50 border-b border-gray-100">
+                  <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Plan ID</th>
+                  <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Architecture</th>
+                  <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Recurring</th>
+                  <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Status</th>
+                  <th className="px-6 py-4 text-right"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {filteredPlans.map((plan) => (
+                  <tr key={plan.id} className="group hover:bg-gray-50/80 transition-colors cursor-pointer">
+                    <td className="px-6 py-5 font-mono text-xs font-bold text-blue-600">P-{plan.id}</td>
+                    <td className="px-6 py-5">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-bold text-gray-900">{plan.name}</p>
+                        {plan.highlighted && <span className="text-[10px] font-black text-yellow-600 uppercase bg-yellow-50 px-1.5 py-0.5 rounded">Featured</span>}
+                      </div>
+                      <p className="text-[10px] text-gray-500 font-medium line-clamp-1">{plan.description || "No description provided."}</p>
+                    </td>
+                    <td className="px-6 py-5">
+                      <p className="text-sm font-black text-gray-900">₹{plan.monthly_price.toLocaleString()}/mo</p>
+                      {plan.yearly_discount > 0 && <p className="text-[10px] font-bold text-green-600 uppercase tracking-wide">{plan.yearly_discount}% yearly save</p>}
+                    </td>
+                    <td className="px-6 py-5">
+                      <Badge variant={plan.is_active ? "success" : "neutral"}>
+                        {plan.is_active ? "Active" : "Disabled"}
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-5 text-right">
+                      <div className="flex justify-end gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => toggleFeatured(plan.id, plan.highlighted)}
+                          disabled={loading}
+                          className={`p-2 rounded-lg transition-colors ${plan.highlighted ? 'text-yellow-600 hover:bg-yellow-50' : 'text-gray-400 hover:text-gray-900 hover:bg-gray-100'}`}
+                          title="Toggle Featured"
+                        >
+                          <Star className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => toggleActive(plan.id, plan.is_active)}
+                          disabled={loading}
+                          className={`p-2 rounded-lg transition-colors ${plan.is_active ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:text-gray-900 hover:bg-gray-100'}`}
+                          title="Toggle Active Status"
+                        >
+                          <Power className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => editPlan(plan)}
+                          disabled={loading}
+                          className="p-2 rounded-lg transition-colors text-blue-600 hover:bg-blue-50"
+                          title="Edit Plan"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => deletePlan(plan.id)}
+                          disabled={loading}
+                          className="p-2 rounded-lg transition-colors text-red-600 hover:bg-red-50"
+                          title="Delete Plan"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {filteredPlans.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500 font-medium">No plans found in ledger.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </Card>
         </div>
 
-        <label className="flex items-center gap-3 mt-4 text-sm font-medium">
-          <input
-            type="checkbox"
-            checked={highlighted}
-            onChange={() => setHighlighted(!highlighted)}
-            disabled={loading}
-            className="h-4 w-4 accent-blue-600"
-          />
-          Mark as featured plan
-        </label>
-
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={submitPlan}
-            disabled={loading}
-            className={`px-6 py-2 rounded-md text-white ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
+        <div className="space-y-6 order-1 lg:order-2">
+          <Card 
+            id="form-section" 
+            title={editingId ? "Edit Tier Architecture" : "Structural Composition"} 
+            subtitle={editingId ? `Modifying plan P-${editingId}` : "Create a new price tier layout"}
+            className={editingId ? "border-blue-200 ring-4 ring-blue-50" : ""}
           >
-            {editingId ? "Update Plan" : "Create Plan"}
-          </button>
+            <form onSubmit={submitPlan} className="space-y-5">
+              <div className="space-y-1">
+                <label className="block text-[10px] uppercase font-black tracking-widest text-gray-400 mb-1.5">Primary Label</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Nordic Enterprise" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  disabled={loading}
+                  required
+                  className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none" 
+                />
+              </div>
 
-          {editingId && (
-            <button
-              onClick={resetForm}
-              disabled={loading}
-              className="border px-6 py-2 rounded-md"
-            >
-              Cancel
-            </button>
-          )}
+              <div className="space-y-1">
+                <label className="block text-[10px] uppercase font-black tracking-widest text-gray-400 mb-1.5">Description</label>
+                <textarea 
+                  placeholder="Benefit summary..." 
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  disabled={loading}
+                  rows={2}
+                  className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-600/20 transition-all outline-none resize-none font-medium" 
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1 relative">
+                  <label className="block text-[10px] uppercase font-black tracking-widest text-gray-400 mb-1.5">Monthly Base (₹)</label>
+                  <DollarSign className="absolute left-3 top-8 text-gray-400 w-3 h-3" />
+                  <input 
+                    type="number" 
+                    placeholder="0.00" 
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    disabled={loading}
+                    required
+                    min={0}
+                    className="w-full bg-gray-50 border-none rounded-lg pl-8 pr-4 py-2 text-sm font-bold text-gray-900 focus:ring-2 focus:ring-blue-600/20 transition-all outline-none" 
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="block text-[10px] uppercase font-black tracking-widest text-gray-400 mb-1.5">Yearly Disc (%)</label>
+                  <input 
+                    type="number" 
+                    placeholder="e.g. 20" 
+                    value={discount}
+                    onChange={(e) => setDiscount(e.target.value)}
+                    disabled={loading}
+                    min={0}
+                    max={100}
+                    className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-bold text-green-600 focus:ring-2 focus:ring-blue-600/20 transition-all outline-none" 
+                  />
+                </div>
+              </div>
+
+              <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={highlighted}
+                  onChange={() => setHighlighted(!highlighted)}
+                  disabled={loading}
+                  className="h-4 w-4 accent-blue-600 cursor-pointer"
+                />
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-gray-900">Push to Spotlight</span>
+                  <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest">Mark as recommended</span>
+                </div>
+              </label>
+
+              <div className="pt-4 flex gap-3">
+                {editingId && (
+                  <Button type="button" variant="outline" className="flex-1" onClick={resetForm} disabled={loading}>Clear</Button>
+                )}
+                <Button type="submit" className={editingId ? "flex-1" : "w-full"} disabled={loading}>
+                  {loading ? "Processing..." : (editingId ? "Update Node" : "Phase Build")}
+                </Button>
+              </div>
+            </form>
+          </Card>
+
+          <div className="p-6 rounded-2xl bg-gray-900 text-white shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 rounded-full blur-3xl opacity-20 -mr-10 -mt-10 pointer-events-none" />
+            <div className="relative z-10">
+              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-4 backdrop-blur-sm">
+                <Zap className="w-5 h-5 text-yellow-400" />
+              </div>
+              <h4 className="text-lg font-black font-headline leading-tight mb-2">Automated Revenue Protocol</h4>
+              <p className="text-sm opacity-60 font-body mb-4">Leverage machine learning to optimize pricing tiers based on usage telemetry and user demand logic.</p>
+              <button className="text-xs font-bold font-mono tracking-widest uppercase hover:text-blue-400 transition-colors">Initialize Sequence →</button>
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* TABLE */}
-      <div className="hidden md:block bg-white rounded-xl shadow overflow-x-auto">
-        <table className="w-full text-left">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-4">Plan</th>
-              <th className="p-4">Price</th>
-              <th className="p-4">Discount</th>
-              <th className="p-4">Status</th>
-              <th className="p-4 text-right">Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {plans.map((plan) => (
-              <tr key={plan.id} className="border-t">
-                <td className="p-4">
-                  <div className="font-semibold flex items-center gap-2">
-                    {plan.name}
-                    {plan.highlighted && (
-                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
-                        Featured
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {plan.description}
-                  </div>
-                </td>
-
-                <td className="p-4 font-medium">
-                  ₹{plan.monthly_price.toLocaleString()}
-                </td>
-                <td className="p-4">{plan.yearly_discount}%</td>
-
-                <td className="p-4">
-                  <span
-                    className={`px-2 py-1 rounded text-sm ${
-                      plan.is_active
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {plan.is_active ? "Active" : "Inactive"}
-                  </span>
-                </td>
-
-                <td className="p-4 text-right">
-                  <div className="flex justify-end items-center gap-3">
-                    <button
-                      onClick={() => editPlan(plan)}
-                      disabled={loading}
-                      className="text-blue-600 hover:bg-blue-50 p-2 rounded"
-                      title="Edit"
-                    >
-                      <Icon icon="cuida:edit-outline" width="20" />
-                    </button>
-
-                    <button
-                      onClick={() => toggleFeatured(plan.id, plan.highlighted)}
-                      disabled={loading}
-                      className={`p-2 rounded ${
-                        plan.highlighted
-                          ? "text-yellow-600 hover:bg-yellow-50"
-                          : "text-gray-500 hover:bg-gray-100"
-                      }`}
-                      title="Feature"
-                    >
-                      <Icon icon="material-symbols:star-outline" width="20" />
-                    </button>
-
-                    <button
-                      onClick={() => toggleActive(plan.id, plan.is_active)}
-                      disabled={loading}
-                      className="text-purple-600 hover:bg-purple-50 p-2 rounded"
-                      title="Enable / Disable"
-                    >
-                      <Icon
-                        icon="material-symbols:power-settings-new"
-                        width="20"
-                      />
-                    </button>
-
-                    <button
-                      onClick={() => deletePlan(plan.id)}
-                      disabled={loading}
-                      className="text-red-600 hover:bg-red-50 p-2 rounded"
-                      title="Delete"
-                    >
-                      <Icon icon="fluent:delete-20-regular" width="20" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-
-            {plans.length === 0 && (
-              <tr>
-                <td colSpan={5} className="p-6 text-center text-gray-500">
-                  No pricing plans found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <div className="md:hidden space-y-4">
-  {plans.map((plan) => (
-    <div
-      key={plan.id}
-      className="bg-white rounded-xl shadow p-4 space-y-3"
-    >
-      {/* Header */}
-      <div className="flex justify-between items-start">
-        <div>
-          <h3 className="font-semibold text-lg flex items-center gap-2">
-            {plan.name}
-            {plan.highlighted && (
-              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
-                Featured
-              </span>
-            )}
-          </h3>
-          <p className="text-sm text-gray-500">{plan.description}</p>
-        </div>
-
-        <span
-          className={`text-xs px-2 py-1 rounded ${
-            plan.is_active
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          }`}
-        >
-          {plan.is_active ? "Active" : "Inactive"}
-        </span>
-      </div>
-
-      {/* Pricing */}
-      <div className="flex justify-between text-sm">
-        <span>Monthly</span>
-        <span className="font-medium">
-          ₹{plan.monthly_price.toLocaleString()}
-        </span>
-      </div>
-
-      <div className="flex justify-between text-sm">
-        <span>Yearly Discount</span>
-        <span>{plan.yearly_discount}%</span>
-      </div>
-
-      {/* Actions */}
-      <div className="flex justify-between pt-3 border-t">
-        <button
-          onClick={() => editPlan(plan)}
-          className="text-blue-600 text-sm"
-        >
-          Edit
-        </button>
-
-        <button
-          onClick={() => toggleFeatured(plan.id, plan.highlighted)}
-          className="text-yellow-600 text-sm"
-        >
-          {plan.highlighted ? "Unfeature" : "Feature"}
-        </button>
-
-        <button
-          onClick={() => toggleActive(plan.id, plan.is_active)}
-          className="text-purple-600 text-sm"
-        >
-          {plan.is_active ? "Disable" : "Enable"}
-        </button>
-
-        <button
-          onClick={() => deletePlan(plan.id)}
-          className="text-red-600 text-sm"
-        >
-          Delete
-        </button>
       </div>
     </div>
-  ))}
-</div>
-
-    </main>
   );
 }

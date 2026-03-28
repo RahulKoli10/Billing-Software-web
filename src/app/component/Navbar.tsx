@@ -176,7 +176,7 @@ export default function Navbar() {
                         if (user?.role === "superadmin") {
                           router.push("/dashboard/admin");
                         } else {
-                          router.push("/dashboard/user");
+                          router.push("/dashboard");
                         }
                       }}
                       className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
