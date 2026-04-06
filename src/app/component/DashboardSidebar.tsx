@@ -14,24 +14,32 @@ import {
   ShieldCheck,
   ClipboardMinus,
   List,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buildApiUrl } from "@/lib/api";
 import { notifyAuthStateChanged } from "@/lib/auth-events";
 import { toast } from "sonner";
+import type { LucideIcon } from "lucide-react";
 
 type SidebarProps = {
   role: "superadmin" | "user";
+  mobileOpen?: boolean;
+  onClose?: () => void;
 };
 
 type NavItem = {
   label: string;
   href: string;
-  icon: any;
+  icon: LucideIcon;
   roles?: ("superadmin" | "user")[];
 };
 
-export default function DashboardSidebar({ role }: SidebarProps) {
+export default function DashboardSidebar({
+  role,
+  mobileOpen = false,
+  onClose,
+}: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -44,6 +52,7 @@ export default function DashboardSidebar({ role }: SidebarProps) {
     } catch {}
 
     notifyAuthStateChanged();
+    onClose?.();
     router.push("/login");
     router.refresh();
   };
@@ -68,13 +77,12 @@ export default function DashboardSidebar({ role }: SidebarProps) {
   const commonLinks: NavItem[] = [
     { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
     { label: "Subscription", href: "/dashboard/subscription", icon: Activity },
-    { label: "Payments", href: "/dashboard/payments", icon: CreditCard },
-    { label: "Payments", href: "/dashboard/payments", icon: ClipboardMinus },
+    { label: "Payments", href: "/dashboard/payments", icon: CreditCard }, 
   ];
 
   const userLinks: NavItem[] =[
-    { label: "sales", href: "/dashboard/sales", icon: ClipboardMinus },
-    { label: "sales", href: "/dashboard/invoice", icon: ClipboardMinus },
+    { label: "Sales Report", href: "/dashboard/user/sales", icon: ClipboardMinus },
+    { label: "Inventory", href: "/dashboard/user/inventory", icon: Package },
   ]
 
   const adminLinks: NavItem[] = [
@@ -115,11 +123,12 @@ export default function DashboardSidebar({ role }: SidebarProps) {
       <Link
         key={item.href}
         href={item.href}
+        onClick={() => onClose?.()}
         className={cn(
-          "flex items-center gap-3 px-4 py-3 text-sm font-semibold tracking-tight transition-all rounded-r-lg mb-1",
+          "mb-1 flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold tracking-tight transition-all lg:rounded-r-lg lg:rounded-l-none",
           isActive
-            ? "text-blue-600 bg-blue-50/50 border-l-4 border-blue-600"
-            : "text-gray-500 hover:bg-gray-50 hover:text-gray-900 border-l-4 border-transparent",
+            ? "border-l-4 border-blue-600 bg-blue-50/50 text-blue-600"
+            : "border-l-4 border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-900",
         )}
       >
         <item.icon className="w-5 h-5" />
@@ -129,8 +138,37 @@ export default function DashboardSidebar({ role }: SidebarProps) {
   };
 
   return (
-    <aside className="sticky top-0 left-0 z-40 h-screen w-64 border-r border-gray-100 bg-white">
-      <div className="flex h-full flex-col overflow-hidden py-6">
+    <>
+      <div
+        className={cn(
+          "fixed inset-0 z-40 bg-slate-900/40 transition-opacity lg:hidden",
+          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
+        onClick={() => onClose?.()}
+        aria-hidden="true"
+      />
+
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex h-screen w-[86vw] max-w-72 flex-col border-r border-gray-100 bg-white transition-transform duration-300 sm:w-80 lg:sticky lg:top-0 lg:z-40 lg:w-64 lg:max-w-none lg:translate-x-0",
+          mobileOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
+        <div className="flex h-full flex-col overflow-hidden py-5 lg:py-6">
+          <div className="mb-6 flex items-center justify-between px-5 lg:hidden">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-gray-400">
+              Navigation
+            </p>
+            <button
+              type="button"
+              onClick={() => onClose?.()}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-500 transition hover:bg-gray-50"
+              aria-label="Close dashboard navigation"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
         <div className="px-6 mb-10 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-md shadow-blue-600/20">
@@ -155,8 +193,16 @@ export default function DashboardSidebar({ role }: SidebarProps) {
             Main
           </div>
           {commonLinks.map(renderLink)}
-
-          {role === "superadmin" && (
+          
+          {role === "user" && (
+            <>
+              <div className="px-4 mt-8 mb-2 text-xs font-bold uppercase tracking-widest text-gray-800">
+                User Dashboard
+              </div>
+              {userLinks.map(renderLink)}
+            </> 
+          )}
+        {role === "superadmin" && (
             <>
               <div className="px-4 mt-8 mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
                 Admin
@@ -168,8 +214,11 @@ export default function DashboardSidebar({ role }: SidebarProps) {
 
         <div className="px-6 mb-6 mt-8 shrink-0">
           <button
-            onClick={() => (window.location.href = "#")}
-            className="w-full py-3 px-4 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-600/20 hover:opacity-90 transition-all text-center"
+            onClick={() => {
+              onClose?.();
+              window.location.href = "#";
+            }}
+            className="min-w-auto py-3 px-4 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-600/20 hover:opacity-90 transition-all text-center"
           >
             {role === "superadmin" ? "Generate Report" : "New Invoice"}
           </button>
@@ -178,6 +227,7 @@ export default function DashboardSidebar({ role }: SidebarProps) {
         <div className="mt-auto shrink-0 overflow-hidden border-t border-gray-100 px-4 pt-4">
           <Link
             href="/settings"
+            onClick={() => onClose?.()}
             className="flex items-center gap-3 px-4 py-3 text-gray-500 text-sm font-semibold tracking-tight hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors"
           >
             <Settings className="w-5 h-5" />
@@ -191,6 +241,7 @@ export default function DashboardSidebar({ role }: SidebarProps) {
           </button>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

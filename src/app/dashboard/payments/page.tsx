@@ -53,10 +53,10 @@ export default function PaymentHistory() {
     return (
       <div className="space-y-6">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-500">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-500">
             Mentor Overview
           </p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
             Purchase History
           </h1>
         </div>
@@ -76,10 +76,10 @@ export default function PaymentHistory() {
   if (!payments.length) {
     return (
       <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
-        <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-500">
+        <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-500">
           Mentor Overview
         </p>
-        <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
           Purchase History
         </h1>
         <p className="mt-3 max-w-xl text-sm text-slate-500">
@@ -96,10 +96,10 @@ export default function PaymentHistory() {
   return (
     <div className="space-y-8">
       <div>
-        <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-500">
+        <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-500">
           Mentor Overview
         </p>
-        <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
           Purchase History
         </h1>
         <p className="mt-2 max-w-2xl text-sm text-slate-500">
@@ -136,7 +136,7 @@ export default function PaymentHistory() {
 
       <div className="rounded-3xl border border-slate-100 bg-white shadow-sm">
         <div className="border-b border-slate-100 px-6 py-5">
-          <h2 className="text-lg font-black tracking-tight text-slate-900">
+          <h2 className="text-lg font-bold tracking-tight text-black">
             Billing Timeline
           </h2>
           <p className="mt-1 text-sm text-slate-500">
@@ -152,7 +152,7 @@ export default function PaymentHistory() {
             >
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h3 className="text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold text-black">
                     {payment.plan_name || `Purchase #${index + 1}`}
                   </h3>
                   <span
@@ -169,10 +169,10 @@ export default function PaymentHistory() {
               </div>
 
               <div className="rounded-2xl bg-slate-50 p-4">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
                   Amount
                 </p>
-                <p className="mt-3 text-2xl font-black tracking-tight text-slate-900">
+                <p className="mt-3 text-2xl font-bold tracking-tight text-black">
                   {currency.format(Number(payment.amount || 0))}
                 </p>
                 <div className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-slate-500">
@@ -182,10 +182,10 @@ export default function PaymentHistory() {
               </div>
 
               <div className="rounded-2xl bg-slate-50 p-4">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
                   Date
                 </p>
-                <p className="mt-3 text-sm font-semibold text-slate-900">
+                <p className="mt-3 text-sm font-semibold text-black">
                   {formatDate(payment.payment_date)}
                 </p>
                 <p className="mt-2 text-xs text-slate-500">
@@ -219,10 +219,10 @@ function MetricCard({
     <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
             {label}
           </p>
-          <p className="mt-3 text-2xl font-black tracking-tight text-slate-900">
+          <p className="mt-3 text-2xl font-bold tracking-tight text-black">
             {value}
           </p>
           <p className="mt-2 text-sm text-slate-500">{detail}</p>

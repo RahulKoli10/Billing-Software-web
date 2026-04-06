@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Search, ChevronDown, Shield, User } from "lucide-react";
+import { Bell, Menu, Search, Shield, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface UserProp {
@@ -9,7 +9,13 @@ interface UserProp {
   name?: string;
 }
 
-export default function DashboardTopbar({ user }: { user: UserProp }) {
+export default function DashboardTopbar({
+  user,
+  onMenuToggle,
+}: {
+  user: UserProp;
+  onMenuToggle: () => void;
+}) {
   const isAdmin = user.role === "superadmin";
   const emailUsername = user.email?.split("@")[0]?.trim();
   const displayName =
@@ -20,21 +26,38 @@ export default function DashboardTopbar({ user }: { user: UserProp }) {
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
-    <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 sticky top-0 z-30">
+    <header className="sticky top-0 z-30 border-b border-gray-100 bg-white">
+      <div className="flex min-h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
+        <button
+          type="button"
+          onClick={onMenuToggle}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-600 transition hover:bg-gray-50 lg:hidden"
+          aria-label="Open dashboard navigation"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
       {/* Left: Search */}
-      <div className="flex items-center gap-3 flex-1 max-w-md">
-        <div className="relative w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 border border-gray-100 rounded-xl text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-300 transition-all"
-          />
+        <div className="flex min-w-0 flex-1 items-center gap-3 lg:max-w-md">
+          <button
+            type="button"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-500 transition hover:bg-gray-50 sm:hidden"
+            aria-label="Search dashboard"
+          >
+            <Search className="h-4 w-4" />
+          </button>
+          <div className="relative hidden w-full sm:block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full rounded-xl border border-gray-100 bg-gray-50 py-2 pl-9 pr-4 text-sm text-gray-700 transition-all placeholder:text-gray-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            />
+          </div>
         </div>
-      </div>
 
       {/* Right: Notifications + User */}
-      <div className="flex items-center gap-3">
+        <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
         {/* Notification Bell */}
         <button className="relative p-2 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-all">
           <Bell className="w-5 h-5" />
@@ -42,14 +65,14 @@ export default function DashboardTopbar({ user }: { user: UserProp }) {
         </button>
 
         {/* Divider */}
-        <div className="h-8 w-px bg-gray-100" />
+          <div className="hidden h-8 w-px bg-gray-100 sm:block" />
 
         {/* User Badge */}
-        <button className="flex items-center gap-3 pl-1 pr-2 py-1.5 rounded-xl hover:bg-gray-50 transition-all group">
+          <button className="group flex items-center gap-2 rounded-xl py-1.5 pl-1 pr-1 transition-all hover:bg-gray-50 sm:gap-3 sm:pr-2">
           {/* Avatar */}
           <div
             className={cn(
-              "w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-black shadow-sm",
+              "w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-sm",
               isAdmin
                 ? "bg-blue-600 shadow-blue-600/20"
                 : "bg-emerald-500 shadow-emerald-500/20"
@@ -59,7 +82,7 @@ export default function DashboardTopbar({ user }: { user: UserProp }) {
           </div>
 
           {/* Name + Role */}
-          <div className="text-left hidden sm:block">
+            <div className="hidden text-left md:block">
             <p className="text-sm font-bold text-gray-900 leading-tight">
               {displayName}
             </p>
@@ -80,8 +103,9 @@ export default function DashboardTopbar({ user }: { user: UserProp }) {
             </div>
           </div>
 
-          <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+          {/* <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" /> */}
         </button>
+      </div>
       </div>
     </header>
   );

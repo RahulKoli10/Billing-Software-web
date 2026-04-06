@@ -7,14 +7,23 @@ import {
   Users,
   Search,
   Filter,
-  MoreVertical,
   Mail,
   ChevronRight,
   UserPlus
 } from "lucide-react";
 
+interface Customer {
+  user_id: number;
+  name?: string;
+  email?: string;
+  business_name?: string;
+  current_plan?: string;
+  total_revenue?: number;
+  current_status?: string;
+}
+
 export default function AdminCustomersPage() {
-  const [customers, setCustomers] = useState<any[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [expanded, setExpanded] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -46,14 +55,14 @@ export default function AdminCustomersPage() {
         c.business_name?.toLowerCase().includes(search.toLowerCase());
 
       const matchesStatus = activeOnly
-        ? ["active", "pushed"].includes(c.current_status)
+        ? ["active", "pushed"].includes(c.current_status || "")
         : true;
 
       return matchesSearch && matchesStatus;
     });
   }, [customers, search, activeOnly]);
 
-  const activeCustomers = customers.filter(c => ["active", "pushed"].includes(c.current_status)).length;
+  const activeCustomers = customers.filter(c => ["active", "pushed"].includes(c.current_status || "")).length;
   const healthIndex = customers.length ? Math.round((activeCustomers / customers.length) * 100) : 0;
   const totalRevenue = customers.reduce((sum, c) => sum + Number(c.total_revenue || 0), 0);
   const pendingCompliance = customers.filter(c => !c.current_status || c.current_status === "pending" || c.current_status === "expired").length;
@@ -66,43 +75,43 @@ export default function AdminCustomersPage() {
     );
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-700">
-      <div className="flex justify-between items-end">
-        <div>
-          <h2 className="text-3xl font-black font-headline text-gray-900 tracking-tighter">Customer Directory</h2>
+    <div className="space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-right-4 duration-700">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h2 className="text-2xl font-bold font-headline text-gray-900 tracking-tighter sm:text-3xl">Customer Directory</h2>
           <p className="text-gray-500 font-medium">Manage entity relationships and health metrics.</p>
         </div>
-        <Button size="sm" className="flex items-center gap-2">
+        <Button size="sm" className="flex items-center gap-2 self-start sm:self-auto">
           <UserPlus className="w-4 h-4" />
           Onboard Entity
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <Card className="flex flex-col items-center text-center p-8 bg-blue-50/50 border-none shadow-none">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+        <Card className="flex flex-col items-center text-center p-8 bg-blue-50/50 shadow-none">
           <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center mb-4 shadow-xl shadow-blue-600/20">
             <Users className="text-white w-8 h-8" />
           </div>
-          <h4 className="font-black font-headline text-xl text-gray-900">{customers.length}</h4>
-          <p className="text-xs font-bold text-gray-400 opacity-80 uppercase tracking-widest">Total Entities</p>
+          <h4 className="font-bold font-headline text-xl text-gray-900">{customers.length}</h4>
+          <p className="text-sm font-bold text-gray-400 opacity-80 uppercase tracking-widest">Total Entities</p>
         </Card>
         <Card className="flex flex-col items-center text-center p-8 border-none bg-gray-50 shadow-none">
-          <h4 className="font-black font-headline text-xl text-green-600">{healthIndex}%</h4>
+          <h4 className="font-bold font-headline text-xl text-green-600">{healthIndex}%</h4>
           <p className="text-xs font-bold text-gray-400 opacity-80 uppercase tracking-widest">Health Index</p>
         </Card>
         <Card className="flex flex-col items-center text-center p-8 border-none bg-gray-50 shadow-none">
-          <h4 className="font-black font-headline text-xl text-blue-600">₹{totalRevenue.toLocaleString()}</h4>
+          <h4 className="font-bold font-headline text-xl text-blue-600">₹{totalRevenue.toLocaleString()}</h4>
           <p className="text-xs font-bold text-gray-400 opacity-80 uppercase tracking-widest">Total Revenue</p>
         </Card>
         <Card className="flex flex-col items-center text-center p-8 border-none bg-gray-50 shadow-none">
-          <h4 className="font-black font-headline text-xl text-amber-600">{pendingCompliance}</h4>
+          <h4 className="font-bold font-headline text-xl text-amber-600">{pendingCompliance}</h4>
           <p className="text-xs font-bold text-gray-400 opacity-80 uppercase tracking-widest">Pending Status</p>
         </Card>
       </div>
 
       <Card className="p-0 overflow-hidden">
-        <div className="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center bg-white gap-4">
-          <div className="flex items-center gap-4 w-full md:w-auto">
+        <div className="flex flex-col gap-4 border-b border-gray-100 bg-white p-4 sm:p-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 md:w-auto">
              <div className="relative flex-1 md:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
@@ -116,7 +125,7 @@ export default function AdminCustomersPage() {
             <Button
               variant={activeOnly ? "primary" : "outline"}
               size="sm"
-              className="flex items-center gap-2"
+              className="flex items-center justify-center gap-2 sm:justify-start"
               onClick={() => setActiveOnly(!activeOnly)}
             >
               <Filter className="w-4 h-4" />
@@ -126,14 +135,14 @@ export default function AdminCustomersPage() {
           <p className="text-xs font-bold text-gray-400">Showing {filteredCustomers.length} of {customers.length} entities</p>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
+          <table className="min-w-215 w-full text-left">
             <thead>
               <tr className="bg-gray-50/50 border-b border-gray-100">
-                <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Identifier</th>
-                <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Entity details</th>
-                <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Current Plan</th>
-                <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Revenue</th>
-                <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Health</th>
+                <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Identifier</th>
+                <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Entity details</th>
+                <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Current Plan</th>
+                <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Revenue</th>
+                <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Health</th>
                 <th className="px-6 py-4"></th>
               </tr>
             </thead>
@@ -153,7 +162,7 @@ export default function AdminCustomersPage() {
                       </div>
                     </td>
                     <td className="px-6 py-5 text-sm font-medium text-gray-600">{customer.current_plan || "None"}</td>
-                    <td className="px-6 py-5 text-sm font-black text-gray-900">₹{Number(customer.total_revenue || 0).toLocaleString()}</td>
+                    <td className="px-6 py-5 text-sm font-bold text-gray-900">₹{Number(customer.total_revenue || 0).toLocaleString()}</td>
                     <td className="px-6 py-5">
                       <StatusBadge status={customer.current_status} />
                     </td>
@@ -235,7 +244,7 @@ function ExpandedHistory({ userId }: { userId: number }) {
         Subscription Architecture Node
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {history.map((h) => (
           <div
             key={`${h.id}-${h.license_key}`}
@@ -246,7 +255,7 @@ function ExpandedHistory({ userId }: { userId: number }) {
                 {h.plan_name}
               </div>
               <div className="text-right text-sm">
-                <div className="font-black text-gray-900">
+                <div className="font-bold text-gray-900">
                   ₹{h.amount}
                 </div>
               </div>

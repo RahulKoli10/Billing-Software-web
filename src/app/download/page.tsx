@@ -25,8 +25,33 @@ export default function DownloadPage() {
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [requestId, setRequestId] = useState(0);
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [user, setUser] = useState<null | { role: string }>(null);
+const checkAuth = async () => {
+    try {
+      const res = await fetch(buildApiUrl("/api/auth/me"), {
+        credentials: "include",
+        cache: "no-store",
+      });
 
-  /* ================= FETCH ================= */
+      if (!res.ok) {
+        setIsLoggedIn(false);
+        setUser(null);
+        return;
+      }
+
+      const data = await res.json();
+      setIsLoggedIn(data.authenticated === true);
+      setUser(data.user ?? null);
+    } catch {
+      setIsLoggedIn(false);
+      setUser(null);
+    } finally {
+      setAuthChecked(true);
+    }
+  }; 
+  /*   FETCH   */
   const fetchDownloads = async (platform?: "windows" | "mac") => {
     setRequestId((prev) => prev + 1);
     setIsTransitioning(true);
@@ -73,7 +98,7 @@ export default function DownloadPage() {
     };
   }, [requestId, selectedPlatform]);
 
-  /* ================= DOWNLOAD HANDLER ================= */
+  /*   DOWNLOAD HANDLER   */
   const handleDownload = (item: DownloadItem) => {
     const url = buildApiUrl(item.download_url);
 
@@ -89,7 +114,7 @@ export default function DownloadPage() {
     }
   };
 
-  /* ================= FILTER ================= */
+  /*   FILTER   */
   const latestWindows = downloads.find((d) => d.platform === "windows");
   const latestMac = downloads.find((d) => d.platform === "mac");
 
@@ -105,7 +130,7 @@ export default function DownloadPage() {
     <main className="font-dm bg-[#F3F6FB]">
       <Navbar />
 
-      {/* ================= HERO ================= */}
+      {/*   HERO   */}
       <section className="min-h-screen py-16 md:py-20">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
@@ -122,7 +147,7 @@ export default function DownloadPage() {
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <button
                 onClick={() => fetchDownloads("windows")}
-                className={`px-5 py-2 rounded-md ${
+                className={`px-5 py-2 rounded-md cursor-pointer ${
                   selectedPlatform === "windows"
                     ? "bg-black text-white"
                     : "border border-gray-400 hover:bg-gray-100"
@@ -152,9 +177,9 @@ export default function DownloadPage() {
               )}
             </div>
 
-            {/* ================= DOWNLOAD BUTTONS ================= */}
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              {/* Windows */}
+            {/*  DOWNLOAD BUTTONS  */}
+            {/* <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+             
               <button
                 onClick={() =>
                   latestWindows && handleDownload(latestWindows)
@@ -170,8 +195,7 @@ export default function DownloadPage() {
                   ? `Download Windows (${latestWindows.version})`
                   : "Windows Not Available"}
               </button>
-
-              {/* Mac */}
+ 
               <button
                 onClick={() => latestMac && handleDownload(latestMac)}
                 disabled={!latestMac}
@@ -185,12 +209,12 @@ export default function DownloadPage() {
                   ? `Download Mac (${latestMac.version})`
                   : "Mac Coming Soon"}
               </button>
-            </div>
+            </div> */}
           </div>
 
-          {/* ================= TABLE ================= */}
+          {/*   TABLE   */}
           <div
-            className={`mt-16 transition-all duration-300 ${
+            className={`mt-11 transition-all duration-300 ${
               isTransitioning ? "opacity-0 translate-y-2" : "opacity-100"
             }`}
           >
@@ -214,7 +238,7 @@ export default function DownloadPage() {
                     </span>
 
                     <div>
-                      <p className="font-semibold text-gray-900">
+                      <p className="font-semibold text-gray-900 cursor-pointer">
                         {item.file_name}
                       </p>
                       <p className="text-gray-500 text-sm">
@@ -270,7 +294,7 @@ export default function DownloadPage() {
                 onClick={() =>
                   latestWindows && handleDownload(latestWindows)
                 }
-                className="mt-6 bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800"
+                className="mt-6 bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 cursor-pointer"
               >
                 Download for Windows
               </button>
@@ -314,7 +338,7 @@ export default function DownloadPage() {
               <button
                 onClick={() => latestMac && handleDownload(latestMac)}
                 disabled={!latestMac}
-                className={`mt-6 px-6 py-3 rounded-md ${
+                className={`mt-6 px-6 py-3 rounded-md cursor-pointer ${
                   latestMac
                     ? "bg-black text-white hover:bg-gray-800"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -340,12 +364,21 @@ export default function DownloadPage() {
                 Start managing your business smarter today.
               </p>
 
-              <Link
+             { isLoggedIn ? ( <Link
                 href="/signup"
                 className="inline-flex items-center gap-2 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg hover:bg-blue-700"
               >
-                Start Free <Icon icon="line-md:arrow-right" />
+               Start Free  <Icon icon="line-md:arrow-right" />
+              </Link> ) : (
+                
+              <Link
+                href="/plans-price"
+                className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+              >
+                Go to Pricing{" "}
+                <Icon icon="line-md:arrow-right" width="20" height="20" />
               </Link>
+              )}
             </div>
 
             <div className="flex-1 flex justify-center">

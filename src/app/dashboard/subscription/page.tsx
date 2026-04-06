@@ -82,10 +82,10 @@ export default function SubscriptionPage() {
     return (
       <div className="space-y-6">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-500">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-500">
             Mentor Overview
           </p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
             Subscription History
           </h1>
         </div>
@@ -105,10 +105,10 @@ export default function SubscriptionPage() {
   if (!subscriptions.length) {
     return (
       <div className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
-        <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-500">
+        <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-500">
           Mentor Overview
         </p>
-        <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
           Subscription History
         </h1>
         <p className="mt-3 max-w-xl text-sm text-slate-500">
@@ -129,10 +129,10 @@ export default function SubscriptionPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-500">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-500">
             Mentor Overview
           </p>
-          <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900">
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
             Subscription History
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-slate-500">
@@ -170,7 +170,7 @@ export default function SubscriptionPage() {
 
       <div className="rounded-3xl border border-slate-100 bg-white shadow-sm overflow-x-auto">
         <div className="border-b border-slate-100 px-6 py-5">
-          <h2 className="text-lg font-black tracking-tight text-slate-900">
+          <h2 className="text-lg font-bold tracking-tight text-black">
             Plan Timeline
           </h2>
           <p className="mt-1 text-sm text-slate-500">
@@ -186,7 +186,7 @@ export default function SubscriptionPage() {
             >
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h3 className="text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold text-black">
                     {sub.plan_name}
                   </h3>
                   <span
@@ -220,7 +220,7 @@ export default function SubscriptionPage() {
               </div>
 
               <div className="rounded-2xl bg-slate-50 p-4">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
                   Access Window
                 </p>
                 <div className="mt-4 space-y-3">
@@ -230,7 +230,7 @@ export default function SubscriptionPage() {
               </div>
 
               <div className="rounded-2xl bg-slate-50 p-4">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
                   Payment Snapshot
                 </p>
                 <div className="mt-4 space-y-3">
@@ -275,10 +275,10 @@ function OverviewCard({
     <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
             {label}
           </p>
-          <p className="mt-3 text-2xl font-black tracking-tight text-slate-900">
+          <p className="mt-3 text-2xl font-bold tracking-tight text-black">
             {value}
           </p>
           <p className="mt-2 text-sm text-slate-500">{detail}</p>
@@ -310,13 +310,13 @@ function DetailPill({
     <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
       <div className="flex items-center gap-2">
         {icon}
-        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
           {label}
         </p>
       </div>
       <div className="mt-2 flex items-start justify-between gap-3">
         <p
-          className={`min-w-0 flex-1 truncate text-sm font-semibold text-slate-900 ${
+          className={`min-w-0 flex-1 truncate text-sm font-semibold text-black ${
             mono ? "font-mono" : ""
           }`}
           title={value}
@@ -346,7 +346,7 @@ function TimelineRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-3 border-b border-slate-200/70 pb-3 last:border-b-0 last:pb-0">
       <span className="text-sm text-slate-500">{label}</span>
-      <span className="text-sm font-semibold text-slate-900">{value}</span>
+      <span className="text-sm font-semibold text-black">{value}</span>
     </div>
   );
 }

@@ -1,36 +1,202 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 BissBill – Smart Billing & Subscription Management System
 
-## Getting Started
+BissBill is a full-stack SaaS application designed to manage billing, subscriptions, customers, and sales efficiently. It provides a secure and scalable platform for businesses to handle invoices, pricing plans, and transactions.
 
-First, run the development server:
+---
+
+## 🧠 Tech Stack
+
+### Frontend
+
+* Next.js (App Router)
+* Tailwind CSS
+* Axios
+
+### Backend
+
+* Node.js + Express
+* MySQL Database
+* JWT Authentication
+
+### Other Tools
+
+* Razorpay (Payments)
+* Cron Jobs (Subscription cleanup)
+* Helmet (Security)
+* Rate Limiting
+
+---
+
+## ⚙️ Features
+
+* 🔐 Secure Authentication (Login / Signup)
+* 💳 Subscription & Pricing Plans
+* 🧾 Billing & Invoice Management
+* 👥 Customer Management
+* 📊 Sales Tracking
+* 📥 File Download System
+* 🔄 Automated Payment Cleanup (Cron Job)
+* 🌐 API Integration with secure CORS
+
+---
+
+## 📦 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-repo/bissbill.git
+cd bissbill
+```
+
+---
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+---
+
+### 3. Setup environment variables
+
+Create a `.env` file in the root:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000
+FRONTEND_URL=http://localhost:3000
+
+
+DB_HOST=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
+
+
+JWT_SECRET=
+JWT_EXPIRES_IN=1d
+
+#Super admin credentials
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+
+
+# Google OAuth credentials
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI=http://localhost:5000/api/auth/google/callback
+FRONTEND_URL=http://localhost:3000
+
+# Razorpay credentials
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
+
+# SMTP configuration for sending emails
+SMTP_HOST=
+SMTP_EMAIL=
+SMTP_PASSWORD=
+SMTP_PORT=
+
+```
+
+---
+
+### 4. Run the development server
+
+#### Frontend
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Backend
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+### 5. Open in browser
 
-To learn more about Next.js, take a look at the following resources:
+👉 http://localhost:3000
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔐 Security Features
 
-## Deploy on Vercel
+* Helmet.js for secure HTTP headers
+* CORS protection with whitelist
+* Rate limiting to prevent abuse
+* Environment variables for sensitive data
+* Input validation (recommended)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📁 Project Structure
+
+```
+/frontend (Next.js app)
+  ├── app/
+  ├── components/
+  ├── utils/
+
+/backend (Express API)
+  ├── routes/
+  ├── controllers/
+  ├── middlewares/
+  ├── config/
+```
+
+---
+
+## 🚀 Deployment
+
+### Frontend
+
+Deploy easily on **Vercel**
+
+### Backend
+
+Deploy on:
+
+* Render
+* AWS
+* DigitalOcean
+
+---
+
+## 🧪 API Base URL
+
+```
+/backend/*
+```
+
+Example:
+
+```
+/backend/api/auth/login
+```
+
+---
+
+## 📌 Future Improvements
+
+* 🔍 Advanced analytics dashboard
+* 📱 Mobile responsiveness improvements
+* 🤖 AI-based insights (billing predictions)
+* 📊 Export reports (PDF/Excel)
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome. For major changes, please open an issue first.
+ 
+---
+
+## 👨‍💻 Author
+
+Developed by **Rahul Koli**
+Full-Stack Developer | MERN Stack Enthusiast

@@ -3,12 +3,9 @@ import { useEffect, useState } from "react";
 import { buildApiUrl } from "@/lib/api";
 import { Card, Badge, Button } from "@/components/ui/atoms";
 import { 
-  CreditCard, 
   Plus, 
   Search, 
-  Filter,
   DollarSign,
-  Layers,
   Zap,
   Edit2,
   Trash2,
@@ -170,7 +167,7 @@ export default function AdminPricingPage() {
       }
 
       await fetchPlans();
-    } catch (err) {
+    } catch {
       alert("Enable / Disable failed");
     } finally {
       setLoading(false);
@@ -189,7 +186,7 @@ export default function AdminPricingPage() {
       });
 
       await fetchPlans();
-    } catch (e) {
+    } catch {
       // ignore
     } finally {
       setLoading(false);
@@ -199,13 +196,13 @@ export default function AdminPricingPage() {
   const filteredPlans = plans.filter(p => p.name?.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-700">
-      <div className="flex justify-between items-end">
-        <div>
-          <h2 className="text-3xl font-black font-headline text-gray-900 tracking-tighter">Pricing Architect</h2>
+    <div className="space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4 duration-700">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h2 className="text-2xl font-bold font-headline text-gray-900 tracking-tighter sm:text-3xl">Pricing Architect</h2>
           <p className="text-gray-500 font-medium">Design and deploy financial commitment structures.</p>
         </div>
-        <Button size="sm" className="flex items-center gap-2" onClick={() => { resetForm(); document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' }); }}>
+        <Button size="sm" className="flex items-center gap-2 self-start sm:self-auto" onClick={() => { resetForm(); document.getElementById('form-section')?.scrollIntoView({ behavior: 'smooth' }); }}>
           <Plus className="w-4 h-4" />
           Create New Plan
         </Button>
@@ -218,10 +215,10 @@ export default function AdminPricingPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-col-reverse lg:flex-row">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
         <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
-          <Card className="p-0 overflow-hidden overflow-x-auto">
-             <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-white flex-wrap gap-4">
+          <Card className="overflow-hidden p-0">
+             <div className="flex flex-col gap-4 border-b border-gray-100 bg-white p-4 sm:p-6 md:flex-row md:items-center md:justify-between">
               <h3 className="font-bold font-headline text-lg">Active Ledger</h3>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -230,17 +227,18 @@ export default function AdminPricingPage() {
                   placeholder="Filter plans..." 
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="bg-gray-50 border-none rounded-lg pl-10 pr-4 py-2 text-sm w-48 md:w-64 focus:ring-2 focus:ring-blue-600/20 transition-all outline-none" 
+                  className="w-full rounded-lg bg-gray-50 py-2 pl-10 pr-4 text-sm outline-none transition-all focus:ring-2 focus:ring-blue-600/20 md:w-64" 
                 />
               </div>
             </div>
-            <table className="w-full text-left">
+            <div className="overflow-x-auto">
+            <table className="min-w-[780px] w-full text-left">
               <thead>
                 <tr className="bg-gray-50/50 border-b border-gray-100">
-                  <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Plan ID</th>
-                  <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Architecture</th>
-                  <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Recurring</th>
-                  <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Status</th>
+                  <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Plan ID</th>
+                  <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Architecture</th>
+                  <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Recurring</th>
+                  <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Status</th>
                   <th className="px-6 py-4 text-right"></th>
                 </tr>
               </thead>
@@ -251,12 +249,12 @@ export default function AdminPricingPage() {
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-2">
                         <p className="text-sm font-bold text-gray-900">{plan.name}</p>
-                        {plan.highlighted && <span className="text-[10px] font-black text-yellow-600 uppercase bg-yellow-50 px-1.5 py-0.5 rounded">Featured</span>}
+                        {plan.highlighted && <span className="text-[10px] font-bold text-yellow-600 uppercase bg-yellow-50 px-1.5 py-0.5 rounded">Featured</span>}
                       </div>
                       <p className="text-[10px] text-gray-500 font-medium line-clamp-1">{plan.description || "No description provided."}</p>
                     </td>
                     <td className="px-6 py-5">
-                      <p className="text-sm font-black text-gray-900">₹{plan.monthly_price.toLocaleString()}/mo</p>
+                      <p className="text-sm font-bold text-gray-900">₹{plan.monthly_price.toLocaleString()}/mo</p>
                       {plan.yearly_discount > 0 && <p className="text-[10px] font-bold text-green-600 uppercase tracking-wide">{plan.yearly_discount}% yearly save</p>}
                     </td>
                     <td className="px-6 py-5">
@@ -309,6 +307,7 @@ export default function AdminPricingPage() {
                 )}
               </tbody>
             </table>
+            </div>
           </Card>
         </div>
 
@@ -321,7 +320,7 @@ export default function AdminPricingPage() {
           >
             <form onSubmit={submitPlan} className="space-y-5">
               <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-black tracking-widest text-gray-400 mb-1.5">Primary Label</label>
+                <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-1.5">Primary Label</label>
                 <input 
                   type="text" 
                   placeholder="e.g. Nordic Enterprise" 
@@ -334,7 +333,7 @@ export default function AdminPricingPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-[10px] uppercase font-black tracking-widest text-gray-400 mb-1.5">Description</label>
+                <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-1.5">Description</label>
                 <textarea 
                   placeholder="Benefit summary..." 
                   value={description}
@@ -345,9 +344,9 @@ export default function AdminPricingPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1 relative">
-                  <label className="block text-[10px] uppercase font-black tracking-widest text-gray-400 mb-1.5">Monthly Base (₹)</label>
+                  <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-1.5">Monthly Base (₹)</label>
                   <DollarSign className="absolute left-3 top-8 text-gray-400 w-3 h-3" />
                   <input 
                     type="number" 
@@ -361,7 +360,7 @@ export default function AdminPricingPage() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="block text-[10px] uppercase font-black tracking-widest text-gray-400 mb-1.5">Yearly Disc (%)</label>
+                  <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-1.5">Yearly Disc (%)</label>
                   <input 
                     type="number" 
                     placeholder="e.g. 20" 
@@ -406,7 +405,7 @@ export default function AdminPricingPage() {
               <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-4 backdrop-blur-sm">
                 <Zap className="w-5 h-5 text-yellow-400" />
               </div>
-              <h4 className="text-lg font-black font-headline leading-tight mb-2">Automated Revenue Protocol</h4>
+              <h4 className="text-lg font-bold font-headline leading-tight mb-2">Automated Revenue Protocol</h4>
               <p className="text-sm opacity-60 font-body mb-4">Leverage machine learning to optimize pricing tiers based on usage telemetry and user demand logic.</p>
               <button className="text-xs font-bold font-mono tracking-widest uppercase hover:text-blue-400 transition-colors">Initialize Sequence →</button>
             </div>

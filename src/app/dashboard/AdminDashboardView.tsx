@@ -219,11 +219,11 @@ export default function AdminDashboardView() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <Badge variant="primary">Admin Workspace</Badge>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-gray-900">
+          <h1 className="mt-3 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
             Billing admin dashboard
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-gray-500">
@@ -248,7 +248,7 @@ export default function AdminDashboardView() {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 md:gap-6">
         <Card>
           <div className="mb-4 flex items-start justify-between">
             <Users className="h-8 w-8 text-blue-600" />
@@ -304,7 +304,7 @@ export default function AdminDashboardView() {
         </Card>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
         <Card
           title="Recent customers"
           subtitle="Latest customer records returned by the admin customer API"

@@ -6,8 +6,17 @@ import Image from "next/image";
 import Link from "next/link.js";
 import { Icon } from "@iconify/react";
 import Footer from "./component/Footer";
+import { buildApiUrl } from "@/lib/api";
 
 export default function Home() {
+  const scrollToPricing = () => {
+    const pricingSection = document.getElementById("plan-pricing");
+
+    if (!pricingSection) return;
+
+    pricingSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const features = [
     {
       title: "Auto-Discount Engine",
@@ -60,6 +69,32 @@ export default function Home() {
   ];
 
   const [openId, setOpenId] = useState<number | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [user, setUser] = useState<null | { role: string }>(null);
+const checkAuth = async () => {
+    try {
+      const res = await fetch(buildApiUrl("/api/auth/me"), {
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        setIsLoggedIn(false);
+        setUser(null);
+        return;
+      }
+
+      const data = await res.json();
+      setIsLoggedIn(data.authenticated === true);
+      setUser(data.user ?? null);
+    } catch {
+      setIsLoggedIn(false);
+      setUser(null);isLoggedIn
+    } finally {
+      setAuthChecked(true);
+    }
+  }; 
   const FAQS = [
     {
       id: 1,
@@ -119,21 +154,23 @@ export default function Home() {
 
           {/* CTA Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-base">
-            <Link href="/">
+            <Link href="/download">
               {" "}
               <button className="group relative p-px inline-flex items-center justify-center rounded-lg bg-linear-to-r from-[#3652D4] to-[#E4E9F7] transition-all hover:shadow-md cursor-pointer">
                 {/* The Inner Layer */}
                 <span className="px-6 py-3 rounded-[calc(0.5rem-1px)] bg-white text-black font-medium transition group-hover:bg-blue-50/80">
-                  View Demo
+                  View Demo 
                 </span>
               </button>
             </Link>
 
-            <Link href="/signup">
-              <button className="px-6 py-3 rounded-lg bg-[#0032FF] text-white font-medium hover:bg-blue-700 transition cursor-pointer">
-                Start Free Trial
-              </button>
-            </Link>
+            <button
+              type="button"
+              onClick={scrollToPricing}
+              className="px-6 py-3 rounded-lg bg-[#0032FF] text-white font-medium hover:bg-blue-700 transition cursor-pointer"
+            >
+              Start Free Trial
+            </button>
           </div>
 
           <div className="mt-16">
@@ -267,7 +304,7 @@ export default function Home() {
                 key={item.id}
                 className="
             snap-center
-            min-w-[260px] sm:min-w-[280px] md:min-w-[300px]
+            min-w-65 sm:min-w-70 md:min-w-75
             bg-white border border-gray-200
             rounded-xl shadow-sm
             hover:shadow-md transition
@@ -387,12 +424,14 @@ export default function Home() {
                 </p>
               </div>
 
-              <Link
-                href="/signup"
-                className="mt-8 w-fit bg-blue-600 hover:bg-blue-700 transition px-6 py-3 rounded-lg text-sm font-medium"
-              >
-                Log in / Sign up
-              </Link>
+              {isLoggedIn && (
+                <Link
+                  href="/signup"
+                  className="mt-8 w-fit bg-blue-600 hover:bg-blue-700 transition px-6 py-3 rounded-lg text-sm font-medium"
+                >
+                  Log in / Sign up
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -658,6 +697,7 @@ export default function Home() {
                 growing businesses.
               </p>
 
+             {isLoggedIn ? (
               <Link
                 href="/signup"
                 className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
@@ -665,6 +705,15 @@ export default function Home() {
                 Start Free{" "}
                 <Icon icon="line-md:arrow-right" width="20" height="20" />
               </Link>
+             ) : (
+              <Link
+                href="#plan-pricing"
+                className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+              >
+                Go to Pricing{" "}
+                <Icon icon="line-md:arrow-right" width="20" height="20" />
+              </Link>
+            )}
             </div>
 
             {/* Right Image */}

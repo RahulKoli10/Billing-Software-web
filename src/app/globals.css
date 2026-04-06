@@ -2,7 +2,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* stylelint-disable at-rule-no-unknown */
 @custom-variant dark (&:is(.dark *));
+/* stylelint-enable at-rule-no-unknown */
 @layer base, components, utilities;
 
 .font-dm {
@@ -139,4 +141,7 @@
   body {
     @apply bg-background text-foreground;
   }
-}
+   html {
+    @apply scroll-smooth;
+  }
+} 

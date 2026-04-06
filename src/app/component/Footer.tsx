@@ -23,13 +23,13 @@ export default function Footer() {
             <Link href={`https://x.com/`}>
               <Icon icon="ri:twitter-x-line" width={20} />{" "}
             </Link>
-            <Link href={`https://www.facebook.com/`}>
+            <Link href={`https://www.facebook.com/profile.php?id=61575774012675`} target="_blank">
               <Icon icon="mdi:facebook" width={20} />
             </Link>
             <Link href={`https://wa.me/`}>
               <Icon icon="mdi:whatsapp" width={20} />
             </Link>
-            <Link href={`https://www.instagram.com/`}>
+            <Link href={`https://www.instagram.com/bissbillofficial/`} target="_blank">
               <Icon icon="mdi:instagram" width={20} />
             </Link>
             <Link href={`https://www.linkedin.com/`}>

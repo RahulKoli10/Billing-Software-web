@@ -70,7 +70,7 @@ export default function PricingSection() {
   }, []);
 
   return (
-    <section className="py-10 bg-white">
+    <section id="plan-pricing" className="scroll-mt-20 py-10 bg-white">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto">
@@ -138,11 +138,7 @@ export default function PricingSection() {
         >
           {pricingPlans.map((plan) => {
             const monthlyPrice = plan.monthly_price;
-
-            const yearlyMonthlyPrice = Math.round(
-              (monthlyPrice * 12 * (1 - plan.yearly_discount / 100)) / 12,
-            );
-
+            
             return (
               <div
                 key={plan.id}
@@ -208,9 +204,9 @@ export default function PricingSection() {
                 <p className="mt-2 text-black">{plan.description}</p>
 
                 {/* Price */}
-                <div className="mt-6 flex items-end gap-2 h-10">
+                <div className="mt-6 flex items-end gap-1 h-10">
                   {/* Animated price wrapper */}
-                  <div className="relative min-w-24 h-10 overflow-hidden">
+                  <div className="relative min-w-25 h-10 overflow-hidden">
                     {/* Monthly price */}
                     <span
                       className={`
@@ -244,12 +240,12 @@ export default function PricingSection() {
                       {Math.round(
                         (monthlyPrice * 12 * (1 - plan.yearly_discount / 100)) /
                           12,
-                      )}
+                      )}   
                     </span>
                   </div>
 
                   {/* Label */}
-                  <span className="text-gray-500 text-sm leading-none mb-1">
+                  <span className="text-gray-500 text-lg leading-none mb-1">
                     / month
                   </span>
                 </div>

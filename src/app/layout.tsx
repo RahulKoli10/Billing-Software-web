@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { DM_Sans, Open_Sans,Montserrat } from "next/font/google";
+// @ts-expect-error: CSS import declaration is handled by Next.js
 import "./globals.css";
+import { DM_Sans, Open_Sans,Montserrat } from "next/font/google";
 import { Toaster } from "sonner"; 
 
 export const montserrat = Montserrat({
@@ -20,7 +21,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Billow – Billing Software",
+  title: "BISSBILL",
   description: "Modern billing software for businesses",
 };
 

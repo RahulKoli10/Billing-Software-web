@@ -7,11 +7,7 @@ import {
   Plus, 
   Search, 
   Upload,
-  MoreVertical,
   Download,
-  Terminal,
-  Settings2,
-  Database,
   Trash2
 } from "lucide-react";
 
@@ -36,7 +32,7 @@ export default function AdminUploadSoftware() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
-  /* ================= FETCH SOFTWARE ================= */
+  /*   FETCH SOFTWARE   */
   const fetchSoftwares = async () => {
     try {
       const res = await fetch(buildApiUrl("/api/downloads"), {
@@ -53,7 +49,7 @@ export default function AdminUploadSoftware() {
     fetchSoftwares();
   }, []);
 
-  /* ================= UPLOAD ================= */
+  /*   UPLOAD   */
   const handleUpload = async () => {
     if (!version) return alert("Please enter version");
     if (!file && !externalUrl.trim()) {
@@ -106,7 +102,7 @@ export default function AdminUploadSoftware() {
     }
   };
 
-  /* ================= DELETE ================= */
+  /*   DELETE   */
   const handleDelete = async (id: number) => {
     if (!confirm("Delete this software?")) return;
 
@@ -135,13 +131,13 @@ export default function AdminUploadSoftware() {
   }, [softwares, search]);
 
   return (
-    <div className="space-y-8 animate-in zoom-in-95 duration-700">
-      <div className="flex justify-between items-end">
-        <div>
-          <h2 className="text-3xl font-black font-headline text-gray-900 tracking-tighter">Software Repository</h2>
+    <div className="space-y-6 sm:space-y-8 animate-in zoom-in-95 duration-700">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h2 className="text-2xl font-bold font-headline text-gray-900 tracking-tighter sm:text-3xl">Software Repository</h2>
           <p className="text-gray-500 font-medium">Manage distribution and metadata of software assets.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 self-start sm:self-auto">
           {/* <Button variant="outline" size="sm" className="flex items-center gap-2">
             <Settings2 className="w-4 h-4" />
             Protocols
@@ -153,7 +149,7 @@ export default function AdminUploadSoftware() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
         <div className="lg:col-span-2 space-y-6">
           <Card id="upload-section" className="p-8 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/20 transition-all">
             <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-6">
@@ -162,7 +158,7 @@ export default function AdminUploadSoftware() {
             <h4 className="font-bold text-lg mb-1 font-headline">Distribute New Implementation Node</h4>
             <p className="text-sm text-gray-500 mb-6 font-body text-center max-w-sm">Provide a binary payload or an external release URL to instantiate a new software archetype.</p>
             
-            <div className="w-full max-w-2xl bg-white p-6 rounded-xl border border-gray-100 shadow-sm text-left grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid w-full max-w-2xl grid-cols-1 gap-4 rounded-xl border border-gray-100 bg-white p-4 text-left shadow-sm sm:p-6 md:grid-cols-2">
               <div className="space-y-1 relative">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Target Framework</label>
                 <select
@@ -228,10 +224,11 @@ export default function AdminUploadSoftware() {
                 />
               </div>
 
-              <div className="md:col-span-2 mt-4 pt-4 border-t border-gray-100 flex justify-end">
+              <div className="mt-4 flex justify-stretch border-t border-gray-100 pt-4 md:col-span-2 md:justify-end">
                 <Button 
                   onClick={handleUpload} 
                   disabled={loading}
+                  className="w-full md:w-auto"
                 >
                   {loading ? "Deploying Artifact..." : "Deploy to Repository"}
                 </Button>
@@ -239,8 +236,8 @@ export default function AdminUploadSoftware() {
             </div>
           </Card>
 
-          <Card className="p-0 overflow-hidden">
-            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-white">
+          <Card className="overflow-hidden p-0">
+            <div className="flex flex-col gap-4 border-b border-gray-100 bg-white p-4 sm:p-6 md:flex-row md:items-center md:justify-between">
               <h3 className="font-bold font-headline text-lg">Asset Inventory</h3>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -249,19 +246,19 @@ export default function AdminUploadSoftware() {
                   placeholder="Search repository..." 
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="bg-gray-50 border-none rounded-lg pl-10 pr-4 py-2 text-sm w-48 lg:w-64 focus:ring-2 focus:ring-blue-600/20 transition-all outline-none" 
+                  className="w-full rounded-lg bg-gray-50 py-2 pl-10 pr-4 text-sm outline-none transition-all focus:ring-2 focus:ring-blue-600/20 lg:w-64" 
                 />
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="min-w-195 w-full text-left">
                 <thead>
                   <tr className="bg-gray-50/50 border-b border-gray-100">
-                    <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">ID</th>
-                    <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Asset metadata</th>
-                    <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Type</th>
-                    <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Status</th>
-                    <th className="px-6 py-4 font-headline text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Size</th>
+                    <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">ID</th>
+                    <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Asset metadata</th>
+                    <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Type</th>
+                    <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Status</th>
+                    <th className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Size</th>
                     <th className="px-6 py-4"></th>
                   </tr>
                 </thead>
@@ -336,7 +333,7 @@ export default function AdminUploadSoftware() {
           </Card>
 
           <Card className="bg-blue-50/50 border-blue-100">
-            <h4 className="font-black font-headline text-lg text-blue-800 mb-2 flex items-center gap-2">
+            <h4 className="font-bold font-headline text-lg text-blue-800 mb-2 flex items-center gap-2">
               <Terminal className="w-5 h-5" />
               CLI Interface Usage
             </h4>
