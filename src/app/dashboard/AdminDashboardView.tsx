@@ -227,8 +227,8 @@ export default function AdminDashboardView() {
             Billing admin dashboard
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-gray-500">
-            Live overview of customers, pricing, and software releases from your
-            backend data.
+            Live overview of customers, pricing, blog publishing, and software
+            releases from your backend data.
           </p>
         </div>
 
@@ -244,6 +244,12 @@ export default function AdminDashboardView() {
             className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
           >
             Manage pricing
+          </Link>
+          <Link
+            href="/dashboard/admin/blogs"
+            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+          >
+            Manage blogs
           </Link>
         </div>
       </div>
@@ -380,6 +386,11 @@ export default function AdminDashboardView() {
                 href="/dashboard/admin/software-downloads"
                 title="Software downloads"
                 description={`${data.downloads.length} downloadable builds available`}
+              />
+              <AdminLink
+                href="/dashboard/admin/blogs"
+                title="Blogs"
+                description="Create and publish blog cards for the website"
               />
             </div>
           </Card>

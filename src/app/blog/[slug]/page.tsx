@@ -1,0 +1,193 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import Navbar from "../../component/Navbar";
+import Footer from "../../component/Footer";
+import { buildApiUrl } from "@/lib/api";
+
+type Blog = {
+  id: number;
+  slug: string;
+  category: string;
+  title: string;
+  description: string;
+  content: string;
+  image: string;
+  author: string;
+  avatar: string;
+  date: string;
+};
+
+function resolveAssetUrl(path: string) {
+  if (!path) {
+    return path;
+  }
+
+  if (path.startsWith("/uploads/")) {
+    return buildApiUrl(path);
+  }
+
+  return path;
+}
+
+export default function BlogDetailPage() {
+  const params = useParams<{ slug: string }>();
+  const slug = params?.slug;
+  const [blog, setBlog] = useState<Blog | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    if (!slug) {
+      return;
+    }
+
+    const controller = new AbortController();
+
+    async function fetchBlog() {
+      try {
+        const res = await fetch(buildApiUrl(`/api/blogs/slug/${slug}`), {
+          signal: controller.signal,
+        });
+
+        if (res.status === 404) {
+          setNotFound(true);
+          setBlog(null);
+          return;
+        }
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch blog");
+        }
+
+        const data = await res.json();
+        setBlog(data);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Failed to fetch blog:", error);
+          setBlog(null);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void fetchBlog();
+
+    return () => controller.abort();
+  }, [slug]);
+
+  const paragraphs = useMemo(() => {
+    return (blog?.content || "")
+      .split(/\n\s*\n/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean);
+  }, [blog?.content]);
+
+  return (
+    <main className="min-h-screen bg-[#F3F6FB] font-dm">
+      <Navbar />
+
+      <section className="px-4 pt-20 pb-16">
+        <div className="mx-auto max-w-5xl">
+          <Link href="/blog" className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700">
+            Back to blogs
+          </Link>
+
+          {loading ? (
+            <div className="mt-8 overflow-hidden rounded-3xl bg-white shadow-sm">
+              <div className="h-72 w-full animate-pulse bg-gray-200 sm:h-96" />
+              <div className="space-y-5 px-6 py-8 sm:px-10 sm:py-10">
+                <div className="h-7 w-24 animate-pulse rounded-full bg-gray-200" />
+                <div className="h-10 w-4/5 animate-pulse rounded bg-gray-200" />
+                <div className="h-5 w-2/3 animate-pulse rounded bg-gray-100" />
+                <div className="flex items-center gap-3 border-b border-gray-100 pb-6">
+                  <div className="h-9 w-9 animate-pulse rounded-full bg-gray-200" />
+                  <div className="space-y-2">
+                    <div className="h-4 w-28 animate-pulse rounded bg-gray-200" />
+                    <div className="h-3 w-20 animate-pulse rounded bg-gray-100" />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="h-4 w-full animate-pulse rounded bg-gray-100" />
+                  <div className="h-4 w-full animate-pulse rounded bg-gray-100" />
+                  <div className="h-4 w-5/6 animate-pulse rounded bg-gray-100" />
+                  <div className="h-4 w-full animate-pulse rounded bg-gray-100" />
+                  <div className="h-4 w-4/6 animate-pulse rounded bg-gray-100" />
+                </div>
+              </div>
+            </div>
+          ) : notFound || !blog ? (
+            <div className="mt-8 rounded-3xl bg-white p-10 text-center text-gray-500 shadow-sm">
+              Blog not found.
+            </div>
+          ) : (
+            <article className="mt-8 overflow-hidden rounded-3xl bg-white shadow-sm">
+  
+  {/* Image Section (NO overlay) */}
+  <div className="relative h-72 w-full sm:h-96">
+    <Image
+      src={resolveAssetUrl(blog.image)}
+      alt={blog.title}
+      fill
+      className="object-cover"
+    />
+  </div>
+
+  {/* Content Section */}
+  <div className="px-6 py-8 sm:px-10 sm:py-10">
+
+    {/* Category */}
+    <span className="inline-flex rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
+      {blog.category}
+    </span>
+
+    {/* Title */}
+    <h1 className="mt-4 max-w-5xl text-3xl font-bold tracking-tight text-black sm:text-4xl">
+      {blog.title}
+    </h1>
+
+    {/* Description */}
+    <p className="mt-4 max-w-2xl text-sm text-gray-600 sm:text-base">
+      {blog.description}
+    </p>
+
+    {/* Author Section */}
+    <div className="mt-6 flex items-center gap-3 border-b border-gray-100 pb-6">
+     {blog.avatar && blog.avatar.trim() !== "" && (
+  <Image
+    src={resolveAssetUrl(blog.avatar)}
+    alt={blog.author}
+    width={36}
+    height={36}
+    className="rounded-full"
+  />
+)}
+      <div>
+        <p className="font-bold text-gray-900">{blog.author}</p>
+        <p className="text-sm text-gray-500">{blog.date}</p>
+      </div>
+    </div>
+
+    {/* Content */}
+    <div className="mx-auto mt-8 max-w-3xl space-y-6 text-[15px] leading-8 text-gray-700 sm:text-base">
+      {paragraphs.map((paragraph, index) => (
+        <p key={`${blog.id}-${index}`}>{paragraph}</p>
+      ))}
+    </div>
+
+  </div>
+</article>
+          )}
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}

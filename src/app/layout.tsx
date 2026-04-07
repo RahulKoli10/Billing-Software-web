@@ -1,5 +1,4 @@
-import type { Metadata } from "next";
-// @ts-expect-error: CSS import declaration is handled by Next.js
+import type { Metadata } from "next"; 
 import "./globals.css";
 import { DM_Sans, Open_Sans,Montserrat } from "next/font/google";
 import { Toaster } from "sonner"; 

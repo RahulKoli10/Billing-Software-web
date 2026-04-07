@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   ClipboardMinus,
   List,
+  BookOpen,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -110,6 +111,12 @@ export default function DashboardSidebar({
       icon: List,
       roles: ["superadmin"],
     },
+    {
+      label: "Blogs",
+      href: "/dashboard/admin/blogs",
+      icon: BookOpen,
+      roles: ["superadmin"],
+    },
   ];
 
   const renderLink = (item: NavItem) => {
@@ -172,7 +179,7 @@ export default function DashboardSidebar({
         <div className="px-6 mb-10 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-md shadow-blue-600/20">
-              <Wallet className="text-white w-5 h-5" />
+             <Link href="/"><Wallet className="text-white w-5 h-5" /></Link> 
             </div>
             <div>
               <h1 className="text-xl font-bold text-blue-600 tracking-tighter">
