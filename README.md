@@ -2,7 +2,7 @@
 
 BissBill is a full-stack SaaS application designed to manage billing, subscriptions, customers, and sales efficiently. It provides a secure and scalable platform for businesses to handle invoices, pricing plans, and transactions.
 
----
+   
 
 ## 🧠 Tech Stack
 
@@ -25,7 +25,7 @@ BissBill is a full-stack SaaS application designed to manage billing, subscripti
 * Helmet (Security)
 * Rate Limiting
 
----
+   
 
 ## ⚙️ Features
 
@@ -38,7 +38,7 @@ BissBill is a full-stack SaaS application designed to manage billing, subscripti
 * 🔄 Automated Payment Cleanup (Cron Job)
 * 🌐 API Integration with secure CORS
 
----
+   
 
 ## 📦 Getting Started
 
@@ -49,7 +49,7 @@ git clone https://github.com/your-repo/bissbill.git
 cd bissbill
 ```
 
----
+   
 
 ### 2. Install dependencies
 
@@ -57,7 +57,7 @@ cd bissbill
 npm install
 ```
 
----
+   
 
 ### 3. Setup environment variables
 
@@ -100,7 +100,7 @@ SMTP_PORT=
 
 ```
 
----
+   
 
 ### 4. Run the development server
 
@@ -116,13 +116,13 @@ npm run dev
 npm run dev
 ```
 
----
+   
 
 ### 5. Open in browser
 
 👉 http://localhost:3000
 
----
+   
 
 ## 🔐 Security Features
 
@@ -132,7 +132,7 @@ npm run dev
 * Environment variables for sensitive data
 * Input validation (recommended)
 
----
+   
 
 ## 📁 Project Structure
 
@@ -149,7 +149,7 @@ npm run dev
   ├── config/
 ```
 
----
+   
 
 ## 🚀 Deployment
 
@@ -165,7 +165,7 @@ Deploy on:
 * AWS
 * DigitalOcean
 
----
+   
 
 ## 🧪 API Base URL
 
@@ -179,7 +179,7 @@ Example:
 /backend/api/auth/login
 ```
 
----
+   
 
 ## 📌 Future Improvements
 
@@ -188,13 +188,13 @@ Example:
 * 🤖 AI-based insights (billing predictions)
 * 📊 Export reports (PDF/Excel)
 
----
+   
 
 ## 🤝 Contributing
 
 Pull requests are welcome. For major changes, please open an issue first.
  
----
+   
 
 ## 👨‍💻 Author
 

@@ -10,7 +10,7 @@ import {
   Search,
 } from "lucide-react";
 
-// ---------------- TYPES ----------------
+//          TYPES         
 type SaleItem = {
   id: number;
   invoice_no: string;
@@ -47,7 +47,7 @@ type ApiSaleItem = Partial<SaleItem> & {
   payment_method?: string | null;
 };
 
-// ---------------- HELPERS ----------------
+//          HELPERS         
 const currency = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "INR",
@@ -73,7 +73,7 @@ const statusStyles: Record<string, string> = {
   pending: "bg-rose-100 text-rose-700",
 };
 
-// ---------------- COMPONENT ----------------
+//          COMPONENT         
 export default function SalesPage() {
   const [sales, setSales] = useState<SaleItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -130,19 +130,19 @@ export default function SalesPage() {
     }
   };
 
-  // ---------------- FILTER ----------------
+  //          FILTER         
   const filtered = sales.filter(
     (s) =>
       s.invoice_no.toLowerCase().includes(search.toLowerCase()) ||
       s.customer_name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // ---------------- KPI ----------------
+  //          KPI         
   const total = filtered.reduce((sum, s) => sum + +s.net_amount, 0);
   const received = filtered.reduce((sum, s) => sum + +s.received_amount, 0);
   const pending = filtered.reduce((sum, s) => sum + +s.balance_due, 0);
 
-  // ---------------- UI ----------------
+  //          UI         
   return (
     <div className="space-y-6 sm:space-y-8">
 
@@ -289,7 +289,7 @@ export default function SalesPage() {
   );
 }
 
-// ---------------- CARD ----------------
+//          CARD         
 function StatCard({
   title,
   value,

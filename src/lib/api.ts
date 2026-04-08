@@ -1,4 +1,4 @@
-const FALLBACK_API_URL = "https://billing-backend-1-rprc.onrender.com";
+export const FALLBACK_API_URL = "https://billing-backend-1-rprc.onrender.com";
 const CLIENT_PROXY_PREFIX = "/backend";
 
 export function getApiBaseUrl() {
@@ -21,4 +21,14 @@ export function buildApiUrl(path = "") {
   }
 
   return `${getApiBaseUrl()}${normalizedPath}`;
+}
+
+export function buildFallbackApiUrl(path = "") {
+  if (/^https?:\/\//.test(path)) {
+    return path;
+  }
+
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+  return `${FALLBACK_API_URL}${normalizedPath}`;
 }

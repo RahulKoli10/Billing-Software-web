@@ -15,6 +15,7 @@ import {
   ClipboardMinus,
   List,
   BookOpen,
+  Newspaper,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -115,6 +116,12 @@ export default function DashboardSidebar({
       label: "Blogs",
       href: "/dashboard/admin/blogs",
       icon: BookOpen,
+      roles: ["superadmin"],
+    },
+    {
+      label: "News",
+      href: "/dashboard/admin/news",
+      icon: Newspaper,
       roles: ["superadmin"],
     },
   ];

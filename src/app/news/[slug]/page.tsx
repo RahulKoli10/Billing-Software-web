@@ -3,12 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import BlogAssetImage from "../BlogAssetImage";
+import NewsAssetImage from "../NewsAssetImage";
 import Navbar from "../../component/Navbar";
 import Footer from "../../component/Footer";
 import { buildApiUrl } from "@/lib/api";
 
-type Blog = {
+type NewsArticle = {
   id: number;
   slug: string;
   category: string;
@@ -19,6 +19,8 @@ type Blog = {
   author: string;
   avatar: string;
   date: string;
+  tags?: string;
+  read_time?: string;
 };
 
 type ArticleBlock =
@@ -41,10 +43,10 @@ function parseArticleContent(content: string): ArticleBlock[] {
     });
 }
 
-export default function BlogDetailPage() {
+export default function NewsDetailPage() {
   const params = useParams<{ slug: string }>();
   const slug = params?.slug;
-  const [blog, setBlog] = useState<Blog | null>(null);
+  const [article, setArticle] = useState<NewsArticle | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -55,28 +57,28 @@ export default function BlogDetailPage() {
 
     const controller = new AbortController();
 
-    async function fetchBlog() {
+    async function fetchNewsArticle() {
       try {
-        const res = await fetch(buildApiUrl(`/api/blogs/slug/${slug}`), {
+        const res = await fetch(buildApiUrl(`/api/news/slug/${slug}`), {
           signal: controller.signal,
         });
 
         if (res.status === 404) {
           setNotFound(true);
-          setBlog(null);
+          setArticle(null);
           return;
         }
 
         if (!res.ok) {
-          throw new Error("Failed to fetch blog");
+          throw new Error("Failed to fetch news");
         }
 
         const data = await res.json();
-        setBlog(data);
+        setArticle(data);
       } catch (error) {
         if (!controller.signal.aborted) {
-          console.error("Failed to fetch blog:", error);
-          setBlog(null);
+          console.error("Failed to fetch news:", error);
+          setArticle(null);
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -85,14 +87,14 @@ export default function BlogDetailPage() {
       }
     }
 
-    void fetchBlog();
+    void fetchNewsArticle();
 
     return () => controller.abort();
   }, [slug]);
 
   const articleBlocks = useMemo(() => {
-    return parseArticleContent(blog?.content || "");
-  }, [blog?.content]);
+    return parseArticleContent(article?.content || "");
+  }, [article?.content]);
 
   return (
     <main className="min-h-screen bg-[#F3F6FB] font-dm">
@@ -100,8 +102,8 @@ export default function BlogDetailPage() {
 
       <section className="px-4 pt-20 pb-16">
         <div className="mx-auto max-w-5xl">
-          <Link href="/blog" className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700">
-            Back to blogs
+          <Link href="/news" className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700">
+            Back to news
           </Link>
 
           {loading ? (
@@ -127,18 +129,18 @@ export default function BlogDetailPage() {
                 </div>
               </div>
             </div>
-          ) : notFound || !blog ? (
+          ) : notFound || !article ? (
             <div className="mt-8 rounded-3xl bg-white p-10 text-center text-gray-500 shadow-sm">
-              Blog not found.
+              News not found.
             </div>
           ) : (
             <article className="mt-8 overflow-hidden rounded-3xl bg-white shadow-sm">
   
   {/* Image Section (NO overlay) */}
   <div className="relative h-72 w-full sm:h-96">
-    <BlogAssetImage
-      src={blog.image}
-      alt={blog.title}
+    <NewsAssetImage
+      src={article.image}
+      alt={article.title}
       fill
       className="object-cover"
     />
@@ -149,33 +151,35 @@ export default function BlogDetailPage() {
 
     {/* Category */}
     <span className="inline-flex rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
-      {blog.category}
+      {article.category}
     </span>
 
     {/* Title */}
     <h1 className="mt-4 max-w-6xl text-3xl font-bold tracking-tight text-black sm:text-4xl">
-      {blog.title}
+      {article.title}
     </h1>
 
     {/* Description */}
     <p className="mt-4 max-w-5xl text-sm text-gray-600 sm:text-base">
-      {blog.description}
+      {article.description}
     </p>
 
     {/* Author Section */}
     <div className="mt-6 flex items-center gap-3 border-b border-gray-100 pb-6">
-     {blog.avatar && blog.avatar.trim() !== "" && (
-  <BlogAssetImage
-    src={blog.avatar}
-    alt={blog.author}
+     {article.avatar && article.avatar.trim() !== "" && (
+  <NewsAssetImage
+    src={article.avatar}
+    alt={article.author}
     width={36}
     height={36}
     className="rounded-full"
   />
 )}
       <div>
-        <p className="font-bold text-gray-900">{blog.author}</p>
-        <p className="text-sm text-gray-500">{blog.date}</p>
+        <p className="font-bold text-gray-900">{article.author}</p>
+        <p className="text-sm text-gray-500">
+          {article.read_time ? `${article.read_time} - ${article.date}` : article.date}
+        </p>
       </div>
     </div>
 
@@ -184,13 +188,13 @@ export default function BlogDetailPage() {
       {articleBlocks.map((block, index) =>
         block.type === "heading" ? (
           <h2
-            key={`${blog.id}-${index}`}
+            key={`${article.id}-${index}`}
             className="pt-4 text-2xl font-bold leading-snug text-gray-950"
           >
             {block.text}
           </h2>
         ) : (
-          <p key={`${blog.id}-${index}`}>{block.text}</p>
+          <p key={`${article.id}-${index}`}>{block.text}</p>
         )
       )}
     </div>

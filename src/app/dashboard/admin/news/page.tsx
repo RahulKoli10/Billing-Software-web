@@ -6,7 +6,6 @@ import Link from "next/link";
 import { buildApiUrl } from "@/lib/api";
 import { Badge, Button, Card } from "@/components/ui/atoms";
 import {
-  BookOpen,
   Edit2,
   Eye,
   EyeOff,
@@ -15,13 +14,14 @@ import {
   Search,
   Trash2,
   X,
-  FileText,
+  Newspaper,
+  Tag,
   Clock,
 } from "lucide-react";
 
-// ─── Types ──────────────────────────────────────────────────────────────────
+// ─── Types ---
 
-type Blog = {
+type NewsArticle = {
   id: number;
   slug: string;
   category: string;
@@ -32,6 +32,8 @@ type Blog = {
   author: string;
   avatar: string;
   date: string;
+  tags: string;           // comma-separated e.g. "ai,tech news,india"
+  read_time: string;      // e.g. "4 min read"
   is_active: boolean;
 };
 
@@ -45,9 +47,11 @@ const emptyForm = {
   author: "",
   avatar: "",
   date: "",
+  tags: "",
+  read_time: "",
 };
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Helpers ─
 
 function slugify(value: string) {
   return value
@@ -57,26 +61,28 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+/** Rough estimate: 200 words per minute */
 function estimateReadTime(content: string): string {
   const words = content.trim().split(/\s+/).length;
-  return `~${Math.max(1, Math.round(words / 200))} min read`;
+  const minutes = Math.max(1, Math.round(words / 200));
+  return `${minutes} min read`;
 }
 
-const BLOG_CATEGORIES = [
-  "App Development",
-  "Web Development",
-  "AI & Tech",
+const NEWS_CATEGORIES = [
+  "Technology",
+  "AI & Machine Learning",
   "Business",
-  "Design",
-  "DevOps",
-  "Tutorials",
-  "Case Study",
+  "Startups",
+  "Cybersecurity",
+  "Finance",
+  "Health Tech",
+  "Policy",
 ];
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// ─── Component ───────────
 
-export default function AdminBlogsPage() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+export default function AdminNewsPage() {
+  const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -86,27 +92,27 @@ export default function AdminBlogsPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
-  // ── Data fetching ──────────────────────────────────────────────────────────
+  // ── Data fetching ──────
 
-  const fetchBlogs = async () => {
+  const fetchArticles = async () => {
     try {
       setError(null);
-      const res = await fetch(buildApiUrl("/api/blogs/admin"), {
+      const res = await fetch(buildApiUrl("/api/news/admin"), {
         credentials: "include",
       });
-      if (!res.ok) throw new Error("Failed to fetch blogs");
+      if (!res.ok) throw new Error("Failed to fetch news articles");
       const data = await res.json();
-      setBlogs(data);
+      setArticles(data);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     }
   };
 
   useEffect(() => {
-    void fetchBlogs();
+    void fetchArticles();
   }, []);
 
-  // ── Form helpers ───────────────────────────────────────────────────────────
+  // ── Form helpers ───────
 
   const resetForm = () => {
     setEditingId(null);
@@ -120,19 +126,28 @@ export default function AdminBlogsPage() {
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const value = e.target.value;
       setForm((current) => {
+        // Auto-slug from title when creating new
         if (field === "title" && !editingId && !current.slug.trim()) {
           return { ...current, title: value, slug: slugify(value) };
         }
         if (field === "slug") {
           return { ...current, slug: slugify(value) };
         }
+        // Auto read_time from content
+        if (field === "content") {
+          return {
+            ...current,
+            content: value,
+            read_time: current.read_time || estimateReadTime(value),
+          };
+        }
         return { ...current, [field]: value };
       });
     };
 
-  // ── CRUD ───────────────────────────────────────────────────────────────────
+  // ── CRUD - 
 
-  const submitBlog = async (e?: FormEvent) => {
+  const submitArticle = async (e?: FormEvent) => {
     e?.preventDefault();
 
     if (
@@ -144,7 +159,7 @@ export default function AdminBlogsPage() {
       !form.author ||
       (!form.image && !imageFile)
     ) {
-      alert("Please fill all required blog fields");
+      alert("Please fill all required fields");
       return;
     }
 
@@ -153,8 +168,8 @@ export default function AdminBlogsPage() {
 
     try {
       const url = editingId
-        ? buildApiUrl(`/api/blogs/${editingId}`)
-        : buildApiUrl("/api/blogs");
+        ? buildApiUrl(`/api/news/${editingId}`)
+        : buildApiUrl("/api/news");
 
       const payload = new FormData();
       payload.append("slug", slugify(form.slug || form.title));
@@ -163,6 +178,11 @@ export default function AdminBlogsPage() {
       payload.append("description", form.description);
       payload.append("content", form.content);
       payload.append("author", form.author);
+      payload.append("tags", form.tags);
+      payload.append(
+        "read_time",
+        form.read_time || estimateReadTime(form.content)
+      );
       payload.append(
         "date",
         form.date ||
@@ -186,55 +206,54 @@ export default function AdminBlogsPage() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        throw new Error(data?.message || "Failed to save blog");
+        throw new Error(data?.message || "Failed to save article");
       }
 
       resetForm();
-      await fetchBlogs();
+      await fetchArticles();
     } catch (err: unknown) {
-      // FIX: was `err: Error | unknown` — `unknown` is the correct type alone
-      setError(err instanceof Error ? err.message : "Failed to save blog");
+      setError(err instanceof Error ? err.message : "Failed to save article");
     } finally {
       setLoading(false);
     }
   };
 
-  const editBlog = (blog: Blog) => {
-    setEditingId(blog.id);
+  const editArticle = (article: NewsArticle) => {
+    setEditingId(article.id);
     setForm({
-      slug: blog.slug,
-      category: blog.category,
-      title: blog.title,
-      description: blog.description,
-      content: blog.content,
-      image: blog.image,
-      author: blog.author,
-      avatar: blog.avatar,
-      date: blog.date,
+      slug: article.slug,
+      category: article.category,
+      title: article.title,
+      description: article.description,
+      content: article.content,
+      image: article.image,
+      author: article.author,
+      avatar: article.avatar,
+      date: article.date,
+      tags: article.tags,
+      read_time: article.read_time,
     });
     setImageFile(null);
     setAvatarFile(null);
-    document
-      .getElementById("blog-form")
-      ?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("news-form")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const deleteBlog = async (id: number) => {
-    if (!confirm("Delete this blog? This cannot be undone.")) return;
+  const deleteArticle = async (id: number) => {
+    if (!confirm("Delete this article? This cannot be undone.")) return;
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(buildApiUrl(`/api/blogs/${id}`), {
+      const res = await fetch(buildApiUrl(`/api/news/${id}`), {
         method: "DELETE",
         credentials: "include",
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        throw new Error(data?.message || "Failed to delete blog");
+        throw new Error(data?.message || "Failed to delete article");
       }
-      await fetchBlogs();
+      await fetchArticles();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to delete blog");
+      setError(err instanceof Error ? err.message : "Failed to delete article");
     } finally {
       setLoading(false);
     }
@@ -244,7 +263,7 @@ export default function AdminBlogsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(buildApiUrl(`/api/blogs/${id}/status`), {
+      const res = await fetch(buildApiUrl(`/api/news/${id}/status`), {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -252,38 +271,36 @@ export default function AdminBlogsPage() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        throw new Error(data?.message || "Failed to update blog status");
+        throw new Error(data?.message || "Failed to update status");
       }
-      await fetchBlogs();
+      await fetchArticles();
     } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : "Failed to update blog status"
-      );
+      setError(err instanceof Error ? err.message : "Failed to update status");
     } finally {
       setLoading(false);
     }
   };
 
-  // ── Filtering ──────────────────────────────────────────────────────────────
+  // ── Filtering ──────────
 
-  const filteredBlogs = useMemo(() => {
+  const filteredArticles = useMemo(() => {
     const query = search.trim().toLowerCase();
-    return blogs.filter((blog) => {
+    return articles.filter((a) => {
       const matchesSearch =
         !query ||
-        [blog.title, blog.slug, blog.category, blog.author]
+        [a.title, a.slug, a.category, a.author, a.tags]
           .join(" ")
           .toLowerCase()
           .includes(query);
       const matchesCategory =
-        !filterCategory || blog.category === filterCategory;
+        !filterCategory || a.category === filterCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [blogs, search, filterCategory]);
+  }, [articles, search, filterCategory]);
 
-  const activeCount = blogs.filter((b) => b.is_active).length;
+  const activeCount = articles.filter((a) => a.is_active).length;
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Render ─
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-in slide-in-from-bottom-4 duration-700">
@@ -291,10 +308,10 @@ export default function AdminBlogsPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
           <h2 className="text-2xl font-bold font-headline text-gray-900 tracking-tighter sm:text-3xl">
-            Blog Studio
+            News Room
           </h2>
           <p className="text-gray-500 font-medium">
-            Create long blog posts and publish them to their own reading page.
+            Publish and manage news articles with tags, categories, and read time.
           </p>
         </div>
         <Button
@@ -302,22 +319,20 @@ export default function AdminBlogsPage() {
           className="flex items-center gap-2 self-start sm:self-auto"
           onClick={() => {
             resetForm();
-            document
-              .getElementById("blog-form")
-              ?.scrollIntoView({ behavior: "smooth" });
+            document.getElementById("news-form")?.scrollIntoView({ behavior: "smooth" });
           }}
         >
           <Plus className="w-4 h-4" />
-          Create Blog
+          New Article
         </Button>
       </div>
 
-      {/* Stats */}
+      {/* Stats row */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: "Total Blogs", value: blogs.length, icon: FileText },
+          { label: "Total Articles", value: articles.length, icon: Newspaper },
           { label: "Published", value: activeCount, icon: Eye },
-          { label: "Hidden", value: blogs.length - activeCount, icon: EyeOff },
+          { label: "Hidden", value: articles.length - activeCount, icon: EyeOff },
         ].map(({ label, value, icon: Icon }) => (
           <div
             key={label}
@@ -345,35 +360,36 @@ export default function AdminBlogsPage() {
       )}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
-        {/* ── Table ─────────────────────────────────────────────────────── */}
+        {/* ── Table ─── */}
         <div className="lg:col-span-2 order-2 lg:order-1">
           <Card className="overflow-hidden p-0">
             <div className="flex flex-col gap-3 border-b border-gray-100 bg-white p-4 sm:p-5">
               <div className="flex items-center justify-between">
-                <h3 className="font-bold font-headline text-lg">Published Blogs</h3>
+                <h3 className="font-bold font-headline text-lg">Articles</h3>
                 <span className="text-xs text-gray-400 font-medium">
-                  {filteredBlogs.length} of {blogs.length}
+                  {filteredArticles.length} of {articles.length}
                 </span>
               </div>
               <div className="flex flex-col gap-2 sm:flex-row">
+                {/* Search */}
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="text"
-                    placeholder="Search blogs..."
+                    placeholder="Search title, tag, author..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="w-full rounded-lg bg-gray-50 py-2 pl-10 pr-4 text-sm outline-none transition-all focus:ring-2 focus:ring-blue-600/20"
                   />
                 </div>
-                {/* IMPROVEMENT: category filter (was missing in original) */}
+                {/* Category filter */}
                 <select
                   value={filterCategory}
                   onChange={(e) => setFilterCategory(e.target.value)}
                   className="rounded-lg bg-gray-50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-600/20 text-gray-600 font-medium"
                 >
                   <option value="">All categories</option>
-                  {BLOG_CATEGORIES.map((c) => (
+                  {NEWS_CATEGORIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
@@ -381,13 +397,13 @@ export default function AdminBlogsPage() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="min-w-[620px] w-full text-left">
+              <table className="min-w-[680px] w-full text-left">
                 <thead>
                   <tr className="bg-gray-50/50 border-b border-gray-100">
-                    {["ID", "Blog", "Slug", "Status", ""].map((h) => (
+                    {["ID", "Article", "Slug", "Tags", "Status", ""].map((h) => (
                       <th
                         key={h}
-                        className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400"
+                        className="px-5 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400"
                       >
                         {h}
                       </th>
@@ -395,60 +411,73 @@ export default function AdminBlogsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
-                  {filteredBlogs.map((blog) => (
+                  {filteredArticles.map((article) => (
                     <tr
-                      key={blog.id}
+                      key={article.id}
                       className="group hover:bg-gray-50/80 transition-colors"
                     >
-                      <td className="px-6 py-5 font-mono text-xs font-bold text-blue-600">
-                        B-{blog.id}
+                      <td className="px-5 py-4 font-mono text-xs font-bold text-blue-600">
+                        N-{article.id}
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-5 py-4 max-w-[200px]">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-sm font-bold text-gray-900">
-                            {blog.title}
+                          <p className="text-sm font-bold text-gray-900 line-clamp-1">
+                            {article.title}
                           </p>
-                          <Badge variant="primary">{blog.category}</Badge>
+                          <Badge variant="primary">{article.category}</Badge>
                         </div>
-                        {/* IMPROVEMENT: read time estimate shown inline */}
                         <div className="flex items-center gap-1 mt-0.5">
                           <Clock className="w-3 h-3 text-gray-400" />
                           <p className="text-[10px] text-gray-500 font-medium">
-                            {estimateReadTime(blog.content)} · {blog.date}
+                            {article.read_time || "—"} · {article.date}
                           </p>
                         </div>
                       </td>
-                      <td className="px-6 py-5">
-                        <p className="text-sm font-semibold text-gray-900">
-                          /{blog.slug}
-                        </p>
-                        <p className="text-[10px] text-gray-400">{blog.author}</p>
+                      <td className="px-5 py-4">
+                        <p className="text-sm font-semibold text-gray-900">/{article.slug}</p>
+                        <p className="text-[10px] text-gray-400">{article.author}</p>
                       </td>
-                      <td className="px-6 py-5">
-                        <Badge
-                          variant={blog.is_active ? "success" : "neutral"}
-                        >
-                          {blog.is_active ? "Active" : "Hidden"}
+                      <td className="px-5 py-4 max-w-[140px]">
+                        <div className="flex flex-wrap gap-1">
+                          {article.tags
+                            ? article.tags
+                                .split(",")
+                                .slice(0, 3)
+                                .map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className="inline-flex items-center gap-0.5 text-[10px] font-semibold bg-gray-100 text-gray-600 rounded-full px-2 py-0.5"
+                                  >
+                                    <Tag className="w-2.5 h-2.5" />
+                                    {tag.trim()}
+                                  </span>
+                                ))
+                            : <span className="text-[10px] text-gray-400">—</span>}
+                        </div>
+                      </td>
+                      <td className="px-5 py-4">
+                        <Badge variant={article.is_active ? "success" : "neutral"}>
+                          {article.is_active ? "Live" : "Hidden"}
                         </Badge>
                       </td>
-                      <td className="px-6 py-5 text-right">
+                      <td className="px-5 py-4 text-right">
                         <div className="flex justify-end gap-1 opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity">
                           <Link
-                            href={`/blog/${blog.slug}`}
+                            href={`/news/${article.slug}`}
                             target="_blank"
                             className="p-2 rounded-lg transition-colors text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-                            title="Open blog"
+                            title="Open article"
                           >
                             <ExternalLink className="w-4 h-4" />
                           </Link>
                           <button
                             type="button"
-                            onClick={() => toggleStatus(blog.id, blog.is_active)}
+                            onClick={() => toggleStatus(article.id, article.is_active)}
                             disabled={loading}
                             className="p-2 rounded-lg transition-colors text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-                            title={blog.is_active ? "Hide blog" : "Show blog"}
+                            title={article.is_active ? "Hide" : "Publish"}
                           >
-                            {blog.is_active ? (
+                            {article.is_active ? (
                               <EyeOff className="w-4 h-4" />
                             ) : (
                               <Eye className="w-4 h-4" />
@@ -456,19 +485,19 @@ export default function AdminBlogsPage() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => editBlog(blog)}
+                            onClick={() => editArticle(article)}
                             disabled={loading}
                             className="p-2 rounded-lg transition-colors text-blue-600 hover:bg-blue-50"
-                            title="Edit blog"
+                            title="Edit"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
                             type="button"
-                            onClick={() => deleteBlog(blog.id)}
+                            onClick={() => deleteArticle(article.id)}
                             disabled={loading}
                             className="p-2 rounded-lg transition-colors text-red-600 hover:bg-red-50"
-                            title="Delete blog"
+                            title="Delete"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -476,15 +505,15 @@ export default function AdminBlogsPage() {
                       </td>
                     </tr>
                   ))}
-                  {filteredBlogs.length === 0 && (
+                  {filteredArticles.length === 0 && (
                     <tr>
                       <td
-                        colSpan={5}
+                        colSpan={6}
                         className="px-6 py-12 text-center text-gray-500 font-medium"
                       >
                         {search || filterCategory
-                          ? "No blogs match your filters."
-                          : "No blogs yet. Create your first one."}
+                          ? "No articles match your filters."
+                          : "No articles yet. Create your first one."}
                       </td>
                     </tr>
                   )}
@@ -494,21 +523,21 @@ export default function AdminBlogsPage() {
           </Card>
         </div>
 
-        {/* ── Form ──────────────────────────────────────────────────────── */}
+        {/* ── Form ──── */}
         <div className="space-y-6 order-1 lg:order-2">
           <Card
-            id="blog-form"
-            title={editingId ? "Edit Blog" : "Create Blog"}
+            id="news-form"
+            title={editingId ? "Edit Article" : "New Article"}
             subtitle={
               editingId
-                ? `Updating blog B-${editingId}`
-                : "Add a long-form blog for the website"
+                ? `Updating article N-${editingId}`
+                : "Write and publish a news article"
             }
             className={editingId ? "border-blue-200 ring-4 ring-blue-50" : ""}
           >
-            <form onSubmit={submitBlog} className="space-y-4">
+            <form onSubmit={submitArticle} className="space-y-4">
 
-              {/* IMPROVEMENT: dropdown instead of freetext for category */}
+              {/* Category — dropdown for consistency */}
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Category
@@ -519,25 +548,27 @@ export default function AdminBlogsPage() {
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none text-gray-700"
                 >
                   <option value="">Select a category...</option>
-                  {BLOG_CATEGORIES.map((c) => (
+                  {NEWS_CATEGORIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
               </div>
 
+              {/* Title */}
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
-                  Title
+                  Headline
                 </label>
                 <input
                   type="text"
                   value={form.title}
                   onChange={handleChange("title")}
-                  placeholder="Blog title"
+                  placeholder="Article headline"
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none"
                 />
               </div>
 
+              {/* Slug */}
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Slug
@@ -546,51 +577,81 @@ export default function AdminBlogsPage() {
                   type="text"
                   value={form.slug}
                   onChange={handleChange("slug")}
-                  placeholder="blog-url-slug"
+                  placeholder="url-friendly-slug"
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none"
                 />
               </div>
 
+              {/* Description */}
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
-                  Description
+                  Summary
                 </label>
                 <textarea
                   rows={3}
                   value={form.description}
                   onChange={handleChange("description")}
-                  placeholder="Short blog summary for cards and previews"
+                  placeholder="Short summary shown in article cards and previews"
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-blue-600/20 transition-all outline-none resize-none"
                 />
               </div>
 
+              {/* Content */}
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
-                  Full Blog Content
+                  Full Article Content
                 </label>
                 <textarea
                   rows={12}
                   value={form.content}
                   onChange={handleChange("content")}
-                  placeholder={"Write the full blog here.\n\n## Add a sub heading\n\nWrite the next paragraph below it."}
+                  placeholder={"Write the full article here.\n\n## Sub heading\n\nParagraph text below it."}
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-3 text-sm font-medium leading-6 focus:ring-2 focus:ring-blue-600/20 transition-all outline-none resize-y"
                 />
-                {/* IMPROVEMENT: live read time counter */}
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between">
                   <p className="text-xs text-gray-500">
-                    Use ## before a line to add a sub heading.
+                    Use ## before a line for sub headings.
                   </p>
                   {form.content && (
                     <p className="text-xs text-blue-600 font-semibold">
-                      {estimateReadTime(form.content)}
+                      ~{estimateReadTime(form.content)}
                     </p>
                   )}
                 </div>
               </div>
 
+              {/* Tags */}
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
-                  Blog Image Upload
+                  Tags
+                  <span className="ml-1 normal-case font-normal text-gray-400">(comma-separated)</span>
+                </label>
+                <input
+                  type="text"
+                  value={form.tags}
+                  onChange={handleChange("tags")}
+                  placeholder="ai, tech news, india, startup"
+                  className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none"
+                />
+                {/* Live tag preview */}
+                {form.tags && (
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {form.tags.split(",").filter(Boolean).map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-0.5 text-[11px] font-semibold bg-blue-50 text-blue-700 rounded-full px-2 py-0.5"
+                      >
+                        #{tag.trim()}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Cover image upload */}
+              <div className="space-y-1">
+                <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
+                  Cover Image
                 </label>
                 <input
                   type="file"
@@ -602,11 +663,12 @@ export default function AdminBlogsPage() {
                   {imageFile
                     ? `Selected: ${imageFile.name}`
                     : form.image
-                    ? `Current image: ${form.image}`
-                    : "Upload a cover image for the blog."}
+                    ? `Current: ${form.image}`
+                    : "Upload a cover image for the article."}
                 </p>
               </div>
 
+              {/* Author + Date */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
                   <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
@@ -628,15 +690,31 @@ export default function AdminBlogsPage() {
                     type="text"
                     value={form.date}
                     onChange={handleChange("date")}
-                    placeholder="Dec 20, 2025"
+                    placeholder="Apr 6, 2026"
                     className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none"
                   />
                 </div>
               </div>
 
+              {/* Read time (auto-filled but editable) */}
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
-                  Author Avatar Upload
+                  Read Time
+                  <span className="ml-1 normal-case font-normal text-gray-400">(auto-calculated)</span>
+                </label>
+                <input
+                  type="text"
+                  value={form.read_time}
+                  onChange={handleChange("read_time")}
+                  placeholder="4 min read"
+                  className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none"
+                />
+              </div>
+
+              {/* Author avatar upload */}
+              <div className="space-y-1">
+                <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
+                  Author Avatar
                 </label>
                 <input
                   type="file"
@@ -648,11 +726,12 @@ export default function AdminBlogsPage() {
                   {avatarFile
                     ? `Selected: ${avatarFile.name}`
                     : form.avatar
-                    ? `Current avatar: ${form.avatar}`
-                    : "Upload the author profile image."}
+                    ? `Current: ${form.avatar}`
+                    : "Upload the author profile photo."}
                 </p>
               </div>
 
+              {/* Submit */}
               <div className="pt-4 flex gap-3">
                 {editingId && (
                   <Button
@@ -673,26 +752,28 @@ export default function AdminBlogsPage() {
                   {loading
                     ? "Saving..."
                     : editingId
-                    ? "Update Blog"
-                    : "Create Blog"}
+                    ? "Update Article"
+                    : "Publish Article"}
                 </Button>
               </div>
             </form>
           </Card>
 
-          <div className="p-6 rounded-2xl bg-gray-900 text-white shadow-xl relative overflow-hidden">
+          {/* Info card */}
+          <div className="p-6 rounded-2xl bg-gray-900 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 rounded-full blur-3xl opacity-20 -mr-10 -mt-10 pointer-events-none" />
             <div className="relative z-10">
-              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-4 backdrop-blur-sm">
-                <BookOpen className="w-5 h-5 text-blue-300" />
+              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-4">
+                <Newspaper className="w-5 h-5 text-blue-300" />
               </div>
               <h4 className="text-lg font-bold font-headline leading-tight mb-2">
-                Long-Form Publishing
+                News vs Blog
               </h4>
-              <p className="text-sm opacity-60 font-body mb-4">
-                Each blog has its own slug and full reading page at{" "}
-                <code className="text-blue-300">/blog/[slug]</code>. Use ## for
-                subheadings in the content editor.
+              <p className="text-sm opacity-60 font-body mb-3">
+                News articles include tags, read time, and a category dropdown matching your public news page structure at <code className="text-blue-300">/news/[slug]</code>.
+              </p>
+              <p className="text-sm opacity-60 font-body">
+                Blogs at <code className="text-blue-300">/blog/[slug]</code> are long-form editorial content. News is for timely, tagged articles.
               </p>
             </div>
           </div>

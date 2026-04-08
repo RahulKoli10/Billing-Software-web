@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 import { fileURLToPath } from "node:url";
  
 const backendUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
+const fallbackBackendUrl = "https://billing-backend-1-rprc.onrender.com";
 if (!backendUrl) {
   throw new Error(
     "❌ NEXT_PUBLIC_API_URL is not set. Add it to your .env or deployment environment variables."
@@ -78,6 +79,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https", 
         hostname: new URL(backendUrl).hostname,
+      },
+      {
+        protocol: "https",
+        hostname: new URL(fallbackBackendUrl).hostname,
       },
     ],
   },

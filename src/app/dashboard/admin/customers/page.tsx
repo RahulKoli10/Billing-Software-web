@@ -204,7 +204,7 @@ function StatusBadge({ status }: { status?: string }) {
   return <Badge variant="warning">{status}</Badge>;
 }
 
-/* ---------- History Section ---------- */
+/*    History Section    */
 
 interface SubscriptionHistory {
   id: number;

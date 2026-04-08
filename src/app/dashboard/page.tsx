@@ -172,12 +172,12 @@ export default function DashboardHome() {
     </div>
   );
 
-  // --- Admin View ---
+  //     Admin View    
   if (user?.role === "superadmin") {
     return <AdminDashboardView />;
   }
 
-  // --- User View ---
+  //     User View    
   if (!subscription)
     return (
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
