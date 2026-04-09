@@ -232,7 +232,7 @@ export default function DashboardSidebar({
               onClose?.();
               window.location.href = "#";
             }}
-            className="min-w-auto py-3 px-4 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-600/20 hover:opacity-90 transition-all text-center"
+            className="min-w-auto py-3 px-4 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-sm cursor-pointer text-sm font-bold shadow-lg shadow-blue-600/20 hover:opacity-90 transition-all text-center"
           >
             {role === "superadmin" ? "Generate Report" : "New Invoice"}
           </button>

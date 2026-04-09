@@ -85,7 +85,7 @@ export default function SubscriptionPage() {
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-500">
             Mentor Overview
           </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-black">
             Subscription History
           </h1>
         </div>

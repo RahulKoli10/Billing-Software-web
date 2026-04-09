@@ -95,28 +95,28 @@ export default function InventoryPage() {
       setItems(
         Array.isArray(data)
           ? data.map((item: ApiInventoryItem) => ({
-              id: Number(item.id) || 0,
-              company_id:
-                item.company_id === null || item.company_id === undefined
-                  ? null
-                  : Number(item.company_id),
-              item_type: item.item_type || null,
-              item_name: item.item_name || "-",
-              category: item.category || null,
-              hsn_code: item.hsn_code || null,
-              item_code: item.item_code || null,
-              unit: item.unit || null,
-              sale_price: Number(item.sale_price ?? 0),
-              disc_sale_price: Number(item.disc_sale_price ?? 0),
-              wholesale_price: Number(item.wholesale_price ?? 0),
-              purchase_price: Number(item.purchase_price ?? 0),
-              tax_rate: item.tax_rate || null,
-              opening_qty: Number(item.opening_qty ?? 0),
-              min_stock: Number(item.min_stock ?? 0),
-              location: item.location || null,
-              updated_at: item.updated_at || null,
-              user_id: Number(item.user_id) || 0,
-            }))
+            id: Number(item.id) || 0,
+            company_id:
+              item.company_id === null || item.company_id === undefined
+                ? null
+                : Number(item.company_id),
+            item_type: item.item_type || null,
+            item_name: item.item_name || "-",
+            category: item.category || null,
+            hsn_code: item.hsn_code || null,
+            item_code: item.item_code || null,
+            unit: item.unit || null,
+            sale_price: Number(item.sale_price ?? 0),
+            disc_sale_price: Number(item.disc_sale_price ?? 0),
+            wholesale_price: Number(item.wholesale_price ?? 0),
+            purchase_price: Number(item.purchase_price ?? 0),
+            tax_rate: item.tax_rate || null,
+            opening_qty: Number(item.opening_qty ?? 0),
+            min_stock: Number(item.min_stock ?? 0),
+            location: item.location || null,
+            updated_at: item.updated_at || null,
+            user_id: Number(item.user_id) || 0,
+          }))
           : []
       );
       setError("");
@@ -185,16 +185,22 @@ export default function InventoryPage() {
       ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="Items" value={totalItems} icon={Boxes} />
-        <StatCard title="Categories" value={categories} icon={Tag} />
+        <StatCard title="Items"
+          value={<span className="text-xl font-semibold">{totalItems}</span>}
+          icon={Boxes}
+        />
+        <StatCard title="Categories"
+          value={<span className="text-xl font-semibold">{categories}</span>}
+          icon={Tag}
+        />
         <StatCard
           title="Low Stock"
-          value={lowStockItems}
+          value={<span className="text-xl font-semibold">{lowStockItems}</span>}
           icon={AlertTriangle}
         />
         <StatCard
           title="Inventory Value"
-          value={currency.format(inventoryValue)}
+          value={<span className="text-xl font-semibold">{currency.format(inventoryValue)}</span>}
           icon={Package}
         />
       </div>
