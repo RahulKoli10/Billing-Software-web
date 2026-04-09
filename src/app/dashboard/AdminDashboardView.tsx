@@ -263,7 +263,7 @@ export default function AdminDashboardView() {
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Active customers
           </p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">
+          <p className="mt-2 text-2xl font-bold text-gray-900">
             {activeCustomers}
           </p>
         </Card>
@@ -278,7 +278,7 @@ export default function AdminDashboardView() {
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Active pricing plans
           </p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">{activePlans}</p>
+          <p className="mt-2 text-2xl font-bold text-gray-900">{activePlans}</p>
         </Card>
 
         <Card>
@@ -289,7 +289,7 @@ export default function AdminDashboardView() {
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Total revenue
           </p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">
+          <p className="mt-2 text-2xl font-bold text-gray-900">
             {currency.format(totalRevenue)}
           </p>
         </Card>
@@ -304,7 +304,7 @@ export default function AdminDashboardView() {
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Pending approvals
           </p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">
+          <p className="mt-2 text-2xl font-bold text-gray-900">
             {pendingCustomers}
           </p>
         </Card>
