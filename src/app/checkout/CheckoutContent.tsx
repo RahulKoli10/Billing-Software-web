@@ -38,7 +38,7 @@ declare global {
   }
 
   interface Window {
-    Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
+    Razorpay?: new (options: RazorpayOptions) => RazorpayInstance;
   }
 }
 
@@ -54,7 +54,10 @@ interface Plan {
   yearly_discount: number;
 }
 
-async function readErrorMessage(response: Response) {
+async function readErrorMessage(
+  response: Response,
+  fallback = "Payment verification failed",
+) {
   try {
     const data = await response.json();
     if (typeof data?.message === "string" && data.message.trim()) {
@@ -62,7 +65,54 @@ async function readErrorMessage(response: Response) {
     }
   } catch {}
 
-  return "Payment verification failed";
+  return fallback;
+}
+
+const RAZORPAY_SCRIPT_URL = "https://checkout.razorpay.com/v1/checkout.js";
+
+function loadRazorpayScript() {
+  if (typeof window === "undefined") {
+    return Promise.resolve(false);
+  }
+
+  if (typeof window.Razorpay === "function") {
+    return Promise.resolve(true);
+  }
+
+  return new Promise<boolean>((resolve) => {
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      `script[src="${RAZORPAY_SCRIPT_URL}"]`
+    );
+    const script = existingScript || document.createElement("script");
+    let settled = false;
+
+    const finish = (loaded: boolean) => {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+      window.clearTimeout(timeoutId);
+      script.removeEventListener("load", handleLoad);
+      script.removeEventListener("error", handleError);
+      resolve(loaded);
+    };
+
+    const handleLoad = () => finish(typeof window.Razorpay === "function");
+    const handleError = () => finish(false);
+    const timeoutId = window.setTimeout(() => {
+      finish(typeof window.Razorpay === "function");
+    }, 10000);
+
+    script.addEventListener("load", handleLoad, { once: true });
+    script.addEventListener("error", handleError, { once: true });
+
+    if (!existingScript) {
+      script.src = RAZORPAY_SCRIPT_URL;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  });
 }
 
 function CheckoutForm() {
@@ -71,6 +121,8 @@ function CheckoutForm() {
 
   const planId = params.get("planId");
   const billing = params.get("billing");
+  const mode = params.get("mode");
+  const isTrialMode = mode === "trial";
 
   const [accepted, setAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -93,27 +145,23 @@ function CheckoutForm() {
 
   /* LOAD RAZORPAY SCRIPT */
   useEffect(() => {
-    const existingScript = document.querySelector<HTMLScriptElement>(
-      'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
-    );
-
-    if (existingScript) {
-      setScriptLoaded(true);
+    if (isTrialMode) {
+      setScriptLoaded(false);
       return;
     }
 
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
+    let active = true;
 
-    script.onload = () => setScriptLoaded(true);
-
-    document.body.appendChild(script);
+    loadRazorpayScript().then((loaded) => {
+      if (active) {
+        setScriptLoaded(loaded);
+      }
+    });
 
     return () => {
-      script.onload = null;
+      active = false;
     };
-  }, []);
+  }, [isTrialMode]);
 
   /* FETCH PLAN */
   useEffect(() => {
@@ -158,6 +206,93 @@ function CheckoutForm() {
   const gstAmount = (basePrice * GST_PERCENT) / 100;
   const totalAmount = basePrice + gstAmount;
 
+  const validateForm = () => {
+    if (!planId || !billing) {
+      toast.error("Invalid plan selection.");
+      return false;
+    }
+
+    if (
+      !form.full_name ||
+      !form.email ||
+      !form.business_name ||
+      !form.phone ||
+      !form.address
+    ) {
+      toast.error("Please fill required fields.");
+      return false;
+    }
+
+    if (!accepted) {
+      toast.error("Please accept Terms & Privacy Policy.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const saveCustomerDetails = async () => {
+    const customerRes = await fetch(buildApiUrl("/api/customer"), {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    if (!customerRes.ok) {
+      const message = await readErrorMessage(
+        customerRes,
+        "Customer save failed",
+      );
+      throw new Error(message);
+    }
+  };
+
+  const handleTrialStart = async () => {
+    let loadingToast: string | number | undefined;
+
+    try {
+      if (!validateForm()) {
+        return;
+      }
+
+      setLoading(true);
+      loadingToast = toast.loading("Starting trial...");
+
+      await saveCustomerDetails();
+
+      const trialRes = await fetch(buildApiUrl("/api/subscription/start-trial"), {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan_id: Number(planId),
+          billing_cycle: billing,
+        }),
+      });
+
+      const trialData = await trialRes.json();
+
+      if (!trialRes.ok) {
+        throw new Error(trialData.message || "Unable to start trial");
+      }
+
+      toast.dismiss(loadingToast);
+      toast.success("Trial started", {
+        description: `License: ${trialData.licenseKey}. Expires: ${new Date(
+          trialData.expires_at,
+        ).toLocaleDateString()}`,
+      });
+
+      router.push("/dashboard");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Something went wrong";
+      toast.dismiss(loadingToast);
+      toast.error(message);
+      setLoading(false);
+    }
+  };
+
   /* PAYMENT */
 
   const handlePayment = async () => {
@@ -165,23 +300,14 @@ function CheckoutForm() {
     let paymentCompleted = false;
 
     try {
-      if (!scriptLoaded) {
-        toast.error("Payment system loading...");
+      if (!validateForm()) {
         return;
       }
 
-      if (!planId || !billing) {
-        toast.error("Invalid plan selection.");
-        return;
-      }
+      const razorpayReady = scriptLoaded || (await loadRazorpayScript());
 
-      if (!form.full_name || !form.email || !form.business_name || !form.phone) {
-        toast.error("Please fill required fields.");
-        return;
-      }
-
-      if (!accepted) {
-        toast.error("Please accept Terms & Privacy Policy.");
+      if (!razorpayReady || typeof window.Razorpay !== "function") {
+        toast.error("Payment system could not load. Please refresh and try again.");
         return;
       }
 
@@ -190,16 +316,7 @@ function CheckoutForm() {
 
       /* SAVE CUSTOMER */
 
-      const customerRes = await fetch(buildApiUrl("/api/customer"), {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      if (!customerRes.ok) {
-        throw new Error("Customer save failed");
-      }
+      await saveCustomerDetails();
 
       /* CREATE ORDER */
 
@@ -296,7 +413,11 @@ function CheckoutForm() {
       toast.dismiss(loadingToast);
       toast.error(message);
 
-      router.push(`/checkout?planId=${planId}&billing=${billing}`);
+      router.push(
+        `/checkout?planId=${planId}&billing=${billing}${
+          isTrialMode ? "&mode=trial" : ""
+        }`,
+      );
 
       setLoading(false);
     }
@@ -311,7 +432,9 @@ function CheckoutForm() {
             Complete Your Setup
           </h2>
           <p className="mt-3 text-black">
-            Tell us about your business before activating your subscription.
+            {isTrialMode
+              ? "Tell us about your business before starting your free trial."
+              : "Tell us about your business before activating your subscription."}
           </p>
         </div>
 
@@ -373,34 +496,48 @@ function CheckoutForm() {
               <span className="capitalize">{billing}</span>
             </div>
 
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span>₹{basePrice.toFixed(2)}</span>
-            </div>
+            {isTrialMode ? (
+              <div className="rounded-lg bg-emerald-50 p-4 text-sm font-medium text-emerald-700">
+                No payment needed. Continue to activate your free trial.
+              </div>
+            ) : (
+              <>
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>₹{basePrice.toFixed(2)}</span>
+                </div>
 
-            <div className="flex justify-between">
-              <span>GST</span>
-              <span>₹{gstAmount.toFixed(2)}</span>
-            </div>
+                <div className="flex justify-between">
+                  <span>GST</span>
+                  <span>₹{gstAmount.toFixed(2)}</span>
+                </div>
 
-            <hr />
+                <hr />
 
-            <div className="flex justify-between text-lg font-semibold">
-              <span>Total</span>
-              <span>₹{totalAmount.toFixed(2)}</span>
-            </div>
+                <div className="flex justify-between text-lg font-semibold">
+                  <span>Total</span>
+                  <span>₹{totalAmount.toFixed(2)}</span>
+                </div>
+              </>
+            )}
 
             <button
-              onClick={handlePayment}
+              onClick={isTrialMode ? handleTrialStart : handlePayment}
               disabled={loading || !plan}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg"
             >
-              {loading ? "Processing..." : "Activate & Pay"}
+              {loading
+                ? "Processing..."
+                : isTrialMode
+                  ? "Continue"
+                  : "Activate & Pay"}
             </button>
 
-            <p className="text-xs text-gray-400 text-center">
-              Secure payment powered by Razorpay
-            </p>
+            {!isTrialMode && (
+              <p className="text-xs text-gray-400 text-center">
+                Secure payment powered by Razorpay
+              </p>
+            )}
 
           </div>
 

@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { buildApiUrl } from "@/lib/api";
 import { Card, Badge, Button } from "@/components/ui/atoms";
+import { toast } from "sonner";
 import { 
   Plus, 
   Search, 
@@ -51,9 +52,13 @@ export default function AdminUploadSoftware() {
 
   /*   UPLOAD   */
   const handleUpload = async () => {
-    if (!version) return alert("Please enter version");
+    if (!version) {
+      toast.error("Please enter version");
+      return;
+    }
     if (!file && !externalUrl.trim()) {
-      return alert("Please select a file or enter an external URL");
+      toast.error("Please select a file or enter an external URL");
+      return;
     }
 
     const formData = new FormData();
@@ -83,11 +88,13 @@ export default function AdminUploadSoftware() {
       );
 
       if (!res.ok) {
-        alert("Upload failed");
+        toast.error("Upload failed");
         return;
       }
 
-      alert("Software uploaded successfully!");
+      toast.success("Software uploaded", {
+        description: "The download list has been updated.",
+      });
       setFile(null);
       setVersion("");
       setExternalUrl("");
@@ -96,31 +103,53 @@ export default function AdminUploadSoftware() {
       fetchSoftwares();
     } catch (err) {
       console.error(err);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
   /*   DELETE   */
-  const handleDelete = async (id: number) => {
-    if (!confirm("Delete this software?")) return;
-
+  const performDelete = async (id: number) => {
     try {
       setLoading(true);
 
-      await fetch(buildApiUrl(`/api/downloads/${id}`), {
+      const res = await fetch(buildApiUrl(`/api/downloads/${id}`), {
         method: "DELETE",
         credentials: "include",
       });
 
+      if (!res.ok) {
+        throw new Error("Delete failed");
+      }
+
       fetchSoftwares();
+      toast.warning("Software deleted", {
+        description: "The download was removed successfully.",
+      });
     } catch (err) {
       console.error(err);
-      alert("Delete failed");
+      toast.error(err instanceof Error ? err.message : "Delete failed");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDelete = (id: number) => {
+    toast.warning("Delete this software?", {
+      description: "This asset will be removed from the repository.",
+      action: {
+        label: "Delete",
+        onClick: () => {
+          void performDelete(id);
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {},
+      },
+      duration: 8000,
+    });
   };
 
   const filteredSoftware = useMemo(() => {

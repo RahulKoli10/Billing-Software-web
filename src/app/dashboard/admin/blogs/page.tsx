@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { buildApiUrl } from "@/lib/api";
 import { Badge, Button, Card } from "@/components/ui/atoms";
+import { toast } from "sonner";
 import {
   BookOpen,
   Edit2,
@@ -144,7 +145,7 @@ export default function AdminBlogsPage() {
       !form.author ||
       (!form.image && !imageFile)
     ) {
-      alert("Please fill all required blog fields");
+      toast.error("Please fill all required blog fields");
       return;
     }
 
@@ -189,11 +190,19 @@ export default function AdminBlogsPage() {
         throw new Error(data?.message || "Failed to save blog");
       }
 
+      const notifySave = editingId ? toast.info : toast.success;
+      notifySave(editingId ? "Blog updated" : "Blog created", {
+        description: editingId
+          ? "Your changes are now live in the blog list."
+          : "The new blog is now available in the blog list.",
+      });
       resetForm();
       await fetchBlogs();
     } catch (err: unknown) {
       // FIX: was `err: Error | unknown` — `unknown` is the correct type alone
-      setError(err instanceof Error ? err.message : "Failed to save blog");
+      const message = err instanceof Error ? err.message : "Failed to save blog";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -219,8 +228,7 @@ export default function AdminBlogsPage() {
       ?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const deleteBlog = async (id: number) => {
-    if (!confirm("Delete this blog? This cannot be undone.")) return;
+  const performDeleteBlog = async (id: number) => {
     setLoading(true);
     setError(null);
     try {
@@ -233,11 +241,33 @@ export default function AdminBlogsPage() {
         throw new Error(data?.message || "Failed to delete blog");
       }
       await fetchBlogs();
+      toast.warning("Blog deleted", {
+        description: "The blog was removed successfully.",
+      });
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to delete blog");
+      const message = err instanceof Error ? err.message : "Failed to delete blog";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const deleteBlog = (id: number) => {
+    toast.warning("Delete this blog?", {
+      description: "This cannot be undone.",
+      action: {
+        label: "Delete",
+        onClick: () => {
+          void performDeleteBlog(id);
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {},
+      },
+      duration: 8000,
+    });
   };
 
   const toggleStatus = async (id: number, isActive: boolean) => {
@@ -255,10 +285,16 @@ export default function AdminBlogsPage() {
         throw new Error(data?.message || "Failed to update blog status");
       }
       await fetchBlogs();
+      toast.success(!isActive ? "Blog published" : "Blog hidden", {
+        description: !isActive
+          ? "This blog is now visible to readers."
+          : "This blog is no longer visible to readers.",
+      });
     } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : "Failed to update blog status"
-      );
+      const message =
+        err instanceof Error ? err.message : "Failed to update blog status";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }

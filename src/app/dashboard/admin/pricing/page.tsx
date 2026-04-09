@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { buildApiUrl } from "@/lib/api";
 import { Card, Badge, Button } from "@/components/ui/atoms";
+import { toast } from "sonner";
 import { 
   Plus, 
   Search, 
@@ -25,9 +26,21 @@ type PricingPlan = {
   created_at?: string;
 };
 
+type TrialSettings = {
+  trial_days: number;
+  is_enabled: boolean;
+};
+
 export default function AdminPricingPage() {
   const [plans, setPlans] = useState<PricingPlan[]>([]);
+  const [trialSettings, setTrialSettings] = useState<TrialSettings>({
+    trial_days: 7,
+    is_enabled: true,
+  });
+  const [trialDays, setTrialDays] = useState("7");
+  const [trialEnabled, setTrialEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [trialLoading, setTrialLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
@@ -56,8 +69,31 @@ export default function AdminPricingPage() {
     }
   };
 
+  const fetchTrialSettings = async () => {
+    try {
+      const res = await fetch(buildApiUrl("/api/pricing/trial-settings"), {
+        credentials: "include",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch trial settings");
+
+      const data = await res.json();
+      const nextSettings = {
+        trial_days: Number(data.trial_days || 7),
+        is_enabled: Boolean(data.is_enabled),
+      };
+
+      setTrialSettings(nextSettings);
+      setTrialDays(String(nextSettings.trial_days));
+      setTrialEnabled(nextSettings.is_enabled);
+    } catch (err: Error | unknown) {
+      setError(err instanceof Error ? err.message : "Failed to load trial settings");
+    }
+  };
+
   useEffect(() => {
     fetchPlans();
+    fetchTrialSettings();
   }, []);
 
   /* RESET FORM */
@@ -74,7 +110,7 @@ export default function AdminPricingPage() {
   const submitPlan = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!name || !price) {
-      alert("Name and price are required");
+      toast.error("Name and price are required");
       return;
     }
 
@@ -104,10 +140,18 @@ export default function AdminPricingPage() {
 
       if (!res.ok) throw new Error("Save failed");
 
+      const notifySave = editingId ? toast.info : toast.success;
+      notifySave(editingId ? "Pricing plan updated" : "Pricing plan created", {
+        description: editingId
+          ? "The plan changes are now saved."
+          : "The new plan is now available in pricing.",
+      });
       resetForm();
       await fetchPlans();
     } catch (err: Error | unknown) {
-      setError(err instanceof Error ? err.message : "Failed to save plan");
+      const message = err instanceof Error ? err.message : "Failed to save plan";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -125,9 +169,7 @@ export default function AdminPricingPage() {
   };
 
   /* DELETE */
-  const deletePlan = async (id: number) => {
-    if (!confirm("Delete this pricing plan?")) return;
-
+  const performDeletePlan = async (id: number) => {
     setLoading(true);
     setError(null);
 
@@ -140,11 +182,34 @@ export default function AdminPricingPage() {
       if (!res.ok) throw new Error("Delete failed");
 
       await fetchPlans();
+      toast.warning("Pricing plan deleted", {
+        description: "The plan was removed successfully.",
+      });
     } catch (err: Error | unknown) {
-      setError(err instanceof Error ? err.message : "Failed to delete plan");
+      const message =
+        err instanceof Error ? err.message : "Failed to delete plan";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const deletePlan = (id: number) => {
+    toast.warning("Delete this pricing plan?", {
+      description: "This cannot be undone.",
+      action: {
+        label: "Delete",
+        onClick: () => {
+          void performDeletePlan(id);
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {},
+      },
+      duration: 8000,
+    });
   };
 
   /* TOGGLE ACTIVE — SaaS SAFE */
@@ -167,8 +232,14 @@ export default function AdminPricingPage() {
       }
 
       await fetchPlans();
+      const notifyStatus = !active ? toast.success : toast.info;
+      notifyStatus(!active ? "Plan enabled" : "Plan disabled", {
+        description: !active
+          ? "Customers can now select this plan."
+          : "Customers can no longer select this plan.",
+      });
     } catch {
-      alert("Enable / Disable failed");
+      toast.error("Enable / Disable failed");
     } finally {
       setLoading(false);
     }
@@ -178,18 +249,77 @@ export default function AdminPricingPage() {
     setLoading(true);
 
     try {
-      await fetch(buildApiUrl(`/api/pricing/${id}/featured`), {
+      const res = await fetch(buildApiUrl(`/api/pricing/${id}/featured`), {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ highlighted: !highlighted }),
       });
 
+      if (!res.ok) {
+        throw new Error("Failed to update featured status");
+      }
+
       await fetchPlans();
-    } catch {
-      // ignore
+      toast.info(!highlighted ? "Plan featured" : "Plan unfeatured", {
+        description: !highlighted
+          ? "This plan now stands out in pricing."
+          : "This plan is no longer marked as featured.",
+      });
+    } catch (err: Error | unknown) {
+      const message =
+        err instanceof Error ? err.message : "Failed to update featured status";
+      toast.error(message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const submitTrialSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const parsedTrialDays = Number(trialDays);
+
+    if (!Number.isInteger(parsedTrialDays) || parsedTrialDays < 1 || parsedTrialDays > 365) {
+      toast.error("Trial days must be between 1 and 365");
+      return;
+    }
+
+    setTrialLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch(buildApiUrl("/api/pricing/admin/trial-settings"), {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          trial_days: parsedTrialDays,
+          is_enabled: trialEnabled,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || "Failed to save trial settings");
+      }
+
+      setTrialSettings({
+        trial_days: parsedTrialDays,
+        is_enabled: trialEnabled,
+      });
+      toast.info("Trial settings updated", {
+        description: trialEnabled
+          ? `Free trial is enabled for ${parsedTrialDays} days.`
+          : "Free trial is currently disabled.",
+      });
+    } catch (err: Error | unknown) {
+      const message =
+        err instanceof Error ? err.message : "Failed to save trial settings";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setTrialLoading(false);
     }
   };
 
@@ -312,6 +442,47 @@ export default function AdminPricingPage() {
         </div>
 
         <div className="space-y-6 order-1 lg:order-2">
+          <Card
+            title="Trial Version"
+            subtitle="Set the free trial window for new users"
+            className={trialSettings.is_enabled ? "border-emerald-200" : "border-gray-200"}
+          >
+            <form onSubmit={submitTrialSettings} className="space-y-5">
+              <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={trialEnabled}
+                  onChange={() => setTrialEnabled(!trialEnabled)}
+                  disabled={trialLoading}
+                  className="h-4 w-4 accent-emerald-600 cursor-pointer"
+                />
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-gray-900">Enable free trial</span>
+                  <span className="text-[10px] font-medium text-gray-500 uppercase tracking-widest">
+                    {trialEnabled ? "Users can start a trial" : "Trial button and endpoint are blocked"}
+                  </span>
+                </div>
+              </label>
+
+              <div className="space-y-1">
+                <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-1.5">Trial Days</label>
+                <input
+                  type="number"
+                  value={trialDays}
+                  onChange={(e) => setTrialDays(e.target.value)}
+                  disabled={trialLoading || !trialEnabled}
+                  min={1}
+                  max={365}
+                  className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-bold text-emerald-700 focus:ring-2 focus:ring-emerald-600/20 transition-all outline-none disabled:opacity-60"
+                />
+              </div>
+
+              <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={trialLoading}>
+                {trialLoading ? "Saving Trial..." : "Save Trial Settings"}
+              </Button>
+            </form>
+          </Card>
+
           <Card 
             id="form-section" 
             title={editingId ? "Edit Tier Architecture" : "Structural Composition"} 

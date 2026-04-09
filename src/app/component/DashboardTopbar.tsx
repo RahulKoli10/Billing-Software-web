@@ -1,13 +1,23 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Bell, Menu, Search, Shield, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { buildApiUrl } from "@/lib/api";
 
 interface UserProp {
   role: string;
   email?: string;
   name?: string;
 }
+
+type NotificationItem = {
+  id: number;
+  type: string;
+  title: string;
+  message: string;
+  created_at: string;
+};
 
 export default function DashboardTopbar({
   user,
@@ -24,6 +34,103 @@ export default function DashboardTopbar({
     ? "Super Admin"
     : user.email?.trim() || "User";
   const initial = displayName.charAt(0).toUpperCase();
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
+  const notificationRef = useRef<HTMLDivElement | null>(null);
+  const unreadCount = notifications.length;
+
+  const fetchNotifications = useCallback(async () => {
+    try {
+      setNotificationsLoading(true);
+      const res = await fetch(buildApiUrl("/api/notifications"), {
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        setNotifications([]);
+        return;
+      }
+
+      const data = await res.json();
+      setNotifications(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Failed to fetch notifications:", err);
+    } finally {
+      setNotificationsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+    const intervalId = window.setInterval(fetchNotifications, 150000);
+
+    return () => window.clearInterval(intervalId);
+  }, [fetchNotifications]);
+
+  useEffect(() => {
+    if (!notificationsOpen) {
+      return;
+    }
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target as Node)
+      ) {
+        setNotificationsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, [notificationsOpen]);
+
+  const markNotificationRead = async (notificationId: number) => {
+    setNotifications((current) =>
+      current.filter((notification) => notification.id !== notificationId)
+    );
+
+    try {
+      await fetch(buildApiUrl(`/api/notifications/${notificationId}/read`), {
+        method: "PATCH",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.error("Failed to mark notification read:", err);
+      fetchNotifications();
+    }
+  };
+
+  const markAllNotificationsRead = async () => {
+    const previous = notifications;
+    setNotifications([]);
+
+    try {
+      await fetch(buildApiUrl("/api/notifications/read-all"), {
+        method: "PATCH",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.error("Failed to mark all notifications read:", err);
+      setNotifications(previous);
+    }
+  };
+
+  const formatNotificationDate = (value: string) => {
+    const parsed = new Date(value);
+
+    if (Number.isNaN(parsed.getTime())) {
+      return "";
+    }
+
+    return parsed.toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <header className="sticky top-0 z-30 border-b border-gray-100 bg-white">
@@ -59,10 +166,82 @@ export default function DashboardTopbar({
       {/* Right: Notifications + User */}
         <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
         {/* Notification Bell */}
-        <button className="relative p-2 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-all">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 block w-2 h-2 rounded-full bg-blue-600 ring-2 ring-white" />
-        </button>
+        <div className="relative" ref={notificationRef}>
+          <button
+            type="button"
+            onClick={() => setNotificationsOpen((current) => !current)}
+            className="relative p-2 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-all"
+            aria-label="Open notifications"
+            aria-expanded={notificationsOpen}
+          >
+            <Bell className="w-5 h-5" />
+            {unreadCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-[10px] font-bold leading-none text-white ring-2 ring-white">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
+          </button>
+
+          {notificationsOpen && (
+            <div className="absolute right-0 mt-3 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-lg border border-gray-100 bg-white shadow-xl shadow-gray-900/10">
+              <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                <div>
+                  <p className="text-sm font-bold text-gray-900">
+                    Notifications
+                  </p>
+                  <p className="text-xs font-medium text-gray-500">
+                    {unreadCount} unread
+                  </p>
+                </div>
+                {unreadCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={markAllNotificationsRead}
+                    className="rounded-lg px-2 py-1 text-xs font-bold text-blue-600 hover:bg-blue-50"
+                  >
+                    Mark all read
+                  </button>
+                )}
+              </div>
+
+              <div className="max-h-80 overflow-y-auto">
+                {notificationsLoading && unreadCount === 0 ? (
+                  <div className="px-4 py-6 text-center text-sm font-medium text-gray-500">
+                    Loading notifications...
+                  </div>
+                ) : unreadCount === 0 ? (
+                  <div className="px-4 py-6 text-center text-sm font-medium text-gray-500">
+                    No unread notifications.
+                  </div>
+                ) : (
+                  notifications.map((notification) => (
+                    <button
+                      key={notification.id}
+                      type="button"
+                      onClick={() => markNotificationRead(notification.id)}
+                      className="block w-full border-b border-gray-50 px-4 py-3 text-left transition hover:bg-gray-50 last:border-b-0"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="text-sm font-bold text-gray-900">
+                          {notification.title}
+                        </p>
+                        <span className="shrink-0 text-[10px] font-bold uppercase text-blue-500">
+                          {notification.type.replace(/_/g, " ")}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm font-medium text-gray-600">
+                        {notification.message}
+                      </p>
+                      <p className="mt-2 text-xs font-medium text-gray-400">
+                        {formatNotificationDate(notification.created_at)}
+                      </p>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Divider */}
           <div className="hidden h-8 w-px bg-gray-100 sm:block" />

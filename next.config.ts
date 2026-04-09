@@ -16,6 +16,11 @@ const iconifyDomains = [
   "https://api.unisvg.com",
   "https://api.simplesvg.com",
 ].join(" ");
+const razorpayDomains = [
+  "https://checkout.razorpay.com",
+  "https://api.razorpay.com",
+  "https://*.razorpay.com",
+].join(" ");
  
 const securityHeaders = [ 
   { key: "X-Frame-Options", value: "SAMEORIGIN" }, 
@@ -35,11 +40,13 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'", 
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${razorpayDomains}`,
+      `script-src-elem 'self' 'unsafe-inline' ${razorpayDomains}`,
       "style-src 'self' 'unsafe-inline'", 
-      `img-src 'self' data: blob: ${backendUrl}`,
+      `img-src 'self' data: blob: ${backendUrl} ${razorpayDomains}`,
       "font-src 'self'", 
-      `connect-src 'self' ${backendUrl} ${iconifyDomains}`,
+      `connect-src 'self' ${backendUrl} ${iconifyDomains} ${razorpayDomains}`,
+      `frame-src 'self' ${razorpayDomains}`,
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'", 

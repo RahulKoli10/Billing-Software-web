@@ -5,6 +5,7 @@ import React from "react";
 import { buildApiUrl } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import AdminDashboardView from "./AdminDashboardView";
+import { toast } from "sonner";
 import { 
   Activity, 
   ShieldCheck, 
@@ -140,10 +141,7 @@ export default function DashboardHome() {
     }, 2000);
   };
 
-  const handleResetPassword = async () => {
-    if (!confirm("Are you sure you want to generate a new software password? You will need to update your software client immediately.")) {
-      return;
-    }
+  const resetPassword = async () => {
     setIsResetting(true);
     try {
       const res = await fetch(buildApiUrl("/api/subscription/credentials/reset"), { 
@@ -159,11 +157,32 @@ export default function DashboardHome() {
       }));
       setPlainPassword(data.plainPassword);
       setShowPassword(true);
+      toast.success("Software password generated", {
+        description: "Update your software client with the new password.",
+      });
     } catch {
-      alert("Failed to reset software credentials.");
+      toast.error("Failed to reset software credentials.");
     } finally {
       setIsResetting(false);
     }
+  };
+
+  const handleResetPassword = () => {
+    toast("Generate a new software password?", {
+      description:
+        "You will need to update your software client immediately after this.",
+      action: {
+        label: "Generate",
+        onClick: () => {
+          void resetPassword();
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {},
+      },
+      duration: 8000,
+    });
   };
 
   if (loading) return (

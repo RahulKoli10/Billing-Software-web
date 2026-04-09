@@ -16,51 +16,40 @@ type PricingPlan = {
   sort_order: number;
 };
 
+type TrialSettings = {
+  trial_days: number;
+  is_enabled: boolean;
+};
+
 export default function PricingSection() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
   const router = useRouter();
   const [pricingPlans, setPricingPlans] = useState<PricingPlan[]>([]);
-  const [sortOrder, setSortOrder] = useState("");
-
-  const handleChoosePlan = async (planId: number) => {
-    try {
-      const res = await fetch(
-        buildApiUrl("/api/subscription/start-trial"),
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ plan_id: planId }),
-        },
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message);
-        return;
-      }
-
-      alert(
-        `Trial Started!\nLicense: ${data.licenseKey}\nExpires: ${new Date(
-          data.expires_at,
-        ).toLocaleDateString()}`,
-      );
-
-      router.push(`/checkout?planId=${planId}&billing=${billing}`);
-    } catch (err) {
-      alert("Something went wrong");
-    }
-  };
+  const [trialSettings, setTrialSettings] = useState<TrialSettings>({
+    trial_days: 7,
+    is_enabled: true,
+  });
 
   useEffect(() => {
     const fetchPricing = async () => {
       try {
-        const res = await fetch(buildApiUrl("/api/pricing"));
-        if (!res.ok) throw new Error("Failed to fetch pricing");
+        const [pricingRes, trialRes] = await Promise.all([
+          fetch(buildApiUrl("/api/pricing")),
+          fetch(buildApiUrl("/api/pricing/trial-settings")),
+        ]);
 
-        const data = await res.json();
+        if (!pricingRes.ok) throw new Error("Failed to fetch pricing");
+
+        const data = await pricingRes.json();
         setPricingPlans(data);
+
+        if (trialRes.ok) {
+          const trialData = await trialRes.json();
+          setTrialSettings({
+            trial_days: Number(trialData.trial_days || 7),
+            is_enabled: Boolean(trialData.is_enabled),
+          });
+        }
       } catch (err) {
         console.error(err);
       }
@@ -267,6 +256,19 @@ export default function PricingSection() {
                 >
                   Choose plan
                 </button>
+
+                {trialSettings.is_enabled && (
+                  <button
+                    onClick={() =>
+                      router.push(
+                        `/checkout?planId=${plan.id}&billing=${billing}&mode=trial`,
+                      )
+                    }
+                    className="mt-3 w-full rounded-lg border border-emerald-600 py-2 font-medium text-emerald-700 transition hover:bg-emerald-50"
+                  >
+                    Start {trialSettings.trial_days}-day trial
+                  </button>
+                )}
 
                 {/* Note */}
                 <p className="mt-6 text-sm text-gray-500">

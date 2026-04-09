@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { buildApiUrl } from "@/lib/api";
+import { toast } from "sonner";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -59,7 +60,7 @@ export default function SignupPage() {
         throw new Error(data.message || "Signup failed");
       }
 
-      alert(data.message);
+      toast.success(data.message || "Account created successfully");
       router.push("/login");
     } catch (err) {
       setError(err.message || "Something went wrong");

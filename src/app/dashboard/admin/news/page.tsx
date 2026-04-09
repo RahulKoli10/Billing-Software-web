@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { buildApiUrl } from "@/lib/api";
 import { Badge, Button, Card } from "@/components/ui/atoms";
+import { toast } from "sonner";
 import {
   Edit2,
   Eye,
@@ -159,7 +160,7 @@ export default function AdminNewsPage() {
       !form.author ||
       (!form.image && !imageFile)
     ) {
-      alert("Please fill all required fields");
+      toast.error("Please fill all required fields");
       return;
     }
 
@@ -209,10 +210,19 @@ export default function AdminNewsPage() {
         throw new Error(data?.message || "Failed to save article");
       }
 
+      const notifySave = editingId ? toast.info : toast.success;
+      notifySave(editingId ? "Article updated" : "Article created", {
+        description: editingId
+          ? "Your changes are now live in the news list."
+          : "The new article is now available in the news list.",
+      });
       resetForm();
       await fetchArticles();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to save article");
+      const message =
+        err instanceof Error ? err.message : "Failed to save article";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -238,8 +248,7 @@ export default function AdminNewsPage() {
     document.getElementById("news-form")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const deleteArticle = async (id: number) => {
-    if (!confirm("Delete this article? This cannot be undone.")) return;
+  const performDeleteArticle = async (id: number) => {
     setLoading(true);
     setError(null);
     try {
@@ -252,11 +261,34 @@ export default function AdminNewsPage() {
         throw new Error(data?.message || "Failed to delete article");
       }
       await fetchArticles();
+      toast.warning("Article deleted", {
+        description: "The article was removed successfully.",
+      });
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to delete article");
+      const message =
+        err instanceof Error ? err.message : "Failed to delete article";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const deleteArticle = (id: number) => {
+    toast.warning("Delete this article?", {
+      description: "This cannot be undone.",
+      action: {
+        label: "Delete",
+        onClick: () => {
+          void performDeleteArticle(id);
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {},
+      },
+      duration: 8000,
+    });
   };
 
   const toggleStatus = async (id: number, isActive: boolean) => {
@@ -274,8 +306,16 @@ export default function AdminNewsPage() {
         throw new Error(data?.message || "Failed to update status");
       }
       await fetchArticles();
+      toast.success(!isActive ? "Article published" : "Article hidden", {
+        description: !isActive
+          ? "This article is now visible to readers."
+          : "This article is no longer visible to readers.",
+      });
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to update status");
+      const message =
+        err instanceof Error ? err.message : "Failed to update status";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
