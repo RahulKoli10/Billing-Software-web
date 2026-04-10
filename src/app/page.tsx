@@ -22,25 +22,21 @@ export default function Home() {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        img : "/invoice1.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        img : "/invoice2.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        img : "/invoice3.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        img : "/invoice4.png"
     },
   ];
 
@@ -231,14 +227,13 @@ export default function Home() {
 
                 {/* Image Placeholder */}
                 <div className="mt-4 rounded-lg border border-gray-100 overflow-hidden">
-                  {/* <Image
+                  <Image
                     src="/homeFeature.png"
                     alt="Feature"
                     width={600}
                     height={400}
                     className="w-full h-auto"
-                  /> */}
-                  <img src={item.img} alt="" />
+                  />
                 </div>
               </div>
             ))}
