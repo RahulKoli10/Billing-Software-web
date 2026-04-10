@@ -142,7 +142,7 @@ export default function Navbar() {
               Features
             </Link>
             <Link href="/blog" className={linkClass("/blog")}>
-              Blog
+              Blogo
             </Link>
             <Link href="/help" className={linkClass("/help")}>
               Help

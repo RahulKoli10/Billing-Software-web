@@ -88,24 +88,24 @@ export default function AdminCustomersPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-        <Card className="flex flex-col items-center text-center p-8 bg-blue-50/50 shadow-none">
-          <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center mb-4 shadow-xl shadow-blue-600/20">
-            <Users className="text-white w-8 h-8" />
+        <Card className="flex flex-col border border-gray-200 items-center text-center h-40 p-8 bg-blue-50/50 shadow-none">
+          <div className="rounded-2xl flex items-center justify-center mb-4">
+            <Users className="text-blue-600 w-8 h-8" />
           </div>
           <h4 className="font-bold font-headline text-xl text-gray-900">{customers.length}</h4>
           <p className="text-sm font-bold text-gray-400 opacity-80 uppercase tracking-widest">Total Entities</p>
         </Card>
-        <Card className="flex flex-col items-center text-center p-8 border-none bg-gray-50 shadow-none">
+        <Card className="flex flex-col items-center text-center p-13 border-none h-40 bg-gray-50">
           <h4 className="font-bold font-headline text-xl text-green-600">{healthIndex}%</h4>
-          <p className="text-xs font-bold text-gray-400 opacity-80 uppercase tracking-widest">Health Index</p>
+          <p className="text-xs font-bold text-black pt-3 opacity-80 uppercase tracking-widest">Health Index</p>
         </Card>
-        <Card className="flex flex-col items-center text-center p-8 border-none bg-gray-50 shadow-none">
+        <Card className="flex flex-col items-center text-center p-13 border-none h-40 bg-gray-50 shadow-none">
           <h4 className="font-bold font-headline text-xl text-blue-600">₹{totalRevenue.toLocaleString()}</h4>
-          <p className="text-xs font-bold text-gray-400 opacity-80 uppercase tracking-widest">Total Revenue</p>
+          <p className="text-xs font-bold text-black pt-3 opacity-80 uppercase tracking-widest">Total Revenue</p>
         </Card>
-        <Card className="flex flex-col items-center text-center p-8 border-none bg-gray-50 shadow-none">
+        <Card className="flex flex-col items-center text-center p-13 border-none h-40 bg-gray-50 shadow-none">
           <h4 className="font-bold font-headline text-xl text-amber-600">{pendingCompliance}</h4>
-          <p className="text-xs font-bold text-gray-400 opacity-80 uppercase tracking-widest">Pending Status</p>
+          <p className="text-xs font-bold text-black pt-3 opacity-80 uppercase tracking-widest">Pending Status</p>
         </Card>
       </div>
 

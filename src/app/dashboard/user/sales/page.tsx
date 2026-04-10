@@ -99,25 +99,25 @@ export default function SalesPage() {
       setSales(
         Array.isArray(data)
           ? data.map((sale: ApiSaleItem) => ({
-              id: Number(sale.id) || 0,
-              invoice_no: sale.invoice_no || "-",
-              customer_name: sale.customer_name || "-",
-              customer_mobile: sale.customer_mobile || null,
-              customer_gstin: sale.customer_gstin || null,
-              invoice_date: sale.invoice_date || "",
-              due_date: sale.due_date || null,
-              item_count:
-                sale.item_count === null || sale.item_count === undefined
-                  ? null
-                  : Number(sale.item_count),
-              grand_total: Number(sale.grand_total ?? sale.net_amount ?? 0),
-              net_amount: Number(sale.net_amount ?? 0),
-              received_amount: Number(sale.received_amount ?? 0),
-              balance_due: Number(sale.balance_due ?? 0),
-              payment_status: String(sale.payment_status || "pending").toLowerCase(),
-              payment_mode: sale.payment_mode || null,
-              payment_method: sale.payment_method || null,
-            }))
+            id: Number(sale.id) || 0,
+            invoice_no: sale.invoice_no || "-",
+            customer_name: sale.customer_name || "-",
+            customer_mobile: sale.customer_mobile || null,
+            customer_gstin: sale.customer_gstin || null,
+            invoice_date: sale.invoice_date || "",
+            due_date: sale.due_date || null,
+            item_count:
+              sale.item_count === null || sale.item_count === undefined
+                ? null
+                : Number(sale.item_count),
+            grand_total: Number(sale.grand_total ?? sale.net_amount ?? 0),
+            net_amount: Number(sale.net_amount ?? 0),
+            received_amount: Number(sale.received_amount ?? 0),
+            balance_due: Number(sale.balance_due ?? 0),
+            payment_status: String(sale.payment_status || "pending").toLowerCase(),
+            payment_mode: sale.payment_mode || null,
+            payment_method: sale.payment_method || null,
+          }))
           : []
       );
       setError("");
@@ -148,7 +148,7 @@ export default function SalesPage() {
 
       {/* HEADER */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="text-xl font-bold tracking-tight sm:text-3xl">
           Sales Dashboard
         </h1>
         <p className="text-slate-500 mt-1">
@@ -178,22 +178,25 @@ export default function SalesPage() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           title="Total Revenue"
-          value={currency.format(total)}
+          value={<span className="text-xl font-semibold">{currency.format(total)}</span>}
           icon={IndianRupee}
         />
+
         <StatCard
           title="Received"
-          value={currency.format(received)}
+          value={<span className="text-xl font-semibold">{currency.format(received)}</span>}
           icon={CreditCard}
         />
+
         <StatCard
           title="Pending"
-          value={currency.format(pending)}
+          value={<span className="text-xl font-semibold">{currency.format(pending)}</span>}
           icon={AlertCircle}
         />
+
         <StatCard
           title="Invoices"
-          value={filtered.length}
+          value={<span className="text-xl font-semibold">{filtered.length}</span>}
           icon={FileText}
         />
       </div>
@@ -247,7 +250,7 @@ export default function SalesPage() {
                     </td>
                     <td className="p-3">{sale.customer_name}</td>
                     <td className="p-3">{sale.customer_mobile || "-"}</td>
-                    
+
 
                     <td className="p-3">
                       {currency.format(sale.grand_total || sale.net_amount)}
@@ -265,10 +268,9 @@ export default function SalesPage() {
 
                     <td className="p-3">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                          statusStyles[sale.payment_status] ||
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${statusStyles[sale.payment_status] ||
                           "bg-slate-100"
-                        }`}
+                          }`}
                       >
                         {sale.payment_status}
                       </span>
