@@ -7,6 +7,7 @@ import {
   CreditCard,
   Download,
   Loader2,
+  PenSquare,
   ShieldCheck,
   Users,
 } from "lucide-react";
@@ -251,6 +252,12 @@ export default function AdminDashboardView() {
           >
             Manage blogs
           </Link>
+          <Link
+            href="/dashboard/admin/content-writers"
+            className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+          >
+            Content writers
+          </Link>
         </div>
       </div>
 
@@ -392,6 +399,11 @@ export default function AdminDashboardView() {
                 title="Blogs"
                 description="Create and publish blog cards for the website"
               />
+              <AdminLink
+                href="/dashboard/admin/content-writers"
+                title="Content writers"
+                description="Create, reset, and manage writer access"
+              />
             </div>
           </Card>
 
@@ -419,6 +431,29 @@ export default function AdminDashboardView() {
             ) : (
               <p className="text-sm text-gray-500">No software uploaded yet.</p>
             )}
+          </Card>
+
+          <Card title="Editorial access" subtitle="Manage your writer workspace">
+            <div className="rounded-xl bg-violet-50 px-4 py-4">
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-white p-3 text-violet-600 shadow-sm">
+                  <PenSquare className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Content writers</p>
+                  <p className="text-sm text-gray-500">
+                    Add writer accounts and rotate passwords without exposing the main admin login.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/dashboard/admin/content-writers"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-violet-700"
+              >
+                Open writer management
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </Card>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import NewsAssetImage from "../NewsAssetImage";
@@ -22,26 +22,6 @@ type NewsArticle = {
   tags?: string;
   read_time?: string;
 };
-
-type ArticleBlock =
-  | { type: "heading"; text: string }
-  | { type: "paragraph"; text: string };
-
-function parseArticleContent(content: string): ArticleBlock[] {
-  return content
-    .split(/\n\s*\n/)
-    .map((block) => block.trim())
-    .filter(Boolean)
-    .map((block) => {
-      const heading = block.match(/^#{2,3}\s+(.+)$/);
-
-      if (heading) {
-        return { type: "heading", text: heading[1].trim() };
-      }
-
-      return { type: "paragraph", text: block };
-    });
-}
 
 export default function NewsDetailPage() {
   const params = useParams<{ slug: string }>();
@@ -91,10 +71,6 @@ export default function NewsDetailPage() {
 
     return () => controller.abort();
   }, [slug]);
-
-  const articleBlocks = useMemo(() => {
-    return parseArticleContent(article?.content || "");
-  }, [article?.content]);
 
   return (
     <main className="min-h-screen bg-[#F3F6FB] font-dm">
@@ -184,20 +160,10 @@ export default function NewsDetailPage() {
     </div>
 
     {/* Content */}
-    <div className="mx-auto mt-8 max-w-3xl space-y-6 text-[15px] leading-8 text-gray-700 sm:text-base">
-      {articleBlocks.map((block, index) =>
-        block.type === "heading" ? (
-          <h2
-            key={`${article.id}-${index}`}
-            className="pt-4 text-2xl font-bold leading-snug text-gray-950"
-          >
-            {block.text}
-          </h2>
-        ) : (
-          <p key={`${article.id}-${index}`}>{block.text}</p>
-        )
-      )}
-    </div>
+    <div 
+      className="prose prose-lg max-w-none mt-8"
+      dangerouslySetInnerHTML={{ __html: article.content }}
+    />
 
   </div>
 </article>

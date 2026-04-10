@@ -16,6 +16,7 @@ import {
   List,
   BookOpen,
   Newspaper,
+  PenSquare,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -124,14 +125,22 @@ export default function DashboardSidebar({
       icon: Newspaper,
       roles: ["superadmin"],
     },
+    {
+      label: "Content Writers",
+      href: "/dashboard/admin/content-writers",
+      icon: PenSquare,
+      roles: ["superadmin"],
+    },
   ];
 
   const renderLink = (item: NavItem) => {
     const isActive =
-      pathname === item.href ||
-      (pathname.startsWith(item.href + "/") &&
-        item.href !== "/dashboard" &&
-        item.href !== "/dashboard/admin");
+      pathname !== null && (
+        pathname === item.href ||
+        (pathname.startsWith(item.href + "/") &&
+          item.href !== "/dashboard" &&
+          item.href !== "/dashboard/admin")
+      );
 
     return (
       <Link
