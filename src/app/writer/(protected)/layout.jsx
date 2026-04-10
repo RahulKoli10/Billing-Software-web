@@ -1,6 +1,6 @@
 'use client';
 import WriterPrivateRoute from "@/components/WriterPrivateRoute";
-import WriterLayout from "@/pages/writer/WriterLayout";
+import WriterLayout from "@/pages/writer/writerLayout";
 
 export default function WriterProtectedLayout({ children }) {
   return (

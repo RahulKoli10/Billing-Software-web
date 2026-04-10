@@ -1,4 +1,4 @@
-import WriterBlogForm from "@/pages/writer/WriterBlogForm";
+import WriterBlogForm from "@/pages/writer/writerBlogForm";
 
 export default function WriterBlogsEditAliasPage() {
   return <WriterBlogForm />;
