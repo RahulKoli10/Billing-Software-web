@@ -1,4 +1,4 @@
-import WriterNewsList from "@/pages/writer/writerNewsList";
+import WriterNewsList from "@/pages/writer/WriterNewsList";
 
 export default function WriterNewsPage() {
   return <WriterNewsList />;
