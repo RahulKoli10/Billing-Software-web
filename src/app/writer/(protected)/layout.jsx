@@ -1,3 +1,4 @@
+'use client';
 import WriterPrivateRoute from "@/components/WriterPrivateRoute";
 import WriterLayout from "@/pages/writer/WriterLayout";
 
