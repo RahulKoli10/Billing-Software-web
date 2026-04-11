@@ -30,8 +30,11 @@ export default function DashboardTopbar({
   const emailUsername = user.email?.split("@")[0]?.trim();
   const displayName =
     user.name?.trim() || emailUsername || user.email || user.role;
+  const normalizedRole = user.role.trim().toLowerCase();
   const subLabel = isAdmin
     ? "Super Admin"
+    : ["content-writer", "content_writer", "content writer", "writer", "admin"].includes(normalizedRole)
+      ? "Content Writer"
     : user.email?.trim() || "User";
   const initial = displayName.charAt(0).toUpperCase();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);

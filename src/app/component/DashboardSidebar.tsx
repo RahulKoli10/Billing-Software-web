@@ -26,7 +26,7 @@ import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
 
 type SidebarProps = {
-  role: "superadmin" | "user";
+  role: string;
   mobileOpen?: boolean;
   onClose?: () => void;
 };
@@ -35,7 +35,6 @@ type NavItem = {
   label: string;
   href: string;
   icon: LucideIcon;
-  roles?: ("superadmin" | "user")[];
 };
 
 export default function DashboardSidebar({
@@ -93,45 +92,52 @@ export default function DashboardSidebar({
       label: "Admin Overview",
       href: "/dashboard/admin",
       icon: ShieldCheck,
-      roles: ["superadmin"],
     },
     {
       label: "Customers",
       href: "/dashboard/admin/customers",
       icon: Users,
-      roles: ["superadmin"],
     },
     {
       label: "Software Downloads",
       href: "/dashboard/admin/software-downloads",
       icon: Package,
-      roles: ["superadmin"],
     },
     {
       label: "Pricing Plans",
       href: "/dashboard/admin/pricing",
       icon: List,
-      roles: ["superadmin"],
-    },
-    {
-      label: "Blogs",
-      href: "/dashboard/admin/blogs",
-      icon: BookOpen,
-      roles: ["superadmin"],
-    },
-    {
-      label: "News",
-      href: "/dashboard/admin/news",
-      icon: Newspaper,
-      roles: ["superadmin"],
     },
     {
       label: "Content Writers",
       href: "/dashboard/admin/content-writers",
       icon: PenSquare,
-      roles: ["superadmin"],
     },
   ];
+
+  const editorialLinks: NavItem[] = [
+    {
+      label: "Blogs",
+      href: "/dashboard/admin/blogs",
+      icon: BookOpen,
+    },
+    {
+      label: "News",
+      href: "/dashboard/admin/news",
+      icon: Newspaper,
+    },
+  ];
+
+  const normalizedRole = role.trim().toLowerCase();
+  const isSuperadmin = normalizedRole === "superadmin";
+  const isContentWriter = [
+    "content-writer",
+    "content_writer",
+    "content writer",
+    "writer",
+    "admin",
+  ].includes(normalizedRole);
+  const canAccessEditorial = isSuperadmin || isContentWriter;
 
   const renderLink = (item: NavItem) => {
     const isActive =
@@ -217,7 +223,7 @@ export default function DashboardSidebar({
           </div>
           {commonLinks.map(renderLink)}
           
-          {role === "user" && (
+          {normalizedRole === "user" && (
             <>
               <div className="px-4 mt-8 mb-2 text-xs font-bold uppercase tracking-widest text-gray-800">
                 User Dashboard
@@ -225,12 +231,21 @@ export default function DashboardSidebar({
               {userLinks.map(renderLink)}
             </> 
           )}
-        {role === "superadmin" && (
+        {isSuperadmin && (
             <>
               <div className="px-4 mt-8 mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
                 Admin
               </div>
               {adminLinks.map(renderLink)}
+            </>
+          )}
+
+          {canAccessEditorial && (
+            <>
+              <div className="px-4 mt-8 mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
+                Editorial
+              </div>
+              {editorialLinks.map(renderLink)}
             </>
           )}
         </nav>
@@ -243,7 +258,7 @@ export default function DashboardSidebar({
             }}
             className="min-w-auto py-3 px-4 bg-linear-to-r from-blue-600 to-blue-700 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-600/20 hover:opacity-90 transition-all text-center"
           >
-            {role === "superadmin" ? "Generate Report" : "New Invoice"}
+            {isSuperadmin ? "Generate Report" : "New Invoice"}
           </button>
         </div>
 
