@@ -5,7 +5,7 @@ import DashboardSidebar from "./DashboardSidebar";
 import DashboardTopbar from "./DashboardTopbar";
 
 type DashboardShellProps = {
-  role: "superadmin" | "user";
+  role: string;
   user: {
     role: string;
     email?: string;

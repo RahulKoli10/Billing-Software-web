@@ -31,12 +31,17 @@ export default function NewsAssetImage({
     () => resolveAssetUrl(src, useFallback),
     [src, useFallback]
   );
+  const isBackendUpload =
+    src.startsWith("/uploads/") ||
+    src.includes("/uploads/") ||
+    src.includes("/backend/uploads/");
 
   return (
     <Image
       {...props}
       src={resolvedSrc}
       alt={alt}
+      unoptimized={isBackendUpload}
       onError={(event) => {
         if (src.startsWith("/uploads/") && !useFallback) {
           setUseFallback(true);
