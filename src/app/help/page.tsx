@@ -148,7 +148,7 @@ export default function HelpCenterPage() {
               <div className="flex justify-end lg:justify-start">
                 <button
                   type="submit"
-                  className="bg-[#1D2BFF] text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
+                  className="bg-[#1D2BFF] text-white px-10 py-4 rounded-xl cursor-pointer font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
                 >
                   Send Message
                 </button>

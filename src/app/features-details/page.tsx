@@ -9,31 +9,37 @@ export default function SigninPage() {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/billing-invoices.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/gst-and-tax.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/inventory-managment.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/point-and-sales.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/report-and-analytics.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/user-managment-and-security.png"
     },
   ];
   return (

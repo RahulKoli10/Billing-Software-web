@@ -119,12 +119,7 @@ export default function PricingSection() {
 
         {/* Cards */}
         <div
-          className="
-    flex gap-6 overflow-x-auto pb-4
-    md:grid md:grid-cols-2 md:overflow-visible
-    lg:grid-cols-3
-  "
-        >
+          className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-10 lg:gap-6 overflow-x-auto pb-4 md:overflow-visible">
           {pricingPlans.map((plan) => {
             const monthlyPrice = plan.monthly_price;
             
@@ -190,7 +185,7 @@ export default function PricingSection() {
                   </h3>
                 </div>
 
-                <p className="mt-2 text-black">{plan.description}</p>
+                <p className="mt-2 text-green-900">{plan.description}</p>
 
                 {/* Price */}
                 <div className="mt-6 flex items-end gap-1 h-10">

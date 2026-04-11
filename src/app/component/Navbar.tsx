@@ -3,7 +3,7 @@ import { Montserrat } from "next/font/google";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["400" , "500",  "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 import Image from "next/image";
@@ -53,8 +53,7 @@ export default function Navbar() {
   };
 
   const linkClass = (path: string) =>
-    `block font-medium transition ${
-      pathname === path ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
+    `block font-medium transition ${pathname === path ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
     }`;
 
   /* AUTH CHECK */
@@ -95,7 +94,7 @@ export default function Navbar() {
         method: "POST",
         credentials: "include",
       });
-    } catch {}
+    } catch { }
 
     setIsLoggedIn(false);
     setUser(null);
@@ -113,20 +112,20 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* LOGO */}
           <div className="flex items-center gap-2">
-  <Image
-    src="/logo.png"
-    alt="Billing"
-    width={40}
-    height={20}
-    priority
-  />
+            <Image
+              src="/logo.png"
+              alt="Billing"
+              width={40}
+              height={20}
+              priority
+            />
 
-  <h1
-    className={`${montserrat.className} text-xl font-bold text-[#2B3282] tracking-tight`}
-  >
-    BissBill
-  </h1>
-</div>
+            <h1
+              className={`${montserrat.className} text-xl font-bold text-[#2B3282] tracking-tight`}
+            >
+              BissBill
+            </h1>
+          </div>
           {/* DESKTOP MENU */}
           <nav className="hidden lg:flex gap-8 text-base">
             <Link href="/" className={linkClass("/")}>
@@ -142,7 +141,7 @@ export default function Navbar() {
               Features
             </Link>
             <Link href="/blog" className={linkClass("/blog")}>
-              Blogo
+              Blog
             </Link>
             <Link href="/help" className={linkClass("/help")}>
               Help
@@ -162,13 +161,13 @@ export default function Navbar() {
               <>
                 <button
                   onClick={() => setMenuOpen((p) => !p)}
-                  className="text-green-700 hover:text-blue-600"
+                  className="text-green-700 hover:text-blue-600 cursor-pointer"
                 >
                   <Icon icon="qlementine-icons:user-24" width="25" />
                 </button>
 
                 {menuOpen && (
-                  <div className="absolute right-0 top-12 w-44 bg-white  rounded-lg shadow-lg">
+                  <div className="absolute right-0 top-12 w-44 bg-white  rounded-lg shadow-lg ">
                     <button
                       onClick={() => {
                         setMenuOpen(false);
@@ -179,18 +178,18 @@ export default function Navbar() {
                           router.push("/dashboard");
                         }
                       }}
-                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer"
                     >
                       Dashboard
                     </button>
 
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 cursor-pointer"
                     >
                       Logout
                     </button>
-                  </div> 
+                  </div>
                 )}
               </>
             )}

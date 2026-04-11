@@ -320,7 +320,7 @@ export default function DashboardHome() {
             </div>
             <h4 className="text-sm font-bold text-gray-400 mb-1 uppercase tracking-widest">{stat.title}</h4>
             <div className="flex items-center gap-3">
-              <p className="text-2xl text-black font-bold font-headline truncate" title={stat.value}>{stat.value}</p>
+              <p className="text-2xl text-black font-semibold font-headline truncate" title={stat.value}>{stat.value}</p>
               {stat.title === "License Key" && (
                 <button 
                   onClick={(e) => { e.stopPropagation(); handleCopy(stat.value, 'license_stat'); }} 
@@ -349,7 +349,7 @@ export default function DashboardHome() {
               <TrendingUp className="w-4 h-4 text-gray-300" />
             </div>
             <p className="text-sm font-bold uppercase tracking-widest text-gray-400">{stat.title}</p>
-            <p className="mt-2 text-2xl font-bold text-gray-900">{stat.value}</p>
+            <p className="mt-2 text-2xl font-semibold text-gray-900">{stat.value}</p>
             <p className="mt-2 text-xs font-medium text-gray-500">{stat.helper}</p>
           </Card>
         ))}
@@ -710,7 +710,7 @@ Button.displayName = "Button";
 
 export const Card = ({ children, className, title, subtitle }: { children: React.ReactNode, className?: string, title?: string, subtitle?: string }) => {
   return (
-    <div className={cn("bg-white rounded-2xl p-6 shadow-sm border border-gray-100", className)}>
+    <div className={cn("bg-white rounded-lg p-6 shadow-sm border border-gray-100", className)}>
       {(title || subtitle) && (
         <div className="mb-6">
           {title && <h3 className="text-lg font-bold font-headline text-gray-900 tracking-tight">{title}</h3>}

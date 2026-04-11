@@ -25,10 +25,10 @@ export default function DownloadPage() {
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [requestId, setRequestId] = useState(0);
- const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [user, setUser] = useState<null | { role: string }>(null);
-const checkAuth = async () => {
+  const checkAuth = async () => {
     try {
       const res = await fetch(buildApiUrl("/api/auth/me"), {
         credentials: "include",
@@ -50,7 +50,7 @@ const checkAuth = async () => {
     } finally {
       setAuthChecked(true);
     }
-  }; 
+  };
   /*   FETCH   */
   const fetchDownloads = async (platform?: "windows" | "mac") => {
     setRequestId((prev) => prev + 1);
@@ -147,22 +147,20 @@ const checkAuth = async () => {
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <button
                 onClick={() => fetchDownloads("windows")}
-                className={`px-5 py-2 rounded-md cursor-pointer ${
-                  selectedPlatform === "windows"
+                className={`px-5 py-2 rounded-md cursor-pointer ${selectedPlatform === "windows"
                     ? "bg-black text-white"
                     : "border border-gray-400 hover:bg-gray-100"
-                }`}
+                  }`}
               >
                 Windows
               </button>
 
               <button
                 onClick={() => fetchDownloads("mac")}
-                className={`px-5 py-2 rounded-md ${
-                  selectedPlatform === "mac"
+                className={`px-5 py-2 rounded-md ${selectedPlatform === "mac"
                     ? "bg-black text-white"
                     : "border border-gray-400 hover:bg-gray-100"
-                }`}
+                  }`}
               >
                 Mac
               </button>
@@ -214,9 +212,8 @@ const checkAuth = async () => {
 
           {/*   TABLE   */}
           <div
-            className={`mt-11 transition-all duration-300 ${
-              isTransitioning ? "opacity-0 translate-y-2" : "opacity-100"
-            }`}
+            className={`mt-11 transition-all duration-300 ${isTransitioning ? "opacity-0 translate-y-2" : "opacity-100"
+              }`}
           >
             <div className="hidden md:grid grid-cols-3 text-sm font-semibold text-gray-500 border-b pb-3">
               <span>Date</span>
@@ -338,13 +335,12 @@ const checkAuth = async () => {
               <button
                 onClick={() => latestMac && handleDownload(latestMac)}
                 disabled={!latestMac}
-                className={`mt-6 px-6 py-3 rounded-md cursor-pointer ${
-                  latestMac
+                className={`mt-6 px-6 py-3 rounded-md cursor-pointer ${latestMac
                     ? "bg-black text-white hover:bg-gray-800"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
+                  }`}
               >
-                {latestMac ? "Download for Mac" : "Mac Coming Soon"}
+                {latestMac ? "Download for Mac" : "Download for Mac"}
               </button>
             </div>
           </div>
@@ -364,20 +360,20 @@ const checkAuth = async () => {
                 Start managing your business smarter today.
               </p>
 
-             { isLoggedIn ? ( <Link
+              {isLoggedIn ? (<Link
                 href="/signup"
                 className="inline-flex items-center gap-2 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg hover:bg-blue-700"
               >
-               Start Free  <Icon icon="line-md:arrow-right" />
-              </Link> ) : (
-                
-              <Link
-                href="/plans-price"
-                className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-              >
-                Go to Pricing{" "}
-                <Icon icon="line-md:arrow-right" width="20" height="20" />
-              </Link>
+                Start Free  <Icon icon="line-md:arrow-right" />
+              </Link>) : (
+
+                <Link
+                  href="/plans-price"
+                  className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+                >
+                  Go to Pricing{" "}
+                  <Icon icon="line-md:arrow-right" width="20" height="20" />
+                </Link>
               )}
             </div>
 

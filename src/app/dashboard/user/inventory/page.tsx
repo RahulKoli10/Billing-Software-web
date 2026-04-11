@@ -186,26 +186,26 @@ export default function InventoryPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard title="Items"
-          value={<span className="text-xl font-semibold">{totalItems}</span>}
+          value={totalItems}
           icon={Boxes}
         />
         <StatCard title="Categories"
-          value={<span className="text-xl font-semibold">{categories}</span>}
+          value={categories}
           icon={Tag}
         />
         <StatCard
           title="Low Stock"
-          value={<span className="text-xl font-semibold">{lowStockItems}</span>}
+          value={lowStockItems}
           icon={AlertTriangle}
         />
         <StatCard
           title="Inventory Value"
-          value={<span className="text-xl font-semibold">{currency.format(inventoryValue)}</span>}
+          value={currency.format(inventoryValue)}
           icon={Package}
         />
       </div>
 
-      <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-lg border bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-245 w-full text-sm">
             <thead className="bg-slate-50 text-slate-600">
@@ -288,12 +288,12 @@ function StatCard({
   icon: ComponentType<{ className?: string }>;
 }) {
   return (
-    <div className="rounded-2xl border bg-white p-4 shadow-sm transition hover:shadow-md">
+    <div className="rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md">
       <div className="flex items-center justify-between">
         <p className="text-sm text-slate-500">{title}</p>
         <Icon className="h-5 w-5 text-blue-600" />
       </div>
-      <p className="mt-2 text-xl font-bold text-black">{value}</p>
+      <p className="mt-2 text-xl font-semibold text-black">{value}</p>
     </div>
   );
 }
