@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ComponentType } from "react";
+import React,{ useEffect, useState, type ComponentType } from "react";
 import { buildApiUrl } from "@/lib/api";
 import {
   IndianRupee,
