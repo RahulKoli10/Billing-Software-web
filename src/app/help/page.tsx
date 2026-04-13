@@ -78,7 +78,7 @@ export default function HelpCenterPage() {
           <div className="relative hidden lg:block h-full">
             <div className="absolute top-0 left-0 w-[140%] h-125 shadow-2xl rounded-tl-3xl border-t border-l border-white/50 overflow-hidden bg-white">
               <Image
-                src="/heroBilling.png"
+                src="/HeroBilling.jpeg"
                 alt="Help Center Dashboard"
                 fill
                 className="object-cover object-top-left"
