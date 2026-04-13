@@ -104,7 +104,7 @@ export default function Navbar() {
     notifyAuthStateChanged();
     router.push("/login");
   };
-  
+
   return (
     <header className="w-full bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
@@ -140,7 +140,7 @@ export default function Navbar() {
               Features
             </Link>
             <Link href="/blog" className={linkClass("/blog")}>
-              Blogo
+              Blog
             </Link>
             <Link href="/help" className={linkClass("/help")}>
               Help
