@@ -20,6 +20,10 @@
 .prose pre { background: #1e1e1e; color: #fff; padding: 1rem; border-radius: 8px; overflow-x: auto; }
 .prose blockquote { border-left: 4px solid #7c6ff7; padding-left: 1rem; color: #555; font-style: italic; }
 .prose img { max-width: 100%; border-radius: 8px; margin: 1rem 0; }
+.prose table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+.prose th, .prose td { border: 1px solid #d1d5db; padding: 8px; min-width: 100px; text-align: left; }
+.prose th { background-color: #f3f4f6; font-weight: 700; }
+
 
 .font-dm {
   font-family: var(--font-dm-sans);

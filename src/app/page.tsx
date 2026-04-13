@@ -7,7 +7,7 @@ import Link from "next/link.js";
 import { Icon } from "@iconify/react";
 import Footer from "./component/Footer";
 import { buildApiUrl } from "@/lib/api";
-
+import { featureItems } from "./features/featureData";
 export default function Home() {
   const scrollToPricing = () => {
     const pricingSection = document.getElementById("plan-pricing");
@@ -17,28 +17,28 @@ export default function Home() {
     pricingSection.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const features = [
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-    },
-  ];
+  // const features = [
+  //   {
+  //     title: "Auto-Discount Engine",
+  //     description:
+  //       "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+  //   },
+  //   {
+  //     title: "Auto-Discount Engine",
+  //     description:
+  //       "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+  //   },
+  //   {
+  //     title: "Auto-Discount Engine",
+  //     description:
+  //       "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+  //   },
+  //   {
+  //     title: "Auto-Discount Engine",
+  //     description:
+  //       "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+  //   },
+  // ];
 
   const invoices = [
     {
@@ -72,7 +72,7 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [user, setUser] = useState<null | { role: string }>(null);
-const checkAuth = async () => {
+  const checkAuth = async () => {
     try {
       const res = await fetch(buildApiUrl("/api/auth/me"), {
         credentials: "include",
@@ -90,36 +90,43 @@ const checkAuth = async () => {
       setUser(data.user ?? null);
     } catch {
       setIsLoggedIn(false);
-      setUser(null);isLoggedIn
+      setUser(null);
+      isLoggedIn;
     } finally {
       setAuthChecked(true);
     }
-  }; 
+  };
   const FAQS = [
     {
       id: 1,
-      question: "Is the billing software really free to use?",
+      question:"What is BissBill and who is it best for?",
       answer:
-        "Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations. Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations.",
+        "BissBill is an all-in-one GST billing software designed specifically for small businesses in India. Whether you're a retail shop owner, wholesaler, or a beginner with no accounting knowledge, BissBill makes it easy to create GST invoices, manage inventory, track payments, and generate reports — all from one simple platform. It is the best GST billing software for small business India that requires zero technical expertise to get started."
     },
     {
       id: 2,
-      question: " Is the billing software really free to use?",
-      answer:
-        "Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations. Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations.",
+      question:"Is BissBill really free? What features do I get for free?",
+      answer:"Yes BissBill is free to start. When you sign up, you instantly get access to 45% of our core features including GST invoicing, basic inventory management, and payment tracking — with no credit card required and no hidden charges. It is one of the few free GST billing software options in India that actually gives you meaningful features without asking for payment upfront. You can upgrade anytime to unlock the full power of BissBill."
     },
     {
       id: 3,
-      question: "Is the billing software really free to use?",
+      question:"Can BissBill replace Tally for my small business?",
       answer:
-        "Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations. Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations.",
+      "Absolutely. BissBill is built as a modern, easy-to-use Tally alternative billing software for India. Unlike Tally, BissBill requires no training or accounting background — your staff can start billing from day one. It covers everything a small business needs — GST invoicing, inventory tracking, purchase management, reports, and multi-user access all in one place. If you're looking for a simpler, faster, and more affordable online billing software India, BissBill is the right switch."
     },
     {
       id: 4,
-      question: " Is the billing software really free to use?",
+      question: "Does BissBill support barcode scanning and WhatsApp invoice sharing?",
       answer:
-        "Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations. Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations.",
+        "Yes, both features are built right into BissBill. Our billing software with barcode scanner India support lets you scan products instantly at the counter for faster billing with zero manual entry errors. Once the invoice is ready, you can share it directly with your customer via WhatsApp, SMS, or Email in a single tap. BissBill is one of the very few billing software with WhatsApp invoice sharing available in India making it the perfect choice for retail shops and wholesalers who want fast, paperless billing.",
     },
+    {
+      id: 5,
+      question: "Does BissBill work for retail shops and POS billing on PC or Windows?",
+      answer:
+        "Yes. BissBill is a complete POS billing software for retail shop India that works seamlessly on PC and Windows. Whether you run a grocery store, clothing shop, electronics store, or any other retail business, BissBill handles high-volume billing at the counter with speed and accuracy. It supports barcode scanners, thermal printers, and cash drawers making it the most reliable billing software for PC Windows India for retail owners who need a fast and dependable point-of-sale system.",
+    },
+
   ];
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -140,16 +147,26 @@ const checkAuth = async () => {
       {/* hero */}
       <section className="w-full bg-linear-to-t from-white via-blue-50 to-blue-50 ">
         <div className="max-w-7xl mx-auto px-4 py-10 text-center mt-px font-open">
+          <div className="flex items-center justify-center mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-200 bg-blue-50 text-sm font-medium text-blue-700 shadow-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+              </span>
+              Smart Billing for Smart Business
+            </span>
+          </div>
           {/* Heading */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black leading-tight ">
-            All-In-One Billing That Grows <br />
-            <span className="text-[#002DFF]">Your Business</span>
+            India{`'`}s #1 GST Billing Software for <br />
+            <span className="text-[#002DFF]">Smart Businesses</span>
           </h1>
 
           {/* Subtitle */}
           <p className="mt-6 max-w-2xl mx-auto text-base md:text-lg text-black font-open">
-            Create GST invoices manage inventory track payments and automate
-            reports everything your business needs to bill smarter and faster
+            Create GST invoices, manage inventory, track payments and automate
+            reports everything your small business needs to bill smarter and
+            grow faster.
           </p>
 
           {/* CTA Buttons */}
@@ -159,7 +176,7 @@ const checkAuth = async () => {
               <button className="group relative p-px inline-flex items-center justify-center rounded-lg bg-linear-to-r from-[#3652D4] to-[#E4E9F7] transition-all hover:shadow-md cursor-pointer">
                 {/* The Inner Layer */}
                 <span className="px-6 py-3 rounded-[calc(0.5rem-1px)] bg-white text-black font-medium transition group-hover:bg-blue-50/80">
-                  View Demo 
+                  View Demo
                 </span>
               </button>
             </Link>
@@ -193,11 +210,12 @@ const checkAuth = async () => {
           {/* Header */}
           <div className="text-center max-w-4xl mx-auto text-black">
             <h2 className="text-3xl md:text-[42px] font-bold font-open">
-              Features of our Invoice
+              Everything Your Business Needs to <br /> Bill Smarter
             </h2>
-            <p className="mt-4 text-base md:text-lg font-open">
-              Everything you need to bill faster, manage better, and scale your
-              business powered by automation, accuracy, and simplicity.
+            <p className="mt-4 max-w-4xl text-base md:text-lg font-open">
+              From GST invoicing to inventory, payments to analytics BissBill is
+              the only GST billing software your business will ever need. Built
+              for Indian small businesses, designed for simplicity.
             </p>
           </div>
 
@@ -214,27 +232,30 @@ const checkAuth = async () => {
 
           {/* Feature Grid */}
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {features.map((item, index) => (
+            {featureItems.slice(0, 4).map((item) => (
               <div
-                key={index}
+                key={item.slug}
                 className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition bg-white"
               >
                 <h3 className="text-2xl font-semibold text-gray-900 font-open">
                   {item.title}
                 </h3>
 
-                <p className="mt-2 text-base  ">{item.description}</p>
+                <p className="mt-2 text-base">{item.cardDescription}</p>
 
                 {/* Image Placeholder */}
-                <div className="mt-4 rounded-lg border border-gray-100 overflow-hidden">
+                <Link
+                  href={`/features-details?feature=${item.slug}`}
+                  className="block mt-4 rounded-lg border border-gray-100 overflow-hidden"
+                >
                   <Image
                     src="/homeFeature.png"
-                    alt="Feature"
+                    alt={item.title}
                     width={600}
                     height={400}
                     className="w-full h-auto"
                   />
-                </div>
+                </Link>
               </div>
             ))}
           </div>
@@ -245,11 +266,12 @@ const checkAuth = async () => {
       <section className="w-full bg-white py-12">
         <div className="max-w-7xl mx-auto px-4 relative">
           {/* Header */}
-          <div className="text-center max-w-xl mx-auto text-black">
+          <div className="text-center max-w-4xl mx-auto text-black">
             <h2 className="text-3xl md:text-[42px] font-bold">Invoices</h2>
             <p className="mt-4 text-lg font-open">
-              Send professional invoices, track payments, and reduce delays
-              automatically.
+              Create GST-ready invoices instantly, share them via WhatsApp or
+              Email, and track every payment all from India{`'`}s easiest GST
+              billing software.
             </p>
           </div>
 
@@ -330,12 +352,12 @@ const checkAuth = async () => {
           {/* Header */}
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-black">
-              Why Choose Us
+              Why Choose BissBill?
             </h2>
             <p className="mt-4 text-black text-base md:text-lg">
-              Everything you need to create invoices, track payments, manage
-              inventory, and run your business more efficiently from one
-              platform.
+              More than just billing BissBill is a complete GST billing
+              software built for Indian small businesses to invoice faster,
+              manage smarter, and grow bigger.
             </p>
           </div>
 
@@ -352,9 +374,11 @@ const checkAuth = async () => {
                   Business Growth
                 </h3>
                 <p className="mt-2 text-sm text-[#202020]">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry{`'`}s
-                  standard dummy text ever since the 1500s.
+                  BissBill is designed to grow with your business. From your
+                  first invoice to managing multiple branches, our GST billing
+                  software scales with every stage of your journey giving you
+                  the tools to sell more, manage better, and earn more every
+                  single day.
                 </p>
               </div>
 
@@ -367,9 +391,11 @@ const checkAuth = async () => {
                   Faster Payments
                 </h3>
                 <p className="mt-2 text-sm text-[#202020]">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry{`'`}s
-                  standard dummy text ever since the 1500s.
+                  Stop chasing payments manually. BissBill lets you share
+                  invoices instantly via WhatsApp, SMS and Email, track
+                  outstanding dues in real time, and send payment reminders in
+                  one click so your cash flow stays healthy and collections stay
+                  on track.
                 </p>
               </div>
 
@@ -382,13 +408,11 @@ const checkAuth = async () => {
                   Real-Time Inventory
                 </h3>
                 <p className="mt-2 text-sm text-[#202020]">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry{`'`}s
-                  standard dummy text ever since the 1500s. It was popularised
-                  in the 1960s with the release of Letraset sheets containing
-                  Lorem Ipsum passages, and more recently with desktop
-                  publishing software like Aldus PageMaker including versions of
-                  Lorem Ipsum.
+                  Never run out of stock unexpectedly again. BissBill gives you
+                  live inventory tracking, low stock alerts, barcode support,
+                  and multi-warehouse management — all built into your billing
+                  software with inventory management. Know exactly what you
+                  have, where it is, and when to reorder.
                 </p>
               </div>
             </div>
@@ -405,22 +429,23 @@ const checkAuth = async () => {
                 </h3>
 
                 <p className="mt-4 text-sm text-[#E0E0E0]">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry{`'`}s
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining
-                  essentially unchanged.
+                  Getting started with BissBill costs you nothing. Sign up for
+                  free and instantly unlock 45% of our powerful features —
+                  including GST invoicing, inventory tracking, and payment
+                  management. No credit card required, no hidden charges, no
+                  risk.
                 </p>
 
                 <p className="mt-4 text-sm text-[#E0E0E0]">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry.
+                  Whether you{`'`}re a first-time business owner or switching
+                  from a Tally alternative billing software, BissBill makes the
+                  transition effortless. Try it free and see why thousands of
+                  Indian small businesses trust BissBill as their
+                  billing software.
                 </p>
                 <p className="mt-2 text-sm text-[#E0E0E0]">
-                  Lorem Ipsum has been the industry{`'`}s standard dummy text
-                  ever since the 1500s.
+                  Ready to bill smarter? Join India{`'`}s growing community of
+                  smart business owners today.
                 </p>
               </div>
 
@@ -449,9 +474,8 @@ const checkAuth = async () => {
               What Our Customers Say
             </h2>
             <p className="mt-4 text-gray-600">
-              See how our billing solution helps businesses save time,
-              streamline operations, and grow faster with an efficient billing
-              system.
+              Thousands of Indian small business owners trust BissBill as their
+              go-to GST billing software — here{`'`}s what they have to say.
             </p>
           </div>
 
@@ -474,9 +498,10 @@ const checkAuth = async () => {
               </div>
 
               <p className="mt-4 text-[#6F6D6D] text-base leading-relaxed">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry. Lorem Ipsum has
+                We were using a manual register for years and switching to
+                BissBill was the best decision we made. GST invoices are ready
+                in seconds, stock is always updated, and my staff learned it in
+                a single day. Highly recommend it to every shop owner in India.
               </p>
 
               <div className="mt-6 flex items-center gap-3">
@@ -488,8 +513,10 @@ const checkAuth = async () => {
                   className="rounded-full object-cover"
                 />
                 <div>
-                  <p className="font-semibold text-xl">Full Name</p>
-                  <p className="text-base text-[#6F6D6D]">CEO of company</p>
+                  <p className="font-semibold text-xl">Ramesh Agarwal</p>
+                  <p className="text-base text-[#6F6D6D]">
+                    Owner, Agarwal General Store — Jaipur
+                  </p>
                 </div>
               </div>
             </div>
@@ -511,9 +538,11 @@ const checkAuth = async () => {
               </div>
 
               <p className="mt-4 text-base leading-relaxed text-white">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry. Lorem Ipsum has
+                BissBill completely changed how we run our retail business.
+                Earlier we were spending hours on billing and GST calculations
+                now it takes minutes. The WhatsApp invoice sharing feature is a
+                game changer. Our customers love getting instant bills and we
+                love how easy it is to track payments.
               </p>
 
               <div className="mt-6 flex items-center gap-3">
@@ -525,8 +554,10 @@ const checkAuth = async () => {
                   className="rounded-full object-cover"
                 />
                 <div>
-                  <p className="font-semibold text-xl">Full Name</p>
-                  <p className="text-base ">CEO of company</p>
+                  <p className="font-semibold text-xl">Priya Mehta </p>
+                  <p className="text-base ">
+                    Owner, Mehta Fashion House — Surat
+                  </p>
                 </div>
               </div>
             </div>
@@ -549,9 +580,11 @@ const checkAuth = async () => {
               </div>
 
               <p className="mt-4 text-gray-600 text-base leading-relaxed">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry. Lorem Ipsum has
+                I tried multiple billing software before BissBill but they were
+                all too complicated. This one is simple, fast, and perfect for
+                someone with no accounting background. The inventory tracking
+                and low stock alerts have saved us so many times. Best GST
+                billing software for small business in India.
               </p>
 
               <div className="mt-6 flex items-center gap-3">
@@ -564,8 +597,11 @@ const checkAuth = async () => {
                 />
 
                 <div>
-                  <p className="font-semibold text-xl">Full Name</p>
-                  <p className="text-base text-[#6F6D6D]">CEO of company</p>
+                  <p className="font-semibold text-xl">Sunil Tiwari</p>
+                  <p className="text-base text-[#6F6D6D]">
+                    {" "}
+                    Owner, Tiwari Electronics — Lucknow
+                  </p>
                 </div>
               </div>
             </div>
@@ -586,12 +622,12 @@ const checkAuth = async () => {
             {/* Rating text */}
             <p className="text-base text-[#5A5A5A] flex items-center justify-center gap-2">
               <span className="text-black">
-                <span className="font-semibold text-xl">7.2</span> / 10
+                <span className="font-semibold text-xl"> 4.8 </span>/ 5
               </span>
 
               <span>|</span>
 
-              <span>Based on 43,403 verified reviews</span>
+              <span>Based on 2,300+ verified reviews</span>
 
               <span>|</span>
 
@@ -608,12 +644,15 @@ const checkAuth = async () => {
       <section className="py-10 bg-white">
         <div className="max-w-4xl mx-auto px-4">
           {/* Heading */}
-          <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
+          <h2 className="text-3xl md:text-5xl font-bold text-center">
             Frequently Asked Questions
           </h2>
-
+          <p className="mt-4  text-gray-600 text-center">
+            Everything you need to know about BissBill — India{`'`}s smartest
+            GST billing software for small businesses.
+          </p>
           {/* FAQ Items */}
-          <div className="space-y-6">
+          <div className="space-y-6 mt-4">
             {FAQS.map((faq) => {
               const isOpen = openId === faq.id;
 
@@ -643,11 +682,10 @@ const checkAuth = async () => {
                   <div
                     className={`
                     grid transition-all duration-500 ease-in-out
-                    ${
-                      isOpen
+                    ${isOpen
                         ? "grid-rows-[1fr] opacity-100 mt-4"
                         : "grid-rows-[0fr] opacity-0 mt-0"
-                    }
+                      }
                   `}
                   >
                     <div className="overflow-hidden">
@@ -697,23 +735,23 @@ const checkAuth = async () => {
                 growing businesses.
               </p>
 
-             {isLoggedIn ? (
-              <Link
-                href="/signup"
-                className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-              >
-                Start Free{" "}
-                <Icon icon="line-md:arrow-right" width="20" height="20" />
-              </Link>
-             ) : (
-              <Link
-                href="#plan-pricing"
-                className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-              >
-                Go to Pricing{" "}
-                <Icon icon="line-md:arrow-right" width="20" height="20" />
-              </Link>
-            )}
+              {isLoggedIn ? (
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+                >
+                  Start Free{" "}
+                  <Icon icon="line-md:arrow-right" width="20" height="20" />
+                </Link>
+              ) : (
+                <Link
+                  href="#plan-pricing"
+                  className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+                >
+                  Go to Pricing{" "}
+                  <Icon icon="line-md:arrow-right" width="20" height="20" />
+                </Link>
+              )}
             </div>
 
             {/* Right Image */}

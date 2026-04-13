@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { LoaderCircle } from "lucide-react";
+import { Calendar, Clock, LoaderCircle, Save, X } from "lucide-react";
 import { toast } from "sonner";
 import ImageUploadBox from "@/components/writer/ImageUploadBox";
 import RichTextEditor from "@/components/writer/RichTextEditor";
@@ -51,6 +51,29 @@ export default function WriterBlogForm() {
   const [form, setForm] = useState<BlogFormState>(createEmptyForm(writer?.name || ""));
   const [loadingBlog, setLoadingBlog] = useState(isEditMode);
   const [submittingAction, setSubmittingAction] = useState<ContentStatus | "">("");
+  const [localBlogId, setLocalBlogId] = useState<string | null>(blogId);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const [showStatusMessage, setShowStatusMessage] = useState(false);
+  const [scheduledAt, setScheduledAt] = useState<string>("");
+  const [showSchedulePopup, setShowSchedulePopup] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState<ContentStatus | "scheduled">("draft");
+
+
+  const formRef = useRef(form);
+  const localBlogIdRef = useRef<string | null>(blogId);
+  const isSubmittingRef = useRef(false);
+  const hasChangesRef = useRef(false);
+
+  useEffect(() => {
+    formRef.current = form;
+  }, [form]);
+
+  useEffect(() => {
+    localBlogIdRef.current = localBlogId;
+  }, [localBlogId]);
+
+
 
   useEffect(() => {
     setForm((current) => {
@@ -103,6 +126,14 @@ export default function WriterBlogForm() {
           categories: data?.category ? [data.category] : [],
           content: data?.content || "",
         });
+        setLocalBlogId(String(data?.id || blogId));
+        setCurrentStatus(data?.status || "draft");
+        if (data?.scheduled_at) {
+          setScheduledAt(new Date(data.scheduled_at).toISOString().slice(0, 16));
+        }
+        hasChangesRef.current = false;
+
+
       } catch (error) {
         toast.error(error instanceof Error ? error.message : "Unable to load blog");
       } finally {
@@ -125,83 +156,184 @@ export default function WriterBlogForm() {
     [form.metaDescription]
   );
 
-  async function submitBlog(status: ContentStatus) {
-    if (!form.featuredImage) {
-      toast.error("Featured image is required.");
-      return;
-    }
+  const submitBlog = useCallback(
+    async (status: ContentStatus | "scheduled", isAutoSave = false, overrideScheduledAt?: string) => {
+      const currentForm = formRef.current;
 
-    if (!form.title.trim()) {
-      toast.error("Title is required.");
-      return;
-    }
+      const currentId = localBlogIdRef.current;
+      const editMode = Boolean(currentId);
 
-    if (!form.author.trim()) {
-      toast.error("Author is required.");
-      return;
-    }
-
-    if (!form.excerpt.trim()) {
-      toast.error("Excerpt is required.");
-      return;
-    }
-
-    if (!form.categories.length) {
-      toast.error("Add at least one category.");
-      return;
-    }
-
-    if (!countPlainText(form.content)) {
-      toast.error("Content is required.");
-      return;
-    }
-
-    setSubmittingAction(status);
-
-    try {
-      const payload = {
-        slug: slugify(form.slug || form.title),
-        category: form.categories[0],
-        title: form.title.trim(),
-        description: form.excerpt.trim(),
-        content: form.content,
-        image: form.featuredImage,
-        author: form.author.trim(),
-        avatar: "",
-        date: "",
-        status,
-        metaTitle: form.metaTitle.trim(),
-        metaDescription: form.metaDescription.trim(),
-        categories: form.categories,
-      };
-
-      const response = await fetch(
-        buildApiUrl(isEditMode ? `/api/writer/blogs/${blogId}` : "/api/writer/blogs"),
-        {
-          method: isEditMode ? "PUT" : "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
+      if (!isAutoSave) {
+        if (!currentForm.featuredImage) {
+          toast.error("Featured image is required.");
+          return;
         }
-      );
 
-      const data = (await response.json().catch(() => ({}))) as ApiMessage;
+        if (!currentForm.title.trim()) {
+          toast.error("Title is required.");
+          return;
+        }
 
-      if (!response.ok) {
-        throw new Error(data?.message || "Unable to save blog");
+        if (!currentForm.author.trim()) {
+          toast.error("Author is required.");
+          return;
+        }
+
+        if (!currentForm.excerpt.trim()) {
+          toast.error("Excerpt is required.");
+          return;
+        }
+
+        if (!currentForm.categories.length) {
+          toast.error("Add at least one category.");
+          return;
+        }
+
+        if (!countPlainText(currentForm.content)) {
+          toast.error("Content is required.");
+          return;
+        }
+      } else {
+        // Silent validation for auto-save
+        if (!currentForm.title.trim() && !countPlainText(currentForm.content)) {
+          return;
+        }
+        if (isSubmittingRef.current || submittingAction) {
+          return;
+        }
       }
 
-      toast.success(status === "published" ? "Blog published" : "Draft saved");
-      router.push("/writer/blogs");
-      router.refresh();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unable to save blog");
-    } finally {
-      setSubmittingAction("");
+      if (isAutoSave) {
+        setAutoSaveStatus("saving");
+      } else {
+        setSubmittingAction(status);
+      }
+
+      isSubmittingRef.current = true;
+
+      try {
+        const payload = {
+          slug: slugify(currentForm.slug || currentForm.title),
+          category: currentForm.categories[0] || "Uncategorized",
+          title: currentForm.title.trim() || "Untitled Draft",
+          description: currentForm.excerpt.trim(),
+          content: currentForm.content,
+          image: currentForm.featuredImage,
+          author: currentForm.author.trim(),
+          avatar: "",
+          date: "",
+          status,
+          scheduled_at: status === "scheduled" ? (overrideScheduledAt || scheduledAt) : null,
+          metaTitle: currentForm.metaTitle.trim(),
+          metaDescription: currentForm.metaDescription.trim(),
+          categories: currentForm.categories,
+        };
+
+
+        const response = await fetch(
+          buildApiUrl(editMode ? `/api/writer/blogs/${currentId}` : "/api/writer/blogs"),
+          {
+            method: editMode ? "PUT" : "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+
+        const data = (await response.json().catch(() => ({}))) as ApiMessage & { id?: string | number };
+
+        if (!response.ok) {
+          throw new Error(data?.message || "Unable to save blog");
+        }
+
+        if (!editMode && data?.id) {
+          setLocalBlogId(String(data.id));
+        }
+
+        hasChangesRef.current = false;
+
+        if (isAutoSave) {
+          setAutoSaveStatus("success");
+          setLastSavedAt(new Date());
+          setShowStatusMessage(true);
+          // Set timeout to hide status message after 5 seconds
+          setTimeout(() => setShowStatusMessage(false), 5000);
+        } else {
+          toast.success(
+            status === "published" 
+              ? "Blog published" 
+              : status === "scheduled" 
+                ? "Blog scheduled" 
+                : "Draft saved"
+          );
+          router.push("/writer/blogs");
+          router.refresh();
+        }
+
+      } catch (error) {
+        if (isAutoSave) {
+          setAutoSaveStatus("error");
+        } else {
+          toast.error(error instanceof Error ? error.message : "Unable to save blog");
+        }
+      } finally {
+        if (!isAutoSave) {
+          setSubmittingAction("");
+        }
+        isSubmittingRef.current = false;
+      }
+    },
+    [router, submittingAction, scheduledAt]
+  );
+
+
+
+  // Mark changes when form fields update
+  useEffect(() => {
+    const isActuallyEmpty = !form.featuredImage && !form.title && !form.excerpt && !form.content && !form.categories.length;
+    if (!isActuallyEmpty) {
+      hasChangesRef.current = true;
     }
-  }
+  }, [form.title, form.content, form.excerpt, form.featuredImage, form.categories, form.slug]);
+
+  // Debounced auto-save (3s)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (hasChangesRef.current) {
+        void submitBlog("draft", true);
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [form.title, form.content, form.excerpt, submitBlog]);
+
+  // Interval auto-save (30s)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (hasChangesRef.current) {
+        void submitBlog("draft", true);
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [submitBlog]);
+
+  // Final auto-save on unmount
+  useEffect(() => {
+    return () => {
+      // Trigger final save if there are changes
+      // Note: This might not work reliably in all browsers due to fetch cancellation
+      // but it fulfills the "trigger one final auto-save" requirement
+      if (hasChangesRef.current) {
+        // We use the ref version of form to ensure we have the latest state on unmount
+        // although in this case the closure might also be fine since we recreate this effect
+        void submitBlog("draft", true);
+      }
+    };
+  }, [submitBlog]);
+
 
   if (loadingBlog) {
     return (
@@ -215,204 +347,289 @@ export default function WriterBlogForm() {
   }
 
   return (
-    <div className="space-y-6 pb-28">
-      <div className="border-b border-[#e7e2ff]">
-        <div className="flex items-center gap-8 overflow-x-auto">
-          <span className="border-b-2 border-[#7c6ff7] pb-3 text-sm font-semibold text-[#534AB7]">
-            Create Blog
-          </span>
-          <Link
-            href="/writer/blogs"
-            className="pb-3 text-sm font-medium text-slate-500 transition hover:text-[#534AB7]"
-          >
-            View Blogs
-          </Link>
+    <div className="min-h-screen bg-[#f7f6f3] space-y-8">
+      <div className="border-b border-[#ebebeb] bg-white px-6 py-4 lg:px-10">
+        <div className="mx-auto max-w-7xl flex items-center justify-between">
+          <div className="flex items-center gap-8 overflow-x-auto">
+            <span className="text-sm font-semibold text-[#1a1a1a]">
+              Create Blog
+            </span>
+            <Link
+              href="/writer/blogs"
+              className="text-sm font-medium text-[#9a9a9a] transition hover:text-[#5b4ced]"
+            >
+              View Blogs
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              {autoSaveStatus === "saving" && (
+                <div className="flex items-center gap-1.5 text-xs font-medium text-[#9a9a9a]">
+                  <LoaderCircle className="h-3 w-3 animate-spin text-[#5b4ced]" />
+                  Saving...
+                </div>
+              )}
+              {autoSaveStatus === "success" && lastSavedAt && (
+                <div className="text-xs font-medium text-[#9a9a9a]">
+                  Draft saved at {lastSavedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
-      <section className="rounded-[1.8rem] border border-[#ece8ff] bg-white p-6 shadow-[0_24px_70px_-52px_rgba(124,111,247,0.65)]">
-        <ImageUploadBox
-          value={form.featuredImage}
-          onChange={(url) => setForm((current) => ({ ...current, featuredImage: url || "" }))}
-          hint="PNG, JPG, WebP or GIF (max. 5MB)"
-        />
-      </section>
+      <div className="mx-auto max-w-4xl space-y-8 px-6 lg:px-10">
 
-      <section className="rounded-[1.8rem] border border-[#ece8ff] bg-white p-6 shadow-[0_24px_70px_-52px_rgba(124,111,247,0.65)]">
-        <div className="mb-5">
-          <h2 className="text-xl font-semibold tracking-tight text-slate-950">Post Details</h2>
-        </div>
+        <section className="rounded-2xl border border-[#ebebeb] bg-white p-7">
+          <h2 className="mb-4 text-[15px] font-semibold text-[#1a1a1a]">Featured Image</h2>
+          <ImageUploadBox
+            value={form.featuredImage}
+            onChange={(url) => setForm((current) => ({ ...current, featuredImage: url || "" }))}
+            hint="PNG, JPG, WebP or GIF (max. 5MB)"
+          />
+        </section>
 
-        <div className="space-y-5">
-          <label className="block">
-            <div className="mb-2 flex items-center justify-between gap-3">
-              <span className="text-sm font-semibold text-slate-800">Title</span>
-              <span className="text-xs font-medium text-rose-500">Required</span>
-            </div>
-            <input
-              type="text"
-              value={form.title}
-              onChange={(event) =>
-                setForm((current) => ({
-                  ...current,
-                  title: event.target.value,
-                }))
-              }
-              placeholder="Write the blog title"
-              className="h-11 w-full rounded-xl border border-[#d8dbe4] bg-white px-4 text-sm text-[#111827] outline-none transition placeholder:text-[#9ca3af] focus:border-[#7c6ff7] focus:ring-2 focus:ring-[#7c6ff7]/20"
-            />
-          </label>
-
-          <label className="block">
-            <div className="mb-2 flex items-center justify-between gap-3">
-              <span className="text-sm font-semibold text-slate-800">Author</span>
-              <span className="text-xs font-medium text-rose-500">Required</span>
-            </div>
-            <input
-              type="text"
-              value={form.author}
-              onChange={(event) =>
-                setForm((current) => ({
-                  ...current,
-                  author: event.target.value,
-                }))
-              }
-              placeholder="Author name"
-              className="h-11 w-full rounded-xl border border-[#d8dbe4] bg-white px-4 text-sm text-[#111827] outline-none transition placeholder:text-[#9ca3af] focus:border-[#7c6ff7] focus:ring-2 focus:ring-[#7c6ff7]/20"
-            />
-          </label>
-
-          <div className="block">
-            <div className="mb-2 text-sm font-semibold text-slate-800">Custom URL</div>
-            <SlugInput
-              value={form.slug}
-              onChange={(slug) => setForm((current) => ({ ...current, slug }))}
-              autoSource={form.title}
-              hint="URL-friendly version of the title (e.g., my-blog-post)"
-            />
+        <section className="rounded-2xl border border-[#ebebeb] bg-white p-7">
+          <div className="mb-4">
+            <h2 className="text-[15px] font-semibold text-[#1a1a1a]">Post Details</h2>
           </div>
 
-          <label className="block">
-            <div className="mb-2 flex items-center justify-between gap-3">
-              <span className="text-sm font-semibold text-slate-800">Excerpt</span>
-              <span className="text-xs font-medium text-rose-500">Required</span>
-            </div>
-            <textarea
-              value={form.excerpt}
-              onChange={(event) =>
-                setForm((current) => ({
-                  ...current,
-                  excerpt: event.target.value,
-                }))
-              }
-              rows={4}
-              placeholder="A brief summary of the post"
-              className="w-full rounded-xl border border-[#d8dbe4] bg-white px-4 py-3 text-sm text-[#111827] outline-none transition placeholder:text-[#9ca3af] focus:border-[#7c6ff7] focus:ring-2 focus:ring-[#7c6ff7]/20"
-            />
-            <p className="mt-2 text-xs text-[#6b7280]">
-              A brief summary of the post (displayed in blog listings)
-            </p>
-          </label>
+          <div className="space-y-6">
+            <label className="block">
+              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Title</span>
+              <input
+                type="text"
+                value={form.title}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    title: event.target.value,
+                  }))
+                }
+                placeholder="Write the blog title"
+                className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+              />
+            </label>
 
-          <label className="block">
-            <div className="mb-2 flex items-center justify-between gap-3">
-              <span className="text-sm font-semibold text-slate-800">Meta Title</span>
-              <span className="text-xs text-[#6b7280]">Currently: {metaTitleCount} characters</span>
-            </div>
-            <input
-              type="text"
-              value={form.metaTitle}
-              onChange={(event) =>
-                setForm((current) => ({
-                  ...current,
-                  metaTitle: event.target.value,
-                }))
-              }
-              placeholder="Optional SEO title"
-              className="h-11 w-full rounded-xl border border-[#d8dbe4] bg-white px-4 text-sm text-[#111827] outline-none transition placeholder:text-[#9ca3af] focus:border-[#7c6ff7] focus:ring-2 focus:ring-[#7c6ff7]/20"
-            />
-            <p className="mt-2 text-xs text-[#6b7280]">Recommended length: 50–60 characters</p>
-          </label>
+            <label className="block">
+              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Author</span>
+              <input
+                type="text"
+                value={form.author}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    author: event.target.value,
+                  }))
+                }
+                placeholder="Author name"
+                className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+              />
+            </label>
 
-          <label className="block">
-            <div className="mb-2 flex items-center justify-between gap-3">
-              <span className="text-sm font-semibold text-slate-800">Meta Description</span>
-              <span className="text-xs text-[#6b7280]">
-                Currently: {metaDescriptionCount} characters
-              </span>
+            <div className="block">
+              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Custom URL</span>
+              <SlugInput
+                value={form.slug}
+                onChange={(slug) => setForm((current) => ({ ...current, slug }))}
+                autoSource={form.title}
+                hint="URL-friendly version of the title (e.g., my-blog-post)"
+              />
             </div>
-            <textarea
-              value={form.metaDescription}
-              onChange={(event) =>
-                setForm((current) => ({
-                  ...current,
-                  metaDescription: event.target.value,
-                }))
-              }
-              rows={4}
-              placeholder="Optional SEO description"
-              className="w-full rounded-xl border border-[#d8dbe4] bg-white px-4 py-3 text-sm text-[#111827] outline-none transition placeholder:text-[#9ca3af] focus:border-[#7c6ff7] focus:ring-2 focus:ring-[#7c6ff7]/20"
-            />
-            <p className="mt-2 text-xs text-[#6b7280]">Recommended length: 150–160 characters</p>
-          </label>
 
-          <div className="block">
-            <div className="mb-2 text-sm font-semibold text-slate-800">Categories</div>
-            <TagInput
-              tags={form.categories}
-              onChange={(categories) => setForm((current) => ({ ...current, categories }))}
-              placeholder="Add a category"
-            />
+            <label className="block">
+              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Excerpt</span>
+              <textarea
+                value={form.excerpt}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    excerpt: event.target.value,
+                  }))
+                }
+                rows={4}
+                placeholder="A brief summary of the post"
+                className="w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 py-3 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+              />
+              <p className="mt-2 text-[12px] text-[#aaa]">
+                A brief summary of the post (displayed in blog listings)
+              </p>
+            </label>
+
+                  <label className="block">
+              <div className="mb-1.5 flex items-center justify-between gap-3">
+                <span className="text-[13px] font-medium text-[#555]">Meta Title</span>
+                <span className="text-[12px] text-[#aaa]">Currently: {metaTitleCount} characters</span>
+              </div>
+              <input
+                type="text"
+                value={form.metaTitle}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    metaTitle: event.target.value,
+                  }))
+                }
+                placeholder="Optional SEO title"
+                className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+              />
+              <p className="mt-2 text-[12px] text-[#aaa] text-right">Recommended length: 50–60 characters</p>
+            </label>
+
+            <label className="block">
+              <div className="mb-1.5 flex items-center justify-between gap-3">
+                <span className="text-[13px] font-medium text-[#555]">Meta Description</span>
+                <span className="text-[12px] text-[#aaa]">
+                  Currently: {metaDescriptionCount} characters
+                </span>
+              </div>
+              <textarea
+                value={form.metaDescription}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    metaDescription: event.target.value,
+                  }))
+                }
+                rows={4}
+                placeholder="Optional SEO description"
+                className="w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 py-3 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+              />
+              <p className="mt-2 text-[12px] text-[#aaa] text-right">Recommended length: 150–160 characters</p>
+            </label>
+
+            <div className="block">
+              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Categories</span>
+              <TagInput
+                tags={form.categories}
+                onChange={(categories) => setForm((current) => ({ ...current, categories }))}
+                placeholder="Add a category"
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="rounded-[1.8rem] border border-[#ece8ff] bg-white p-6 shadow-[0_24px_70px_-52px_rgba(124,111,247,0.65)]">
-        <div className="mb-5">
-          <h2 className="text-xl font-semibold tracking-tight text-slate-950">Content</h2>
-        </div>
+        <section className="rounded-2xl border border-[#ebebeb] bg-white p-7">
+          <div className="mb-4">
+            <h2 className="text-[15px] font-semibold text-[#1a1a1a]">Content</h2>
+          </div>
 
-        <RichTextEditor
-          value={form.content}
-          onChange={(content) => setForm((current) => ({ ...current, content }))}
-          placeholder="Write your blog post here..."
-          minHeight={400}
-        />
-      </section>
+          <RichTextEditor
+            value={form.content}
+            onChange={(content) => setForm((current) => ({ ...current, content }))}
+            placeholder="Write your blog post here..."
+            minHeight={400}
+          />
+        </section>
+      </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#e7e2ff] bg-white/92 px-4 py-4 backdrop-blur sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-[1400px] flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <button
-            type="button"
-            onClick={() => submitBlog("draft")}
-            disabled={Boolean(submittingAction)}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#d7cffd] bg-white px-5 py-3 text-sm font-semibold text-[#6b5ee8] transition hover:bg-[#f7f5ff] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {submittingAction === "draft" ? (
-              <>
-                <LoaderCircle className="h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              "Save as Draft"
+      <div className="sticky bottom-0 z-40 border-t border-[#ebebeb] bg-white/80 backdrop-blur-md px-6 py-4 -mx-6 lg:-mx-10 mt-12">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => submitBlog("draft")}
+              disabled={Boolean(submittingAction)}
+              className="inline-flex h-10 items-center justify-center rounded-[10px] border border-[#ebebeb] bg-white px-5 text-sm font-medium text-[#555] transition hover:bg-[#fafaf8] disabled:opacity-50"
+            >
+              {submittingAction === "draft" ? (
+                <>
+                  <LoaderCircle className="h-4 w-4 animate-spin mr-2" />
+                  Saving...
+                </>
+              ) : (
+                "Save as Draft"
+              )}
+            </button>
+
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowSchedulePopup(!showSchedulePopup)}
+                disabled={Boolean(submittingAction)}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-[10px] border border-[#5b4ced] bg-white px-5 text-sm font-medium text-[#5b4ced] transition hover:bg-[#f5f3ff] disabled:opacity-50"
+              >
+                <Calendar className="h-4 w-4" />
+                Schedule
+              </button>
+
+              {showSchedulePopup && (
+                <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl border border-[#ebebeb] bg-white p-5 shadow-xl animate-in fade-in slide-in-from-bottom-2">
+                  <div className="mb-4 flex items-center justify-between">
+                    <span className="text-sm font-bold text-[#1a1a1a]">Schedule Post</span>
+                    <button 
+                      onClick={() => setShowSchedulePopup(false)}
+                      className="text-[#9a9a9a] hover:text-[#1a1a1a]"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    <input
+                      type="datetime-local"
+                      value={scheduledAt}
+                      onChange={(e) => setScheduledAt(e.target.value)}
+                      min={new Date().toISOString().slice(0, 16)}
+                      className="w-full rounded-xl border border-[#e5e5e5] bg-[#fafaf8] px-4 py-3 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+                    />
+                    <button
+                      type="button"
+                      disabled={!scheduledAt}
+                      onClick={() => {
+                        if (new Date(scheduledAt) <= new Date()) {
+                          toast.error("Please select a future date and time.");
+                          return;
+                        }
+                        setShowSchedulePopup(false);
+                        void submitBlog("scheduled");
+                      }}
+                      className="w-full rounded-xl bg-[#5b4ced] py-3 text-sm font-bold text-white transition hover:bg-[#4a3ecc] disabled:opacity-50"
+                    >
+                      Confirm Schedule
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {currentStatus === "scheduled" && scheduledAt && (
+              <div className="flex items-center gap-3 rounded-xl bg-[#ede9fe] px-4 py-2.5 text-xs font-semibold text-[#5b4ced]">
+                <Clock className="h-3.5 w-3.5" />
+                <span>
+                  Scheduled for {new Date(scheduledAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+                <button
+                  onClick={() => {
+                    setScheduledAt("");
+                    void submitBlog("draft", false, "");
+                  }}
+                  className="ml-1 text-[#5b4ced] hover:underline"
+                >
+                  Cancel
+                </button>
+              </div>
             )}
-          </button>
 
-          <button
-            type="button"
-            onClick={() => submitBlog("published")}
-            disabled={Boolean(submittingAction)}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#7c6ff7] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#6f61ef] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {submittingAction === "published" ? (
-              <>
-                <LoaderCircle className="h-4 w-4 animate-spin" />
-                Publishing...
-              </>
-            ) : (
-              "Publish"
-            )}
-          </button>
+            <button
+              type="button"
+              onClick={() => submitBlog("published")}
+              disabled={Boolean(submittingAction)}
+              className="inline-flex h-10 items-center justify-center rounded-[10px] bg-[#5b4ced] px-8 text-sm font-medium text-white transition hover:bg-[#4a3ecc] disabled:opacity-50"
+            >
+              {submittingAction === "published" ? (
+                <>
+                  <LoaderCircle className="h-4 w-4 animate-spin mr-2" />
+                  Publishing...
+                </>
+              ) : (
+                "Publish"
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -54,13 +54,13 @@ export default function TagInput({
             }
           }}
           placeholder={placeholder}
-          className="h-11 flex-1 rounded-xl border border-[#d8dbe4] bg-white px-4 text-sm text-[#111827] outline-none transition placeholder:text-[#9ca3af] focus:border-[#7c6ff7] focus:ring-2 focus:ring-[#7c6ff7]/20"
+          className="h-10 flex-1 rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-4 text-sm text-[#111827] outline-none transition placeholder:text-[#9ca3af] focus:border-[#5b4ced]"
         />
 
         <button
           type="button"
           onClick={addTag}
-          className="inline-flex h-11 items-center justify-center rounded-xl bg-[#7c6ff7] px-5 text-sm font-semibold text-white transition hover:bg-[#6d5ff0]"
+          className="inline-flex h-10 items-center justify-center rounded-lg bg-[#5b4ced] px-5 text-sm font-semibold text-white transition hover:bg-[#4a3ecc]"
         >
           {buttonLabel}
         </button>
@@ -71,14 +71,14 @@ export default function TagInput({
           {tags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center gap-2 rounded-full bg-[#EEEDFE] px-3 py-1.5 text-xs font-medium text-[#534AB7]"
+              className="inline-flex items-center gap-2 rounded-md bg-[#ede9fe] px-3 py-1 text-xs font-semibold text-[#5b4ced]"
             >
               <span>{tag}</span>
               <button
                 type="button"
                 aria-label={`Remove ${tag}`}
                 onClick={() => removeTag(tag)}
-                className="inline-flex h-4 w-4 items-center justify-center rounded-full text-[#534AB7] transition hover:bg-[#ddd9ff]"
+                className="inline-flex h-4 w-4 items-center justify-center rounded-full text-[#5b4ced] transition hover:bg-[#d8d0ff]"
               >
                 ×
               </button>

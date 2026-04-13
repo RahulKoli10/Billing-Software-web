@@ -123,10 +123,10 @@ export default function ImageUploadBox({
             handleOpenFilePicker();
           }
         }}
-        className={`relative flex min-h-64 w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed bg-white transition focus:outline-none focus:ring-2 focus:ring-[#7c6ff7]/30 ${
+        className={`relative flex min-h-[160px] w-full items-center justify-center overflow-hidden rounded-xl border-2 border-dashed bg-[#fafaf8] transition focus:outline-none focus:ring-2 focus:ring-[#5b4ced]/30 ${
           isUploading
             ? "cursor-wait border-[#cfc9ff]"
-            : "cursor-pointer border-[#d8dbe4] hover:border-[#7c6ff7] hover:bg-[#faf9ff]"
+            : "cursor-pointer border-[#e0e0e0] hover:border-[#5b4ced]"
         } ${error ? "border-[#ef4444]" : ""}`}
       >
         {previewUrl ? (
@@ -149,12 +149,12 @@ export default function ImageUploadBox({
           <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
             {isUploading ? (
               <>
-                <LoaderCircle className="h-8 w-8 animate-spin text-[#7c6ff7]" />
+                <LoaderCircle className="h-8 w-8 animate-spin text-[#5b4ced]" />
                 <p className="mt-3 text-sm font-semibold text-[#111827]">Uploading image...</p>
               </>
             ) : (
               <>
-                <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#f4f3ff] text-[#7c6ff7]">
+                <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#ede9fe] text-[#5b4ced]">
                   <ImagePlus className="h-7 w-7" />
                 </div>
                 <p className="mt-4 text-sm font-semibold text-[#111827]">
@@ -169,7 +169,7 @@ export default function ImageUploadBox({
         {previewUrl && isUploading ? (
           <div className="absolute inset-0 flex items-center justify-center bg-white/80">
             <div className="flex flex-col items-center gap-3 text-[#111827]">
-              <LoaderCircle className="h-8 w-8 animate-spin text-[#7c6ff7]" />
+              <LoaderCircle className="h-8 w-8 animate-spin text-[#5b4ced]" />
               <p className="text-sm font-semibold">Uploading image...</p>
             </div>
           </div>

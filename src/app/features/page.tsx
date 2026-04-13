@@ -3,39 +3,9 @@ import Navbar from "../component/Navbar";
 import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
-export default function SigninPage() {
-    const features = [
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-    },
-     {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-    },
-  ];
+import { featureItems } from "./featureData";
+
+export default function featurePage() {
   return (
     <main className="font-dm">
         <Navbar/>
@@ -44,11 +14,11 @@ export default function SigninPage() {
           {/* Header */}
           <div className="text-center max-w-4xl mx-auto text-black">
             <h2 className="text-3xl md:text-[42px] font-bold ">
-              Features of our Invoice
+              Everything Your Business Needs to <br/>Bill Smarter
             </h2>
             <p className="mt-4 text-base md:text-lg">
-              Everything you need to bill faster, manage better, and scale your
-              business powered by automation, accuracy, and simplicity.
+               From GST invoicing to inventory, payments to analytics — BissBill is the only GST billing software your business will ever need. Built for Indian small businesses, designed for simplicity.
+
             </p>
           </div>
 
@@ -65,27 +35,29 @@ export default function SigninPage() {
 
           {/* Feature Grid */}
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {features.map((item, index) => (
+            {featureItems.map((item) => (
               <div
-                key={index}
+                key={item.slug}
                 className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition bg-white"
               >
                 <h3 className="text-2xl font-semibold text-gray-900 font-open">
                   {item.title}
                 </h3>
 
-                <p className="mt-2 text-base  ">{item.description}</p>
+                <p className="mt-2 text-base">{item.cardDescription}</p>
 
                 {/* Image Placeholder */}
-                <Link href="/features-details"><div className="mt-4 rounded-lg border border-gray-100 overflow-hidden">
+                <Link
+                  href={`/features-details?feature=${item.slug}`}
+                  className="block mt-4 rounded-lg border border-gray-100 overflow-hidden"
+                >
                   <Image
                     src="/homeFeature.png"
-                    alt="Feature"
+                    alt={item.title}
                     width={600}
                     height={400}
                     className="w-full h-auto"
                   />
-                </div>
                 </Link>
               </div>
             ))}
