@@ -2,22 +2,16 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ChevronLeft,
-  ChevronRight,
-  LoaderCircle,
-  Newspaper,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import Link from "next/link";
+import { Icon } from "@iconify/react";
 import { toast } from "sonner";
 import { buildApiUrl } from "@/lib/api";
 import type { ContentStatus, WriterContentItem } from "@/types/writer";
-
+import Image from "next/image";
 const PAGE_SIZE = 10;
 
 interface StatusBadgeProps {
-  status?: ContentStatus;
+  status?: ContentStatus | "scheduled";
 }
 
 interface PaginationProps {
@@ -31,28 +25,15 @@ interface ApiMessage {
 }
 
 function resolveImageUrl(value?: string) {
-  if (!value) {
-    return "";
-  }
-
-  if (/^https?:\/\//.test(value) || value.startsWith("data:") || value.startsWith("blob:")) {
-    return value;
-  }
-
+  if (!value) return "";
+  if (/^https?:\/\//.test(value) || value.startsWith("data:") || value.startsWith("blob:")) return value;
   return buildApiUrl(value);
 }
 
 function formatDate(value?: string) {
-  if (!value) {
-    return "-";
-  }
-
+  if (!value) return "-";
   const parsed = new Date(value);
-
-  if (Number.isNaN(parsed.getTime())) {
-    return value;
-  }
-
+  if (Number.isNaN(parsed.getTime())) return value;
   return parsed.toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "short",
@@ -61,63 +42,81 @@ function formatDate(value?: string) {
 }
 
 function StatusBadge({ status }: StatusBadgeProps) {
-  const isPublished = status === "published";
-
+  if (status === "published") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-[#ede9fe] px-2.5 py-0.5 text-[11px] font-bold text-[#5b4ced]">
+        Published
+      </span>
+    );
+  }
+  if (status === "scheduled") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-[#ede9fe] px-2.5 py-0.5 text-[11px] font-bold text-[#5b4ced]">
+        Scheduled
+      </span>
+    );
+  }
   return (
-    <span
-      className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold capitalize ${
-        isPublished ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-700"
-      }`}
-    >
-      {isPublished ? "Published" : "Draft"}
+    <span className="inline-flex items-center rounded-full bg-[#f5f5f5] px-2.5 py-0.5 text-[11px] font-bold text-[#888]">
+      Draft
     </span>
   );
 }
 
 function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
-  if (totalPages <= 1) {
-    return null;
-  }
+  if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-between border-t border-[#ece8ff] px-6 py-4">
-      <p className="text-sm text-slate-500">
-        Page {page} of {totalPages}
-      </p>
-
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => onPageChange(page - 1)}
-          disabled={page === 1}
-          className="inline-flex items-center gap-2 rounded-xl border border-[#ddd7ff] px-3 py-2 text-sm font-medium text-[#6a5ce8] transition hover:bg-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Previous
-        </button>
-        <button
-          type="button"
-          onClick={() => onPageChange(page + 1)}
-          disabled={page === totalPages}
-          className="inline-flex items-center gap-2 rounded-xl border border-[#ddd7ff] px-3 py-2 text-sm font-medium text-[#6a5ce8] transition hover:bg-[#f4f1ff] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Next
-          <ChevronRight className="h-4 w-4" />
-        </button>
+    <div className="flex items-center justify-center gap-4 py-12">
+      <button
+        type="button"
+        onClick={() => onPageChange(page - 1)}
+        disabled={page === 1}
+        className="text-sm font-medium text-[#9a9a9a] transition hover:text-[#1a1a1a] disabled:opacity-30 disabled:cursor-not-allowed"
+      >
+        Previous
+      </button>
+      
+      <div className="flex items-center gap-1">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+          <button
+            key={p}
+            onClick={() => onPageChange(p)}
+            className={`min-w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${
+              page === p 
+                ? "bg-[#5b4ced] text-white" 
+                : "text-[#9a9a9a] hover:bg-[#fafaf8] hover:text-[#1a1a1a]"
+            }`}
+          >
+            {p}
+          </button>
+        ))}
       </div>
+
+      <button
+        type="button"
+        onClick={() => onPageChange(page + 1)}
+        disabled={page === totalPages}
+        className="text-sm font-medium text-[#9a9a9a] transition hover:text-[#1a1a1a] disabled:opacity-30 disabled:cursor-not-allowed"
+      >
+        Next
+      </button>
     </div>
   );
 }
 
 function EmptyState() {
   return (
-    <div className="flex min-h-[360px] flex-col items-center justify-center px-6 text-center">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#f1efff] text-[#6a5ce8]">
-        <Newspaper className="h-10 w-10" />
-      </div>
-      <h3 className="mt-5 text-lg font-semibold text-slate-950">
-        No articles yet. Write your first news article.
-      </h3>
+    <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
+      <h3 className="text-xl font-bold text-[#1a1a1a] tracking-tight">No articles yet</h3>
+      <p className="mt-2 text-[#9a9a9a] max-w-xs mx-auto">Start publishing news to keep your readers informed.</p>
+      <Link
+        href="/writer/news/create"
+        className="mt-8 inline-flex items-center gap-2 px-6 py-3 bg-[#5b4ced] text-white rounded-[10px] text-sm font-bold transition-all hover:bg-[#4a3ddb]"
+      >
+        <Icon icon="lucide:plus" width={16} />
+        Write News
+      </Link>
     </div>
   );
 }
@@ -136,11 +135,7 @@ export default function WriterNewsList() {
         credentials: "include",
         cache: "no-store",
       });
-
-      if (!response.ok) {
-        throw new Error("Unable to load articles");
-      }
-
+      if (!response.ok) throw new Error("Unable to load articles");
       const data = await response.json();
       setArticles(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -161,31 +156,23 @@ export default function WriterNewsList() {
   }, [articles, page]);
 
   async function deleteArticle(id: string | number | undefined) {
-    if (id === undefined) {
-      return;
-    }
+    if (id === undefined) return;
     const confirmed = window.confirm("Delete this article?");
-
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
     setDeletingId(id);
+    const loadingToast = toast.loading("Deleting article...");
 
     try {
       const response = await fetch(buildApiUrl(`/api/writer/news/${id}`), {
         method: "DELETE",
         credentials: "include",
       });
-
       const data = (await response.json().catch(() => ({}))) as ApiMessage;
+      if (!response.ok) throw new Error(data?.message || "Unable to delete article");
 
-      if (!response.ok) {
-        throw new Error(data?.message || "Unable to delete article");
-      }
-
+      toast.dismiss(loadingToast);
       toast.success("Article deleted");
-
       setArticles((current) => {
         const nextArticles = current.filter((article) => article.id !== id);
         const nextTotalPages = Math.max(1, Math.ceil(nextArticles.length / PAGE_SIZE));
@@ -193,6 +180,7 @@ export default function WriterNewsList() {
         return nextArticles;
       });
     } catch (error) {
+      toast.dismiss(loadingToast);
       toast.error(error instanceof Error ? error.message : "Unable to delete article");
     } finally {
       setDeletingId(null);
@@ -200,135 +188,113 @@ export default function WriterNewsList() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="flex flex-col gap-4 rounded-[1.9rem] border border-[#e8e4ff] bg-white p-6 shadow-[0_26px_80px_-58px_rgba(124,111,247,0.75)] sm:flex-row sm:items-end sm:justify-between">
+    <div className="space-y-12">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 px-1">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-950">News Articles</h1>
+          <h2 className="text-[42px] font-bold tracking-[-0.03em] leading-tight text-[#1a1a1a]">News</h2>
+          <p className="mt-3 text-[17px] font-medium text-[#9a9a9a]">Create and manage your news articles.</p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => router.push("/writer/news/create")}
-          className="inline-flex items-center gap-2 self-start rounded-2xl bg-[#7c6ff7] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#6d5ff0]"
+        <Link
+          href="/writer/news/create"
+          className="inline-flex h-12 items-center gap-2.5 px-6 bg-[#5b4ced] text-white rounded-2xl text-sm font-bold transition-all hover:bg-[#4a3ecc] hover:shadow-[0_8px_20px_rgba(91,76,237,0.2)]"
         >
-          <Plus className="h-4 w-4" />
-          Create New Article
-        </button>
-      </section>
+          <Icon icon="lucide:plus" width={18} />
+          Write News
+        </Link>
+      </div>
 
-      <section className="overflow-hidden rounded-[1.9rem] border border-[#ece8ff] bg-white shadow-[0_24px_70px_-54px_rgba(124,111,247,0.7)]">
+      <section>
         {loading ? (
-          <div className="flex min-h-[260px] items-center justify-center">
-            <div className="inline-flex items-center gap-3 rounded-2xl border border-[#ece8ff] bg-[#faf9ff] px-5 py-4 text-sm font-medium text-slate-600">
-              <LoaderCircle className="h-4 w-4 animate-spin text-[#7c6ff7]" />
-              Loading articles...
-            </div>
+          <div className="py-32 text-center">
+            <span className="text-sm font-medium text-[#9a9a9a]">Loading articles...</span>
           </div>
         ) : !articles.length ? (
           <EmptyState />
         ) : (
           <>
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-left">
-                <thead className="border-b border-[#ece8ff] bg-[#faf9ff]">
-                  <tr>
-                    <th className="px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
-                      Featured Image
-                    </th>
-                    <th className="px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
-                      Title
-                    </th>
-                    <th className="px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
-                      Category
-                    </th>
-                    <th className="px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
-                      Status
-                    </th>
-                    <th className="px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
-                      Publish Date
-                    </th>
-                    <th className="px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
-                      Tags
-                    </th>
-                    <th className="px-6 py-4 text-right text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#f1edff]">
-                  {paginatedArticles.map((article) => {
-                    const tags = String(article.tags || "")
-                      .split(",")
-                      .map((tag) => tag.trim())
-                      .filter(Boolean);
+            <div className="rounded-3xl border border-[#ebebeb] bg-white overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-[#fafaf8] border-b border-[#ebebeb]">
+                      <th className="py-4 px-6 text-[11px] font-bold uppercase tracking-widest text-[#9a9a9a]">Image</th>
+                      <th className="py-4 px-6 text-[11px] font-bold uppercase tracking-widest text-[#9a9a9a]">Title</th>
+                      <th className="py-4 px-6 text-[11px] font-bold uppercase tracking-widest text-[#9a9a9a]">Category</th>
+                      <th className="py-4 px-6 text-[11px] font-bold uppercase tracking-widest text-[#9a9a9a]">Status</th>
+                      <th className="py-4 px-6 text-[11px] font-bold uppercase tracking-widest text-[#9a9a9a]">Date</th>
+                      <th className="py-4 px-6 text-[11px] font-bold uppercase tracking-widest text-[#9a9a9a]">Tags</th>
+                      <th className="py-4 px-6 text-right text-[11px] font-bold uppercase tracking-widest text-[#9a9a9a]">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#f0f0f0]">
+                    {paginatedArticles.map((article) => {
+                      const tags = String(article.tags || "")
+                        .split(",")
+                        .map((tag) => tag.trim())
+                        .filter(Boolean);
 
-                    return (
-                      <tr key={article.id} className="hover:bg-[#fcfbff]">
-                        <td className="px-6 py-5">
-                          <img
-                            src={resolveImageUrl(article.image)}
-                            alt={article.title}
-                            className="h-14 w-20 rounded-xl object-cover"
-                          />
-                        </td>
-                        <td className="px-6 py-5">
-                          <div>
-                            <p className="text-sm font-semibold text-slate-950">{article.title}</p>
-                            <p className="mt-1 text-xs text-slate-500">/{article.slug}</p>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <span className="inline-flex rounded-full bg-[#EEEDFE] px-3 py-1 text-xs font-medium text-[#534AB7]">
+                      return (
+                        <tr key={article.id} className="group hover:bg-[#fafaf8]/50 transition-colors">
+                          <td className="py-4 px-6">
+                            <Image
+                              src={resolveImageUrl(article.image)}
+                              alt={article.title || "article image"}
+                              className="h-10 w-14 rounded-[10px] object-cover bg-[#f5f5f5] border border-[#ebebeb]"
+                            />
+                          </td>
+                          <td className="py-4 px-6">
+                            <div>
+                              <p className="text-[14px] font-semibold text-[#1a1a1a] line-clamp-1">{article.title}</p>
+                              <p className="mt-0.5 text-[11px] font-medium text-[#9a9a9a]">/{article.slug}</p>
+                            </div>
+                          </td>
+                          <td className="py-4 px-6 text-[13px] font-medium text-[#3d3d3d]">
                             {article.category}
-                          </span>
-                        </td>
-                        <td className="px-6 py-5">
-                          <StatusBadge status={article.status} />
-                        </td>
-                        <td className="px-6 py-5 text-sm text-slate-600">
-                          {formatDate(article.date || article.created_at)}
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="flex flex-wrap gap-2">
-                            {tags.length ? (
-                              tags.map((tag) => (
-                                <span
-                                  key={`${article.id}-${tag}`}
-                                  className="inline-flex rounded-full bg-[#f5f3ff] px-2.5 py-1 text-[11px] font-medium text-[#5f54c7]"
-                                >
-                                  {tag}
-                                </span>
-                              ))
-                            ) : (
-                              <span className="text-xs text-slate-400">No tags</span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          <div className="flex justify-end gap-2">
-                            <button
-                              type="button"
-                              onClick={() => router.push(`/writer/news/edit/${article.id}`)}
-                              className="inline-flex items-center gap-2 rounded-xl border border-[#ddd7ff] px-3 py-2 text-sm font-medium text-[#6a5ce8] transition hover:bg-[#f4f1ff]"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => deleteArticle(article.id)}
-                              disabled={deletingId === article.id}
-                              className="inline-flex items-center gap-2 rounded-xl border border-rose-200 px-3 py-2 text-sm font-medium text-rose-600 transition hover:bg-rose-50 disabled:opacity-60"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                              {deletingId === article.id ? "Deleting..." : "Delete"}
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                          </td>
+                          <td className="py-4 px-6">
+                            <StatusBadge status={article.status} />
+                          </td>
+                          <td className="py-4 px-6 text-[13px] font-medium text-[#3d3d3d]">
+                            {formatDate(article.date || article.created_at)}
+                          </td>
+                          <td className="py-4 px-6">
+                            <div className="flex flex-wrap gap-1">
+                              {tags.length > 0 ? (
+                                tags.map((tag) => (
+                                  <span key={tag} className="text-[10px] bg-[#ede9fe] px-2 py-0.5 rounded-lg font-bold text-[#5b4ced]">
+                                    {tag}
+                                  </span>
+                                ))
+                              ) : (
+                                <span className="text-[10px] text-[#9a9a9a]">—</span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-4 px-6">
+                            <div className="flex justify-end items-center gap-4">
+                              <button
+                                type="button"
+                                onClick={() => router.push(`/writer/news/edit/${article.id}`)}
+                                className="text-[13px] font-bold text-[#5b4ced] hover:underline underline-offset-4"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => deleteArticle(article.id)}
+                                disabled={deletingId === article.id}
+                                className="text-[13px] font-bold text-[#9a9a9a] transition hover:text-rose-500 disabled:opacity-50"
+                              >
+                                {deletingId === article.id ? "..." : "Delete"}
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />

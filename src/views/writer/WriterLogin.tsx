@@ -3,7 +3,6 @@
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { LockKeyhole, Mail, PenSquare } from "lucide-react";
 import { useWriterAuth } from "@/context/WriterAuthContext";
 
 export default function WriterLogin() {
@@ -38,93 +37,77 @@ export default function WriterLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(124,111,247,0.24),_transparent_32%),linear-gradient(180deg,#f9f8ff_0%,#f2f1ff_45%,#ffffff_100%)] px-4 py-10">
-      <div className="mx-auto grid min-h-[calc(100vh-5rem)] max-w-6xl overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_32px_80px_-30px_rgba(124,111,247,0.45)] backdrop-blur md:grid-cols-[1.1fr_0.9fr]">
-        <section className="flex flex-col justify-between p-8 sm:p-10 lg:p-14">
-          <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#d9d5ff] bg-[#f3f1ff] px-4 py-2 text-sm font-semibold text-[#6b5ee8]">
-            <PenSquare className="h-4 w-4" />
-            Writer Portal
-          </div>
-
-          <div className="mt-10 max-w-md">
-            <h1 className="text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
-              Sign in to manage your published voice.
-            </h1>
-            <p className="mt-4 text-base leading-7 text-slate-600">
-              This area is reserved for content writers only. Use your writer account to access blogs, news, and profile tools.
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-4 text-sm text-slate-600 sm:grid-cols-3">
-            <div className="rounded-2xl border border-[#ece9ff] bg-[#faf9ff] p-4">
-              Draft safely
-            </div>
-            <div className="rounded-2xl border border-[#ece9ff] bg-[#faf9ff] p-4">
-              Publish faster
-            </div>
-            <div className="rounded-2xl border border-[#ece9ff] bg-[#faf9ff] p-4">
-              Stay focused
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#fafaf8] flex items-center justify-center p-6">
+      <div className="w-full max-w-4xl bg-white border border-[#ebebeb] rounded-[24px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] overflow-hidden grid md:grid-cols-2">
+        {/* Left Side: Brand Statement */}
+        <section className="bg-[#f7f5f0] p-12 lg:p-16 flex flex-col justify-center border-r border-[#ebebeb]">
+          <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-[#1a1a1a] leading-[1.1]">
+            Your stories, <br />
+            beautifully crafted.
+          </h1>
+          <p className="mt-6 text-lg text-[#3d3d3d] leading-relaxed max-w-sm">
+            Access the BISSBILL writer portal to manage your content and reach your audience.
+          </p>
         </section>
 
-        <section className="flex items-center border-t border-[#efecff] bg-white px-6 py-8 sm:px-10 md:border-l md:border-t-0">
-          <form onSubmit={handleSubmit} className="w-full">
-            <div className="rounded-[1.75rem] border border-[#e7e3ff] bg-white p-6 shadow-[0_24px_60px_-36px_rgba(124,111,247,0.55)] sm:p-8">
-              <h2 className="text-2xl font-semibold text-slate-950">
-                Writer login
-              </h2>
-              <p className="mt-2 text-sm text-slate-500">
-                Enter your writer credentials to continue.
-              </p>
+        {/* Right Side: Login Form */}
+        <section className="p-10 lg:p-16 flex flex-col justify-center">
+          <div className="max-w-sm w-full mx-auto">
+            <h2 className="text-2xl font-bold text-[#1a1a1a] tracking-tight">Sign in</h2>
+            <p className="mt-2 text-sm text-[#9a9a9a]">Enter your writer credentials to continue.</p>
 
-              <div className="mt-8 space-y-5">
-                <label className="block">
-                  <span className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700">
-                    <Mail className="h-4 w-4 text-[#7c6ff7]" />
-                    Email
-                  </span>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder="writer@company.com"
-                    required
-                    className="w-full rounded-2xl border border-[#ddd8ff] bg-[#fbfaff] px-4 py-3 text-slate-900 outline-none transition focus:border-[#7c6ff7] focus:ring-4 focus:ring-[#7c6ff7]/15"
-                  />
+            <form onSubmit={handleSubmit} className="mt-10 space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-[#3d3d3d]" htmlFor="email">
+                  Email address
                 </label>
-
-                <label className="block">
-                  <span className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700">
-                    <LockKeyhole className="h-4 w-4 text-[#7c6ff7]" />
-                    Password
-                  </span>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    placeholder="Enter password"
-                    required
-                    className="w-full rounded-2xl border border-[#ddd8ff] bg-[#fbfaff] px-4 py-3 text-slate-900 outline-none transition focus:border-[#7c6ff7] focus:ring-4 focus:ring-[#7c6ff7]/15"
-                  />
-                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@company.com"
+                  required
+                  className="w-full h-11 px-4 rounded-[10px] border border-[#ebebeb] text-sm text-[#1a1a1a] outline-none transition focus:border-[#5b4ced] focus:ring-1 focus:ring-[#5b4ced]"
+                />
               </div>
 
-              {error ? (
-                <p className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-600">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-semibold text-[#3d3d3d]" htmlFor="password">
+                    Password
+                  </label>
+                </div>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className="w-full h-11 px-4 rounded-[10px] border border-[#ebebeb] text-sm text-[#1a1a1a] outline-none transition focus:border-[#5b4ced] focus:ring-1 focus:ring-[#5b4ced]"
+                />
+              </div>
+
+              {error && (
+                <div className="p-3 rounded-[8px] bg-rose-50 border border-rose-100 text-xs font-medium text-rose-600">
                   {error}
-                </p>
-              ) : null}
+                </div>
+              )}
 
               <button
                 type="submit"
                 disabled={submitting}
-                className="mt-6 w-full rounded-2xl bg-[#7c6ff7] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#6f61ef] disabled:cursor-not-allowed disabled:opacity-70"
+                className="w-full h-11 mt-2 bg-[#5b4ced] hover:bg-[#4a3ddb] text-white rounded-[10px] text-sm font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? "Signing in..." : "Sign in"}
               </button>
-            </div>
-          </form>
+            </form>
+            
+            <p className="mt-10 text-xs text-center text-[#9a9a9a]">
+              Protected by BISSBILL Security.
+            </p>
+          </div>
         </section>
       </div>
     </div>

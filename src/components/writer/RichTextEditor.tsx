@@ -11,6 +11,14 @@ import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import CodeBlock from "@tiptap/extension-code-block";
 import Placeholder from "@tiptap/extension-placeholder";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { Color } from "@tiptap/extension-color";
+import { TextStyle } from "@tiptap/extension-text-style";
+
+
 import {
   AlignCenter,
   AlignLeft,
@@ -19,7 +27,14 @@ import {
   Link2,
   List,
   ListOrdered,
+  Table2,
+  Plus,
+  Trash2,
+  Merge,
+  Split,
 } from "lucide-react";
+import { Icon } from "@iconify/react";
+
 import { buildApiUrl } from "@/lib/api";
 
 const ACTIVE_BUTTON_CLASS = "bg-[#7c6ff7] text-white border-[#7c6ff7]";
@@ -103,9 +118,18 @@ export default function RichTextEditor({
       Placeholder.configure({
         placeholder,
       }),
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
+      TextStyle,
+      Color,
     ],
     [placeholder]
   );
+
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -248,6 +272,50 @@ export default function RichTextEditor({
           U
         </ToolbarButton>
 
+        <div className="relative group/color">
+          <ToolbarButton
+            title="Text Color"
+            className="flex flex-col relative overflow-hidden"
+          >
+            <span className="text-sm leading-none mt-[-2px]">A</span>
+            <div 
+              className="absolute bottom-1 left-1.5 right-1.5 h-[2px] rounded-full" 
+              style={{ backgroundColor: editor?.getAttributes("textStyle").color || "#000000" }}
+            />
+          </ToolbarButton>
+          
+          <div className="invisible group-hover/color:visible absolute top-full left-0 z-50 mt-1 min-w-[140px] rounded-lg border border-[#e5e7eb] bg-white p-2 shadow-xl">
+            <div className="grid grid-cols-5 gap-1.5">
+              {[
+                "#000000", "#374151", "#ef4444", "#f97316", "#eab308",
+                "#22c55e", "#3b82f6", "#5b4ced", "#ec4899", "#ffffff"
+              ].map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  className="h-5 w-5 rounded-md border border-[#eee]"
+                  style={{ backgroundColor: color }}
+                  onClick={() => editor?.chain().focus().setColor(color).run()}
+                />
+              ))}
+            </div>
+            <div className="mt-2 border-t border-[#f3f4f6] pt-2">
+              <label className="flex items-center gap-2 cursor-pointer hover:bg-[#f9fafb] p-1 rounded-md transition-colors">
+                <div className="relative h-5 w-5 rounded-md border border-[#eee] flex items-center justify-center overflow-hidden">
+                   <Icon icon="lucide:pipette" width={10} className="text-[#6b7280] z-10" />
+                   <input
+                    type="color"
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                    onChange={(e) => editor?.chain().focus().setColor(e.target.value).run()}
+                    value={editor?.getAttributes("textStyle").color || "#000000"}
+                  />
+                </div>
+                <span className="text-[10px] font-bold text-[#6b7280] uppercase tracking-wider">Custom Color</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
         <Divider />
 
         <ToolbarButton
@@ -281,6 +349,15 @@ export default function RichTextEditor({
         >
           <ImagePlus className="h-4 w-4" />
         </ToolbarButton>
+        <ToolbarButton
+          title="Insert Table"
+          onClick={() =>
+            editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+          }
+        >
+          <Table2 className="h-4 w-4" />
+        </ToolbarButton>
+
         <input
           ref={fileInputRef}
           type="file"
@@ -343,6 +420,85 @@ export default function RichTextEditor({
         </div>
       </div>
 
+
+      {editor?.isActive("table") && (
+        <div className="flex flex-wrap items-center gap-1 border-b border-[#e5e7eb] bg-[#f9fafb] px-3 py-1.5">
+          <ToolbarButton
+            title="Add Column Left"
+            onClick={() => editor.chain().focus().addColumnBefore().run()}
+            className="w-auto px-1.5 flex gap-1 items-center"
+          >
+            <Plus className="h-3 w-3" /> <span className="text-[10px]">Col Left</span>
+          </ToolbarButton>
+          <ToolbarButton
+            title="Add Column Right"
+            onClick={() => editor.chain().focus().addColumnAfter().run()}
+            className="w-auto px-1.5 flex gap-1 items-center"
+          >
+            <Plus className="h-3 w-3" /> <span className="text-[10px]">Col Right</span>
+          </ToolbarButton>
+          <ToolbarButton
+            title="Delete Column"
+            onClick={() => editor.chain().focus().deleteColumn().run()}
+            className="w-auto px-1.5 flex gap-1 items-center text-red-500"
+          >
+            <Trash2 className="h-3 w-3" /> <span className="text-[10px]">Col</span>
+          </ToolbarButton>
+
+          <Divider />
+
+          <ToolbarButton
+            title="Add Row Above"
+            onClick={() => editor.chain().focus().addRowBefore().run()}
+            className="w-auto px-1.5 flex gap-1 items-center"
+          >
+            <Plus className="h-3 w-3" /> <span className="text-[10px]">Row Above</span>
+          </ToolbarButton>
+          <ToolbarButton
+            title="Add Row Below"
+            onClick={() => editor.chain().focus().addRowAfter().run()}
+            className="w-auto px-1.5 flex gap-1 items-center"
+          >
+            <Plus className="h-3 w-3" /> <span className="text-[10px]">Row Below</span>
+          </ToolbarButton>
+          <ToolbarButton
+            title="Delete Row"
+            onClick={() => editor.chain().focus().deleteRow().run()}
+            className="w-auto px-1.5 flex gap-1 items-center text-red-500"
+          >
+            <Trash2 className="h-3 w-3" /> <span className="text-[10px]">Row</span>
+          </ToolbarButton>
+
+          <Divider />
+
+          <ToolbarButton
+            title="Merge Cells"
+            onClick={() => editor.chain().focus().mergeCells().run()}
+            className="w-auto px-1.5 flex gap-1 items-center"
+          >
+            <Merge className="h-3 w-3" /> <span className="text-[10px]">Merge</span>
+          </ToolbarButton>
+          <ToolbarButton
+            title="Split Cell"
+            onClick={() => editor.chain().focus().splitCell().run()}
+            className="w-auto px-1.5 flex gap-1 items-center"
+          >
+            <Split className="h-3 w-3" /> <span className="text-[10px]">Split</span>
+          </ToolbarButton>
+
+          <Divider />
+
+          <ToolbarButton
+            title="Delete Table"
+            onClick={() => editor.chain().focus().deleteTable().run()}
+            className="ml-auto w-auto px-1.5 flex gap-1 items-center text-red-600 bg-red-50 hover:bg-red-100 border-red-100"
+          >
+            <Trash2 className="h-3 w-3" /> <span className="text-[10px]">Delete Table</span>
+          </ToolbarButton>
+        </div>
+      )}
+
+
       {isPreview ? (
         <div
           className="prose prose-lg max-w-none p-4 min-h-[300px] border rounded overflow-y-auto"
@@ -350,7 +506,8 @@ export default function RichTextEditor({
         />
       ) : (
         <div
-          className="border-t-0 p-3 focus-within:outline focus-within:outline-2 focus-within:outline-[#7c6ff7]"
+          className="border-t-0 p-3 focus-within:outline-2 focus-within:outline-[#7c6ff7]"
+
           style={contentStyle}
         >
           <EditorContent editor={editor} className="min-h-full" />
@@ -430,8 +587,63 @@ export default function RichTextEditor({
           margin: 1rem 0;
           max-width: 100%;
         }
+
+        .rich-text-editor table {
+          border-collapse: collapse;
+          table-layout: fixed;
+          width: 100%;
+          margin: 0;
+          overflow: hidden;
+        }
+
+        .rich-text-editor td,
+        .rich-text-editor th {
+          min-width: 100px;
+          border: 1px solid #d1d5db;
+          padding: 8px;
+          vertical-align: top;
+          box-sizing: border-box;
+          position: relative;
+        }
+
+        .rich-text-editor th {
+          font-weight: bold;
+          text-align: left;
+          background-color: #f3f4f6;
+        }
+
+        .rich-text-editor .selectedCell:after {
+          z-index: 2;
+          position: absolute;
+          content: "";
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          background: #f0edff;
+          pointer-events: none;
+        }
+
+        .rich-text-editor .column-resize-handle {
+          position: absolute;
+          right: -2px;
+          top: 0;
+          bottom: -2px;
+          width: 4px;
+          background-color: #7c6ff7;
+          pointer-events: none;
+        }
+
+        .rich-text-editor .tableWrapper {
+          overflow-x: auto;
+        }
+
+        .rich-text-editor .resize-cursor {
+          cursor: ew-resize;
+          cursor: col-resize;
+        }
+
       `}</style>
     </div>
   );
 }
-

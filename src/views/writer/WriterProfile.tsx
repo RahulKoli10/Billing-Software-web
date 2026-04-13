@@ -1,11 +1,11 @@
 "use client";
 
-import type { ChangeEvent, FormEvent } from "react";
+import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { useWriterAuth } from "@/context/WriterAuthContext";
 import { buildApiUrl } from "@/lib/api";
 import { toast } from "sonner";
-import { KeyRound, User } from "lucide-react";
+import { Icon } from "@iconify/react";
 
 export default function WriterProfile() {
   const { writer, refreshWriter } = useWriterAuth();
@@ -20,11 +20,23 @@ export default function WriterProfile() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
+  // Visibility State
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   useEffect(() => {
     if (writer?.name) {
       setName(writer.name);
     }
   }, [writer]);
+
+  const getInitials = (name?: string) => {
+    if (!name) return "W";
+    const parts = name.split(" ");
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+  };
 
   async function handleProfileUpdate(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -106,121 +118,134 @@ export default function WriterProfile() {
     }
   }
 
+  const initials = getInitials(writer?.name);
+
   return (
-    <div className="space-y-6 max-w-4xl">
-      <section className="overflow-hidden rounded-[1.6rem] border border-[#ece8ff] bg-white p-6 shadow-[0_22px_60px_-42px_rgba(124,111,247,0.5)]">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f0edff] text-[#7c6ff7]">
-            <User className="h-5 w-5" />
+    <div className="min-h-screen bg-[#f7f6f3]">
+      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        {/* Card 1: Personal Information */}
+        <section className="bg-white border border-[#ebebeb] rounded-3xl p-7 shadow-[0_2px_8px_rgba(0,0,0,0.02)] h-fit">
+          <h2 className="text-[15px] font-semibold text-[#1a1a1a] mb-8">Personal Information</h2>
+          
+          <div className="flex flex-col items-center mb-10">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#5b4ced] text-[22px] font-bold text-white shadow-[0_8px_20px_rgba(91,76,237,0.2)]">
+              {initials}
+            </div>
+            <p className="mt-3 text-[13px] font-medium text-[#9a9a9a]">Profile Identity</p>
           </div>
-          <h2 className="text-xl font-semibold tracking-tight text-slate-950">Personal Info</h2>
-        </div>
 
-        <form onSubmit={handleProfileUpdate} className="space-y-5">
-          <div>
-            <label htmlFor="name" className="mb-2 block text-sm font-medium text-slate-700">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-              className="w-full rounded-xl border border-[#e6e2ff] bg-[#fcfbff] px-4 py-3 text-sm font-medium text-slate-900 outline-none transition focus:border-[#7c6ff7] focus:bg-white focus:ring-4 focus:ring-[#7c6ff7]/10"
-              placeholder="Your full name"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-700">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={writer?.email || ""}
-              readOnly
-              className="w-full rounded-xl border border-[#ece8ff] bg-slate-50 px-4 py-3 text-sm font-medium text-slate-500 cursor-not-allowed outline-none"
-              title="Email address cannot be changed"
-            />
-          </div>
-          <div className="pt-2">
-            <button
-              type="submit"
-              disabled={isSavingProfile}
-              className="inline-flex items-center justify-center rounded-xl bg-[#7c6ff7] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#7c6ff7]/30 transition hover:-translate-y-0.5 hover:bg-[#6a5ce8] hover:shadow-[#7c6ff7]/40 disabled:pointer-events-none disabled:opacity-70"
-            >
-              {isSavingProfile ? "Saving..." : "Save Changes"}
-            </button>
-          </div>
-        </form>
-      </section>
+          <form onSubmit={handleProfileUpdate} className="space-y-6">
+            <div>
+              <label className="mb-1.5 block text-[13px] font-medium text-[#555]">Name </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+                placeholder="Full Name"
+                required
+              />
+            </div>
 
-      <section className="overflow-hidden rounded-[1.6rem] border border-[#ece8ff] bg-white p-6 shadow-[0_22px_60px_-42px_rgba(124,111,247,0.5)]">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f0edff] text-[#7c6ff7]">
-            <KeyRound className="h-5 w-5" />
-          </div>
-          <h2 className="text-xl font-semibold tracking-tight text-slate-950">Change Password</h2>
-        </div>
+            <div>
+              <label className="mb-1.5 block text-[13px] font-medium text-[#555]">Email Address</label>
+              <p className="text-[14px] font-medium text-[#888] py-2">{writer?.email || ""}</p>
+            </div>
 
-        <form onSubmit={handlePasswordUpdate} className="space-y-5">
-          <div>
-            <label htmlFor="currentPassword" className="mb-2 block text-sm font-medium text-slate-700">
-              Current Password
-            </label>
-            <input
-              type="password"
-              id="currentPassword"
-              value={currentPassword}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setCurrentPassword(e.target.value)}
-              className="w-full rounded-xl border border-[#e6e2ff] bg-[#fcfbff] px-4 py-3 text-sm font-medium text-slate-900 outline-none transition focus:border-[#7c6ff7] focus:bg-white focus:ring-4 focus:ring-[#7c6ff7]/10"
-              placeholder="Enter current password"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="newPassword" className="mb-2 block text-sm font-medium text-slate-700">
-              New Password
-            </label>
-            <input
-              type="password"
-              id="newPassword"
-              value={newPassword}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
-              className="w-full rounded-xl border border-[#e6e2ff] bg-[#fcfbff] px-4 py-3 text-sm font-medium text-slate-900 outline-none transition focus:border-[#7c6ff7] focus:bg-white focus:ring-4 focus:ring-[#7c6ff7]/10"
-              placeholder="Enter new password (min. 8 characters)"
-              required
-              minLength={8}
-            />
-          </div>
-          <div>
-            <label htmlFor="confirmPassword" className="mb-2 block text-sm font-medium text-slate-700">
-              Confirm New Password
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-xl border border-[#e6e2ff] bg-[#fcfbff] px-4 py-3 text-sm font-medium text-slate-900 outline-none transition focus:border-[#7c6ff7] focus:bg-white focus:ring-4 focus:ring-[#7c6ff7]/10"
-              placeholder="Confirm your new password"
-              required
-              minLength={8}
-            />
-          </div>
-          <div className="pt-2">
-            <button
-              type="submit"
-              disabled={isUpdatingPassword}
-              className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-slate-800 disabled:pointer-events-none disabled:opacity-70"
-            >
-              {isUpdatingPassword ? "Updating..." : "Update Password"}
-            </button>
-          </div>
-        </form>
-      </section>
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isSavingProfile}
+                className="w-full h-10 flex items-center justify-center rounded-2xl bg-[#5b4ced] text-sm font-bold text-white transition-all hover:bg-[#4a3ecc] hover:shadow-[0_8px_20px_rgba(91,76,237,0.15)] disabled:opacity-50"
+              >
+                {isSavingProfile ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+          </form>
+        </section>
+
+        {/* Card 2: Change Password */}
+        <section className="bg-white border border-[#ebebeb] rounded-3xl p-7 shadow-[0_2px_8px_rgba(0,0,0,0.02)] h-fit">
+          <h2 className="text-[15px] font-semibold text-[#1a1a1a] mb-8">Change Password</h2>
+
+          <form onSubmit={handlePasswordUpdate} className="space-y-6">
+            <div>
+              <label className="mb-1.5 block text-[13px] font-medium text-[#555]">Current Password</label>
+              <div className="relative">
+                <input
+                  type={showCurrentPassword ? "text" : "password"}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 pr-10 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+                  placeholder="Enter current password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9a9a9a] hover:text-[#5b4ced]"
+                >
+                  <Icon icon={showCurrentPassword ? "lucide:eye-off" : "lucide:eye"} width={16} />
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-[13px] font-medium text-[#555]">New Password</label>
+              <div className="relative">
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 pr-10 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+                  placeholder="Min. 8 characters"
+                  required
+                  minLength={8}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9a9a9a] hover:text-[#5b4ced]"
+                >
+                  <Icon icon={showNewPassword ? "lucide:eye-off" : "lucide:eye"} width={16} />
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-[13px] font-medium text-[#555]">Confirm New Password</label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 pr-10 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+                  placeholder="Confirm new password"
+                  required
+                  minLength={8}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9a9a9a] hover:text-[#5b4ced]"
+                >
+                  <Icon icon={showConfirmPassword ? "lucide:eye-off" : "lucide:eye"} width={16} />
+                </button>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isUpdatingPassword}
+                className="w-full h-10 flex items-center justify-center rounded-2xl bg-[#1a1a1a] text-sm font-bold text-white transition-all hover:bg-black disabled:opacity-50"
+              >
+                {isUpdatingPassword ? "Updating..." : "Update Password"}
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
     </div>
   );
 }
-

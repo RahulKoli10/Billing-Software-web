@@ -61,12 +61,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/download">Download</Link>
+              </li>   
+              <li>
+                <Link href="/help">Resources</Link>
               </li>
               <li>
-                <Link href="/">Resources</Link>
-              </li>
-              <li>
-                <Link href="/">FAQs</Link>
+                <Link href="/help">FAQs</Link>
               </li>
               <li>
                 <Link href="/blog">Blog</Link>
@@ -75,7 +75,7 @@ export default function Footer() {
                 <Link href="/news">News</Link>
               </li>
               <li>
-                <Link href="/">About Us</Link>
+                <Link href="/help">About Us</Link>
               </li>
               <li>
                 <Link href="/help">Help Centre</Link>
@@ -89,13 +89,14 @@ export default function Footer() {
               Popular Services
             </h4>
             <ul className="space-y-1 ">
-              <li>TaxFlow System</li>
-              <li>QuickCharge Billing</li>
-              <li>LedgerSmart</li>
-              <li>StockPilot</li>
-              <li>Invoicely Core</li>
-              <li>Invoice</li>
-              <li>E-Invoice</li>
+              <li><Link href="/help">GST Billing Software</Link></li>
+              <li><Link href="/help">QuickCharge Billing</Link></li>
+              <li><Link href="/help">IGST Billing Software</Link></li>
+              <li><Link href="/help">Stock Management</Link></li>
+              <li><Link href="/help">Invoice Generator</Link></li>
+              <li><Link href="/help">E-Invoice Software</Link></li>
+              <li><Link href="/help">POS Billing System</Link></li>
+              <li><Link href="/help">Free GST Billing Software</Link></li>
             </ul>
           </div>
 
@@ -103,15 +104,14 @@ export default function Footer() {
           <div>
             <h4 className="font-medium text-black mb-4 text-xl">Software</h4>
             <ul className="space-y-1">
-              <li>Accounting Software</li>
-              <li>Inventory Management</li>
-              <li>POS Billing Software</li>
-              <li>e-Invoicing Software</li>
-              <li>Retail Billing Software</li>
-              <li>Invoice  </li>
-              <li>E-Invoice  </li>
-              <li>Medical Billing</li>
-              <li>Hotel Billing</li>
+              <li><Link href="/help">Accounting Software</Link></li>
+              <li><Link href="/help">Inventory Management</Link></li>
+              <li><Link href="/help">POS Billing Software</Link></li>
+              <li><Link href="/help">E-Invoicing Software</Link></li>
+              <li><Link href="/help">Retail Billing Software</Link></li>
+              <li><Link href="/help">GST Invoice Software</Link></li> 
+              <li><Link href="/help">Medical Billing</Link></li>
+              <li><Link href="/help">Hotel Billing</Link></li>
             </ul>
           </div>
 
@@ -122,6 +122,9 @@ export default function Footer() {
                
               <li><Link href="/help">Contact Us</Link></li>
               <li><Link href="/help">Help & Support</Link></li>
+              <li><Link href="/help">WhatsApp Helpdesh</Link></li>
+              <li><Link href="/help">Video Tutorials</Link></li>
+              <li><Link href="/help">Chat Support</Link></li>
               
             </ul>
           </div>
@@ -130,30 +133,30 @@ export default function Footer() {
             <div>
             <h4 className="font-medium text-black mb-4 text-xl">Company</h4>
             <ul className="space-y-1">
-              <li>About</li>
-              <li>Contact Us</li>
-              <li>Privacy Policy</li>
-              <li>Terms & Conditions</li>
-              <li>Pricing Policy</li>
-              <li>Refund Policy</li>
-              <li>Cancellation Policy</li>
-              <li>Cookie Policy</li>
-              <li>Disclaimer</li>
-              <li>Compliance Policy</li>
+              <li><Link href="/help">About</Link></li>
+              <li><Link href="/help">Contact Us</Link></li>
+              <li><Link href="/help">Privacy Policy</Link></li>
+              <li><Link href="/help">Terms & Conditions</Link></li>
+              <li><Link href="/help">Pricing Policy</Link></li>
+              <li><Link href="/help">Refund Policy</Link></li>
+              <li><Link href="/help">Cancellation Policy</Link></li>
+              <li><Link href="/help">Cookie Policy</Link></li>
+              <li><Link href="/help">Disclaimer</Link></li>
+              <li><Link href="/help">Compliance Policy</Link></li>
             </ul>
           </div>
           {/* Resources */}
           <div>
             <h4 className="font-medium text-black mb-4 text-xl">Resources</h4>
             <ul className="space-y-1">
-              <li>Templates & Downloads</li>
-              <li>Free Tools</li>
-              <li>Videos & Demos</li>
-              <li>Help & Support</li>
-              <li>Security & Legal</li>
-              <li>Updates & Knowledge</li>
-              <li>Blog</li>
-              <li>FAQs</li>
+              <li><Link href="/help">Templates & Downloads</Link></li>
+              <li><Link href="/help">Free Tools</Link></li>
+              <li><Link href="/help">Videos & Demos</Link></li>
+              <li><Link href="/help">Help & Support</Link></li>
+              <li><Link href="/help">Security & Legal</Link></li>
+              <li><Link href="/help">Updates & Knowledge</Link></li>
+              <li><Link href="/blog"></Link>Blog</li>
+              <li><Link href="/help">FAQs</Link></li>
             </ul>
           </div>
 
@@ -161,26 +164,26 @@ export default function Footer() {
             <div>
             <h4 className="font-medium text-black mb-4 text-xl">Company</h4>
             <ul className="space-y-1">
-              <li>Invoicing Guides</li>
-              <li>Payments & Checkout</li>
-              <li>Pricing & Subscription</li>
-              <li>Inventory Management</li>
-              <li>GST & Compliance</li>
-              <li>Reports & Analytics</li>
-              <li>Case Study</li> 
+              <li><Link href="/help">Invoicing Guides</Link></li>
+              <li><Link href="/help">Payments & Checkout</Link></li>
+              <li><Link href="/help">Pricing & Subscription</Link></li>
+              <li><Link href="/help">Inventory Management</Link></li>
+              <li><Link href="/help">GST & Compliance</Link></li>
+              <li><Link href="/help">Reports & Analytics</Link></li>
+              <li><Link href="/help">Case Study</Link></li> 
             </ul>
           </div>
           {/* GST */}
           <div>
             <h4 className="font-medium text-black mb-4 text-xl">GST</h4>
             <ul className="space-y-1">
-              <li>GST Basics</li>
-              <li>GST Registration</li>
-              <li>GST Returns</li>
-              <li>GST Payments & Refunds</li>
-              <li>GST Invoices & E-Invoicing</li>
-              <li>Input Tax Credit (ITC)</li>
-              <li>GST Penalties & Compliance</li>
+              <li><Link href="/">GST Basics</Link></li>
+              <li><Link href="/">GST Registration </Link></li>
+              <li><Link href="/">GST Returns</Link></li>
+              <li><Link href="/">GST Payments & Refunds</Link></li>
+              <li><Link href="/">GST Invoices & E-Invoicing</Link></li>
+              <li><Link href="/">Input Tax Credit (ITC)</Link></li>
+              <li><Link href="/">GST Penalties & Compliance</Link></li>
             </ul>
           </div>
         </div>
@@ -191,7 +194,7 @@ export default function Footer() {
             <div className="hidden sm:block flex-1 h-px bg-gray-300"></div>
 
             <p className="text-xs sm:text-sm text-gray-600 whitespace-nowrap text-center">
-              © 2025 H.A.K GROUP. All rights reserved.
+             © 2026 BissBill — A Product by NovaNectar Services Pvt. Ltd. All Rights Reserved.
             </p>
 
             <div className="hidden sm:block flex-1 h-px bg-gray-300"></div>

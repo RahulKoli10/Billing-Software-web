@@ -8,32 +8,39 @@ import { Icon } from "@iconify/react";
 
 export default function HelpCenterPage() {
   const [openId, setOpenId] = useState<number | null>(null);
-    const FAQS = [
-      {
-        id: 1,
-        question: "Is the billing software really free to use?",
-        answer:
-          "Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations. Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations.",
-      },
-      {
-        id: 2,
-        question: " Is the billing software really free to use?",
-        answer:
-          "Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations. Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations.",
-      },
-      {
-        id: 3,
-        question: "Is the billing software really free to use?",
-        answer:
-          "Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations. Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations.",
-      },
-      {
-        id: 4,
-        question: " Is the billing software really free to use?",
-        answer:
-          "Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations. Yes. Our billing software is fully GST-ready and supports GST invoices, tax calculations   and compliance reports as per Indian regulations.",
-      },
-    ];
+  const FAQS = [
+    {
+      id: 1,
+      question: "What is BillBiss and who is it best for?",
+      answer:
+        "BillBiss is an all-in-one GST billing software designed specifically for small businesses in India. Whether you're a retail shop owner, wholesaler, or a beginner with no accounting knowledge, BillBiss makes it easy to create GST invoices, manage inventory, track payments, and generate reports — all from one simple platform. It is the best GST billing software for small business India that requires zero technical expertise to get started.",
+    },
+    {
+      id: 2,
+      question: "Is BillBiss really free? What features do I get for free?",
+      answer:
+        "Yes BillBiss is free to start. When you sign up, you instantly get access to 45% of our core features including GST invoicing, basic inventory management, and payment tracking — with no credit card required and no hidden charges. It is one of the few free GST billing software options in India that actually gives you meaningful features without asking for payment upfront. You can upgrade anytime to unlock the full power of BillBiss.",
+    },
+    {
+      id: 3,
+      question: "Can BillBiss replace Tally for my small business?",
+      answer:
+        "Absolutely. BillBiss is built as a modern, easy-to-use Tally alternative billing software for India. Unlike Tally, BillBiss requires no training or accounting background — your staff can start billing from day one. It covers everything a small business needs — GST invoicing, inventory tracking, purchase management, reports, and multi-user access all in one place. If you're looking for a simpler, faster, and more affordable online billing software India, BillBiss is the right switch.",
+    },
+    {
+      id: 4,
+      question: "Does BillBiss support barcode scanning and WhatsApp invoice sharing?",
+      answer:
+        "Yes, both features are built right into BillBiss. Our billing software with barcode scanner India support lets you scan products instantly at the counter for faster billing with zero manual entry errors. Once the invoice is ready, you can share it directly with your customer via WhatsApp, SMS, or Email in a single tap. BillBiss is one of the very few billing software with WhatsApp invoice sharing available in India making it the perfect choice for retail shops and wholesalers who want fast, paperless billing.",
+    },
+    {
+      id: 5,
+      question: "Does BillBiss work for retail shops and POS billing on PC or Windows?",
+      answer:
+        "Yes. BillBiss is a complete POS billing software for retail shop India that works seamlessly on PC and Windows. Whether you run a grocery store, clothing shop, electronics store, or any other retail business, BillBiss handles high-volume billing at the counter with speed and accuracy. It supports barcode scanners, thermal printers, and cash drawers making it the most reliable billing software for PC Windows India for retail owners who need a fast and dependable point-of-sale system.",
+    },
+     
+  ];
   return (
     <main className="font-dm bg-white">
       <Navbar />
@@ -44,20 +51,21 @@ export default function HelpCenterPage() {
           {/* LEFT CONTENT */}
           <div className="pb-10 lg:pt-15">
             <h1 className="text-4xl md:text-5xl font-bold text-black">
-              Hello, How can we help you ?
+              Hello, How Can We Help You?
             </h1>
 
             <p className="mt-6 text-gray-500 text-lg max-w-xl leading-relaxed">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem has been the industry{`'`}s standard dummy text ever
-              since the 1500s.
+              Find instant answers to your questions about BillBiss — India{`'`}
+              s easiest GST billing software. Search from our help guides,
+              tutorials, and support articles below.
             </p>
 
             {/* Search */}
             <div className="mt-10 flex max-w-md shadow-sm rounded-xl overflow-hidden">
               <input
                 type="text"
-                placeholder="Ask anything"
+                placeholder="Ask anything... e.g. How to create a GST invoice
+"
                 className="flex-1 px-6 py-4 bg-white border-none focus:outline-none text-gray-600"
               />
               <button className="bg-[#2D44E7] text-white px-8 py-4 font-medium hover:bg-blue-700 transition">
@@ -88,10 +96,10 @@ export default function HelpCenterPage() {
           <div>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h2>
             <p className="text-gray-500 text-lg leading-relaxed mb-10">
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry&apos;s standard dummy
-              text ever since the 1500s. It was popularised in the 1960s with
-              the release of Letraset sheets containing Lorem Ipsum.
+              Can{`'`}t find what you{`'`}re looking for? Our support team is here to
+              help. Whether you have a question about GST invoicing, inventory
+              setup, pricing plans, or anything else — just drop us a message
+              and we{`'`}ll get back to you shortly.
             </p>
 
             {/* Divider */}
@@ -99,15 +107,16 @@ export default function HelpCenterPage() {
 
             <div className="space-y-4 mb-12">
               <p className="text-xl text-black">
-                <span className="font-medium">Email:</span> yourname@example.com
+                <span className="font-medium">Email:</span>{" "}
+                bissbill@novanectar.co.in
               </p>
               <p className="text-xl text-black">
-                <span className="font-medium">Phone:</span> 91+ 99999 99999
+                <span className="font-medium">Phone:</span> 91+ 89798 91708
               </p>
             </div>
 
             <div>
-              <p className="font-bold text-lg mb-6">Social Links:</p>
+              <p className="font-bold text-lg mb-6">Follow Us On</p>
               <div className="flex gap-6 text-black">
                 <a href="#" className="hover:text-blue-600 transition">
                   <Icon icon="mdi:linkedin" className="w-7 h-7" />
@@ -127,21 +136,21 @@ export default function HelpCenterPage() {
             <form className="space-y-5">
               <input
                 type="text"
-                placeholder="Name"
+                placeholder="Your Full Name"
                 className="w-full bg-[#F3F4F6] rounded-xl px-6 py-4 outline-none focus:ring-2 focus:ring-blue-500/20 text-gray-700"
               />
               <input
                 type="email"
-                placeholder="Email"
+                placeholder="Your Email Address"
                 className="w-full bg-[#F3F4F6] rounded-xl px-6 py-4 outline-none focus:ring-2 focus:ring-blue-500/20 text-gray-700"
               />
               <input
                 type="text"
-                placeholder="Subject"
+                placeholder="What is your query about?"
                 className="w-full bg-[#F3F4F6] rounded-xl px-6 py-4 outline-none focus:ring-2 focus:ring-blue-500/20 text-gray-700"
               />
               <textarea
-                placeholder="Write a message"
+                placeholder="Describe your issue or question in detail..."
                 rows={6}
                 className="w-full bg-[#F3F4F6] rounded-xl px-6 py-4 outline-none focus:ring-2 focus:ring-blue-500/20 text-gray-700 resize-none"
               />
@@ -158,8 +167,8 @@ export default function HelpCenterPage() {
         </div>
       </section>
 
-        {/* FAQS SECTION */}
-        <section className="py-10 bg-white">
+      {/* FAQS SECTION */}
+      <section className="py-10 bg-white">
         <div className="max-w-4xl mx-auto px-4">
           {/* Heading */}
           <h2 className="text-3xl md:text-5xl font-bold text-center mb-12">
@@ -234,7 +243,7 @@ export default function HelpCenterPage() {
         </div>
       </section>
 
-      <Footer/>      
+      <Footer />
     </main>
   );
 }
