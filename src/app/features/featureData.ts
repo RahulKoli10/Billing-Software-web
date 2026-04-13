@@ -3,6 +3,7 @@ export type FeatureItem = {
   title: string;
   cardDescription: string;
   detailParagraphs: [string, string];
+  src: string;
 };
 
 export const featureItems: FeatureItem[] = [
@@ -12,9 +13,10 @@ export const featureItems: FeatureItem[] = [
     cardDescription:
       "Create GST-compliant invoices in seconds with India's easiest GST billing software. Auto-calculates CGST, SGST & IGST — no manual effort, no errors.",
     detailParagraphs: [
-"BissBill is built to make billing fast, accurate, and stress-free for every small business owner in India. As a complete GST invoice software, it auto-calculates CGST, SGST, and IGST on every transaction — so you stay GST-compliant without doing the math yourself. Whether you're raising a sale invoice, purchase entry, credit note, or debit note, everything is managed from one simple dashboard.",
-"Designed as an easy GST billing software for beginners, BissBill requires zero accounting knowledge to get started. Use barcode scanning for faster checkout, duplicate previous invoices to save time, and pick from custom templates that reflect your brand. Once done, share invoices instantly via WhatsApp, SMS, or Email — directly from the app. If you're looking for a smart Tally alternative billing software for India, BissBill is built exactly for you."
+      "BissBill is built to make billing fast, accurate, and stress-free for every small business owner in India. As a complete GST invoice software, it auto-calculates CGST, SGST, and IGST on every transaction — so you stay GST-compliant without doing the math yourself. Whether you're raising a sale invoice, purchase entry, credit note, or debit note, everything is managed from one simple dashboard.",
+      "Designed as an easy GST billing software for beginners, BissBill requires zero accounting knowledge to get started. Use barcode scanning for faster checkout, duplicate previous invoices to save time, and pick from custom templates that reflect your brand. Once done, share invoices instantly via WhatsApp, SMS, or Email — directly from the app. If you're looking for a smart Tally alternative billing software for India, BissBill is built exactly for you.",
     ],
+    src: "/invoice.jpeg",
   },
   {
     slug: "inventory-management",
@@ -25,6 +27,7 @@ export const featureItems: FeatureItem[] = [
       "Managing stock manually leads to errors, overselling, and lost revenue. BissBill gives you a complete inventory management system built right into your GST billing software no separate app needed. Track every product in real-time, manage variants like size and colour, and get instant low stock alerts so you're always prepared.",
       "Whether you run a single shop or multiple locations, BissBill handles stock transfers, purchase orders, and warehouse management with ease. Barcode and QR code support makes product entry and billing faster than ever. For retail owners looking for a powerful billing software with inventory management, BissBill is the all-in-one solution built for Indian businesses.",
     ],
+    src: "/Inventory.jpeg",
   },
   {
     slug: "gst-tax-management",
@@ -35,6 +38,7 @@ export const featureItems: FeatureItem[] = [
       "Tax errors can cost your business heavily penalties, notices, and lost time. BissBill eliminates that risk entirely. As a complete GST invoice software, it automatically applies the correct tax slabs on every transaction, splitting CGST, SGST, and IGST accurately based on the type of supply. No manual calculation, no confusion.",
       "From inter-state to intra-state transactions, BissBill handles all GST scenarios seamlessly. Every invoice generated is fully GST-compliant and ready for filing. Whether you're a retailer, wholesaler, or service provider, this free GST billing software is designed to keep your tax records clean, accurate, and audit-ready all year round.",
     ],
+    src: "/Gst-Tax.jpeg",
   },
   {
     slug: "reports-analytics",
@@ -45,6 +49,7 @@ export const featureItems: FeatureItem[] = [
       "Running a business without data is like driving blind. BissBill gives you a powerful reports and analytics dashboard that shows exactly where your business stands — daily sales, monthly trends, top-selling products, and profit summaries, all in one place. No spreadsheets, no confusion.",
       "Whether you want a quick daily overview or a detailed yearly report, BissBill makes it simple. Track purchase vs. sales trends, monitor outstanding payments, and make smarter decisions faster. As a complete billing software for small business India, BissBill puts the power of business intelligence in the hands of every shop owner no technical knowledge required.",
     ],
+    src: "/gst-analytic.jpeg",
   },
   {
     slug: "point-of-sale-pos",
@@ -55,6 +60,7 @@ export const featureItems: FeatureItem[] = [
       "Every second at the billing counter matters. BissBill is a full-featured POS billing software for retail shops in India, designed to make checkout fast, smooth, and error-free. Scan barcodes, auto-fetch product details, apply discounts, and generate GST invoices — all within seconds. No long queues, no manual entry mistakes.",
       "Whether you run a grocery store, electronics shop, clothing retail, or any other business, BissBill POS works seamlessly on PC and Windows. It supports barcode scanners, thermal printers, and cash drawers right out of the box. If you're searching for reliable billing software for PC Windows India that handles high-volume retail with ease, BissBill is your answer.",
     ],
+    src: "/pos.jpeg",
   },
   {
     slug: "user-management-security",
@@ -65,6 +71,7 @@ export const featureItems: FeatureItem[] = [
       "Not everyone in your team needs access to everything. BissBill gives you complete control over your business data with role-based user access management. Assign specific permissions to each staff member — cashiers, accountants, managers so every person sees only what they need to. No data leaks, no accidental changes.",
       "Whether you have 2 employees or 20, BissBill scales with your team. Every login is tracked, every action is logged, and your sensitive business data stays protected at all times. For small business owners in India who want a secure, easy GST billing software that keeps operations clean and accountable, BissBill delivers complete peace of mind.",
     ],
+    src: "/user-staff-security.jpeg",
   },
   {
     slug: "multi-store-branch-management",
@@ -75,6 +82,7 @@ export const featureItems: FeatureItem[] = [
       "Expanding your business shouldn't mean more complexity. BissBill makes multi-store management effortless manage inventory, billing, staff, and reports across all your branches from one centralised dashboard. No juggling between systems, no data mismatch between locations.",
       "Transfer stock between warehouses, track branch-wise performance, and monitor sales across every location in real time. Whether you have 2 stores or 20, BissBill grows with your business. For wholesalers and retail chain owners looking for reliable billing software with inventory management across multiple locations, BissBill is the complete solution built for India.",
     ],
+    src: "/multiStore-managment.jpeg",
   },
   {
     slug: "purchase-expenses",
@@ -85,6 +93,7 @@ export const featureItems: FeatureItem[] = [
       "Tracking what you spend is just as important as tracking what you earn. BissBill lets you record all purchases, supplier invoices, and business expenses directly within your GST billing software no separate accounting tool needed. Every entry is linked to your inventory and reports automatically.",
       "Raise purchase orders, record goods received, and manage supplier payments all from one screen. BissBill gives you a clear view of your cost structure so you can control margins and improve profitability. For small business owners in India looking for an all-in-one online billing software India that handles both sales and purchases seamlessly, BissBill does it all.",
     ],
+    src: "/Purchase-expense.jpeg",
   },
   {
     slug: "payment-collections",
@@ -95,5 +104,6 @@ export const featureItems: FeatureItem[] = [
       "Chasing payments manually wastes time and damages customer relationships. BissBill gives you a complete payment and collections system where you can record payments, track outstanding dues, and send reminders all from within your billing software. Every customer's ledger is updated in real time.",
       "Whether your customer pays cash, UPI, card, or in installments, BissBill records every transaction accurately. Get a clear picture of who owes you, how much, and for how long — so you can follow up confidently. Share payment reminders instantly via WhatsApp or SMS. For Indian small business owners who need a reliable billing software with WhatsApp invoice sharing and payment tracking, BissBill keeps your cash flow healthy and your collections on track.",
     ],
+    src: "/Payment-collection.jpeg",
   },
 ];

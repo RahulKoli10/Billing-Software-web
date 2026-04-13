@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { DM_Sans, Open_Sans,Montserrat } from "next/font/google";
 import { Toaster } from "sonner"; 
+import { AuthProvider } from "@/lib/auth-context";
 
 export const montserrat = Montserrat({
   subsets: ["latin"],
@@ -53,8 +54,10 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body className={`${dmSans.variable} ${openSans.variable} antialiased`}>
-        <Toaster richColors position="top-right" />
-        {children}
+        <AuthProvider>
+          <Toaster richColors position="top-right" />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

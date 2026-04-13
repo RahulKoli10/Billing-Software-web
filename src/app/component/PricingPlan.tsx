@@ -1,8 +1,7 @@
 "use client";
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { buildApiUrl } from "@/lib/api";
 
 type PricingPlan = {
@@ -21,6 +20,47 @@ type TrialSettings = {
   is_enabled: boolean;
 };
 
+function PricingSkeleton() {
+  return (
+    <div className="relative rounded-2xl border p-8 animate-pulse bg-gray-50 border-gray-200 h-150">
+      <div className="h-4 bg-gray-200 rounded w-20 mb-4"></div>
+      <div className="h-5 bg-gray-200 rounded w-3/4 mb-6"></div>
+      <div className="flex items-end gap-1 h-10 mb-6">
+        <div className="h-10 bg-gray-200 rounded w-20"></div>
+        <div className="h-6 bg-gray-200 rounded w-12"></div>
+      </div>
+      <div className="h-10 bg-gray-200 rounded w-full mb-3"></div>
+      <div className="h-10 bg-gray-200 rounded w-full mb-6"></div>
+      <div className="h-4 bg-gray-200 rounded w-full mb-3"></div>
+      <div className="h-4 bg-gray-200 rounded w-5/6 mb-3"></div>
+      <div className="space-y-3 mb-6">
+        <div className="flex items-center gap-1">
+          <div className="h-4 w-4 bg-gray-200 rounded-full"></div>
+          <div className="h-3 bg-gray-200 rounded w-24"></div>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="h-4 w-4 bg-gray-200 rounded-full"></div>
+          <div className="h-3 bg-gray-200 rounded w-32"></div>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="h-4 w-4 bg-gray-200 rounded-full"></div>
+          <div className="h-3 bg-gray-200 rounded w-40"></div>
+        </div>
+      </div>
+      <div className="space-y-2 mb-6 max-h-48 overflow-hidden">
+        <div className="h-3 bg-gray-200 rounded w-16"></div>
+        <div className="h-3 bg-gray-200 rounded w-24"></div>
+        <div className="h-3 bg-gray-200 rounded w-20"></div>
+        <div className="h-3 bg-gray-200 rounded w-28"></div>
+        <div className="h-3 bg-gray-200 rounded w-32"></div>
+        <div className="h-3 bg-gray-200 rounded w-20"></div>
+        <div className="h-3 bg-gray-200 rounded w-24"></div>
+        <div className="h-3 bg-gray-200 rounded w-28"></div>
+      </div>
+    </div>
+  );
+}
+
 export default function PricingSection() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
   const router = useRouter();
@@ -29,6 +69,7 @@ export default function PricingSection() {
     trial_days: 7,
     is_enabled: true,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPricing = async () => {
@@ -52,6 +93,8 @@ export default function PricingSection() {
         }
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -125,7 +168,13 @@ export default function PricingSection() {
     lg:grid-cols-3
   "
         >
-          {pricingPlans.map((plan) => {
+          {loading ? (
+            <>
+              <PricingSkeleton />
+              <PricingSkeleton />
+              <PricingSkeleton />
+            </>
+          ) : pricingPlans.map((plan) => {
             const monthlyPrice = plan.monthly_price;
             
             return (
@@ -328,33 +377,33 @@ export default function PricingSection() {
 
                   {[
                     "Dashboard",
-                    "Account Master",
-                    "Items",
-                    "Company",
-                    "HSN",
-                    "Manufacturer Name",
+                    "Billing & Invoicing",
+                    "Inventory Management",
+                    "GST & Tax Management",
+                    "Reports & Analytics",
+                    "Point of Sale ",
                     "Opening Balance",
-                    "Sale Bill",
-                    "Purchase Bill",
-                    "Receipt",
-                    "Payment",
-                    "Ledger",
-                    "Day Book",
-                    "Sale Register (All)",
-                    "Purchase Register (All)",
-                    "GSTR 1",
-                    "GSTR 2",
-                    "GSTR 3B",
-                    "GSTR9",
-                    "Data Backup",
-                    "Repair Data Base",
-                    "Data Correction",
-                    "Invoice Template",
-                    "Import Pre-Design Template",
-                    "New Financial Year",
-                    "Multi Language",
-                    "Mobile Apps",
-                    "Category Master",
+                    "User Management & Security",
+                    "Multi-Store",
+                    "Branch Management",
+                    "Purchase & Expenses",
+                    "Payment & Collections",
+                    // "Day Book",
+                    // "Sale Register (All)",
+                    // "Purchase Register (All)",
+                    // "GSTR 1",
+                    // "GSTR 2",
+                    // "GSTR 3B",
+                    // "GSTR9",
+                    // "Data Backup",
+                    // "Repair Data Base",
+                    // "Data Correction",
+                    // "Invoice Template",
+                    // "Import Pre-Design Template",
+                    // "New Financial Year",
+                    // "Multi Language",
+                    // "Mobile Apps",
+                    // "Category Master",
                   ].map((item) => (
                     <li key={item} className="flex items-center space-x-2">
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-black" />

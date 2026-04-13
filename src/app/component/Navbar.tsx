@@ -3,7 +3,7 @@ import { Montserrat } from "next/font/google";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["400" , "500",  "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 import Image from "next/image";
@@ -16,63 +16,21 @@ import {
   AUTH_STATE_CHANGED_EVENT,
   notifyAuthStateChanged,
 } from "@/lib/auth-events";
+import { useAuth } from "@/lib/useAuth";
 
 export default function Navbar() {
+  const { user, isLoggedIn, loading: authLoading } = useAuth();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authChecked, setAuthChecked] = useState(false);
-  const [user, setUser] = useState<null | { role: string }>(null);
 
   const pathname = usePathname();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const checkAuth = async () => {
-    try {
-      const res = await fetch(buildApiUrl("/api/auth/me"), {
-        credentials: "include",
-        cache: "no-store",
-      });
-
-      if (!res.ok) {
-        setIsLoggedIn(false);
-        setUser(null);
-        return;
-      }
-
-      const data = await res.json();
-      setIsLoggedIn(data.authenticated === true);
-      setUser(data.user ?? null);
-    } catch {
-      setIsLoggedIn(false);
-      setUser(null);
-    } finally {
-      setAuthChecked(true);
-    }
-  };
-
   const linkClass = (path: string) =>
     `block font-medium transition ${
       pathname === path ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
     }`;
-
-  /* AUTH CHECK */
-  useEffect(() => {
-    checkAuth();
-
-    const handleAuthChanged = () => {
-      checkAuth();
-    };
-
-    window.addEventListener(AUTH_STATE_CHANGED_EVENT, handleAuthChanged);
-    window.addEventListener("focus", handleAuthChanged);
-
-    return () => {
-      window.removeEventListener(AUTH_STATE_CHANGED_EVENT, handleAuthChanged);
-      window.removeEventListener("focus", handleAuthChanged);
-    };
-  }, []);
 
   /*  CLOSE DROPDOWN ON OUTSIDE CLICK   */
   useEffect(() => {
@@ -97,10 +55,6 @@ export default function Navbar() {
       });
     } catch {}
 
-    setIsLoggedIn(false);
-    setUser(null);
-    setMenuOpen(false);
-    setOpen(false);
     notifyAuthStateChanged();
     router.push("/login");
   };
@@ -111,20 +65,20 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* LOGO */}
           <div className="flex items-center gap-2">
-  <Image
-    src="/logo.png"
-    alt="Billing"
-    width={40}
-    height={20}
-    priority
-  />
+            <Image
+              src="/logo.png"
+              alt="Billing"
+              width={40}
+              height={20}
+              priority
+            />
 
-  <h1
-    className={`${montserrat.className} text-xl font-bold text-[#2B3282] tracking-tight`}
-  >
-    BissBill
-  </h1>
-</div>
+            <h1
+              className={`${montserrat.className} text-xl font-bold text-[#2B3282] tracking-tight`}
+            >
+              BissBill
+            </h1>
+          </div>
           {/* DESKTOP MENU */}
           <nav className="hidden lg:flex gap-8 text-base">
             <Link href="/" className={linkClass("/")}>
@@ -139,9 +93,6 @@ export default function Navbar() {
             <Link href="/features" className={linkClass("/features")}>
               Features
             </Link>
-            <Link href="/blog" className={linkClass("/blog")}>
-              Blog
-            </Link>
             <Link href="/help" className={linkClass("/help")}>
               Help
             </Link>
@@ -149,13 +100,16 @@ export default function Navbar() {
 
           {/* RIGHT SIDE (DESKTOP) */}
           <div className="hidden md:flex items-center relative" ref={menuRef}>
-            {!authChecked ? (
-  <div className="h-9 w-28 bg-gray-100 rounded-md animate-pulse" />
-) : !isLoggedIn ? (
-  <Link href="/login" className="bg-[#0032FF] text-white px-4 py-2 rounded-md hover:bg-blue-700">
-    Log in / Sign up
-  </Link>
-) : (
+            {authLoading ? (
+              <div className="h-9 w-28 bg-gray-100 rounded-md animate-pulse" />
+            ) : !isLoggedIn ? (
+              <Link
+                href="/login"
+                className="bg-[#0032FF] text-white px-4 py-2 rounded-md hover:bg-blue-700"
+              >
+                Log in / Sign up
+              </Link>
+            ) : (
               <>
                 <button
                   onClick={() => setMenuOpen((p) => !p)}
@@ -187,7 +141,7 @@ export default function Navbar() {
                     >
                       Logout
                     </button>
-                  </div> 
+                  </div>
                 )}
               </>
             )}
@@ -243,13 +197,7 @@ export default function Navbar() {
           >
             Features
           </Link>
-          <Link
-            href="/blog"
-            onClick={() => setOpen(false)}
-            className={linkClass("/blog")}
-          >
-            Blog
-          </Link>
+
           <Link
             href="/help"
             onClick={() => setOpen(false)}
@@ -258,18 +206,24 @@ export default function Navbar() {
             Help
           </Link>
 
-          {!authChecked ? (
-  <div className="h-9 w-full bg-gray-100 rounded-md animate-pulse mt-6" />
-) : !isLoggedIn ? (
-  <Link href="/login" onClick={() => setOpen(false)}
-    className="block mt-6 bg-blue-600 text-white text-center py-2 rounded-md">
-    Log in / Sign up
-  </Link>
-) : (
-  <button onClick={handleLogout} className="mt-6 text-left text-red-600 font-medium">
-    Logout
-  </button>
-)}
+          {authLoading ? (
+            <div className="h-9 w-full bg-gray-100 rounded-md animate-pulse mt-6" />
+          ) : !isLoggedIn ? (
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="block mt-6 bg-blue-600 text-white text-center py-2 rounded-md"
+            >
+              Log in / Sign up
+            </Link>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="mt-6 text-left text-red-600 font-medium"
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </header>

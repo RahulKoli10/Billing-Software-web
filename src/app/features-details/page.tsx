@@ -44,7 +44,7 @@ export default async function featureDetailsPage({
             {/* Right Image */}
             <div className="flex-1 flex justify-center">
               <Image
-                src="/feature-details.png"
+                src={selectedFeature.src}
                 alt="Billing software dashboard preview"
                 width={500}
                 height={200}
@@ -98,7 +98,7 @@ export default async function featureDetailsPage({
                   className="block mt-4 rounded-lg border border-gray-100 overflow-hidden"
                 >
                   <Image
-                    src="/homeFeature.png"
+                    src={item.src}
                     alt={item.title}
                     width={600}
                     height={400}

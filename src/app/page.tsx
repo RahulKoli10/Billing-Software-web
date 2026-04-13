@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "./component/Navbar";
 import PricingPlan from "./component/PricingPlan";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import { Icon } from "@iconify/react";
 import Footer from "./component/Footer";
 import { buildApiUrl } from "@/lib/api";
 import { featureItems } from "./features/featureData";
+import { useAuth } from "@/lib/useAuth";
 export default function Home() {
   const scrollToPricing = () => {
     const pricingSection = document.getElementById("plan-pricing");
@@ -69,34 +70,8 @@ export default function Home() {
   ];
 
   const [openId, setOpenId] = useState<number | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authChecked, setAuthChecked] = useState(false);
-  const [user, setUser] = useState<null | { role: string }>(null);
-  const checkAuth = async () => {
-    try {
-      const res = await fetch(buildApiUrl("/api/auth/me"), {
-        credentials: "include",
-        cache: "no-store",
-      });
+  const { isLoggedIn, loading: authLoading } = useAuth();
 
-      if (!res.ok) {
-        setIsLoggedIn(false);
-        setUser(null);
-        return;
-      }
-
-      const data = await res.json();
-      setIsLoggedIn(data.authenticated === true);
-      setUser(data.user ?? null);
-    } catch {
-      setIsLoggedIn(false);
-
-      setUser(null);
-      isLoggedIn;
-    } finally {
-      setAuthChecked(true);
-    }
-  };
   const FAQS = [
     {
       id: 1,
@@ -194,7 +169,7 @@ export default function Home() {
           <div className="mt-16">
             <div className="w-full rounded-2xl overflow-hidden">
               <Image
-                src="/heroBilling.png"
+                src="/heroBilling.jpeg"
                 alt="Billing Dashboard"
                 width={1200}
                 height={700}
@@ -250,7 +225,7 @@ export default function Home() {
                   className="block mt-4 rounded-lg border border-gray-100 overflow-hidden"
                 >
                   <Image
-                    src="/homeFeature.png"
+                    src={item.src}
                     alt={item.title}
                     width={600}
                     height={400}
@@ -450,9 +425,9 @@ export default function Home() {
                 </p>
               </div>
 
-              {isLoggedIn && (
+{!isLoggedIn && !authLoading && (
                 <Link
-                  href="/signup"
+                  href="/login"
                   className="mt-8 w-fit bg-blue-600 hover:bg-blue-700 transition px-6 py-3 rounded-lg text-sm font-medium"
                 >
                   Log in / Sign up
@@ -736,9 +711,9 @@ export default function Home() {
                 growing businesses.
               </p>
 
-              {isLoggedIn ? (
+              {!isLoggedIn && !authLoading ? (
                 <Link
-                  href="/signup"
+                  href="/login"
                   className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
                 >
                   Start Free{" "}

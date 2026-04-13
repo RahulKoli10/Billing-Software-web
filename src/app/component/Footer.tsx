@@ -154,8 +154,7 @@ export default function Footer() {
               <li><Link href="/help">Videos & Demos</Link></li>
               <li><Link href="/help">Help & Support</Link></li>
               <li><Link href="/help">Security & Legal</Link></li>
-              <li><Link href="/help">Updates & Knowledge</Link></li>
-              <li><Link href="/blog"></Link>Blog</li>
+              <li><Link href="/help">Updates & Knowledge</Link></li> 
               <li><Link href="/help">FAQs</Link></li>
             </ul>
           </div>

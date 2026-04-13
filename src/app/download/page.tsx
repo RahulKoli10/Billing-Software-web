@@ -59,7 +59,7 @@ const checkAuth = async () => {
   };
 
   useEffect(() => {
-    fetchDownloads("windows"); // ✅ default
+    fetchDownloads()
   }, []);
 
   useEffect(() => {
@@ -144,7 +144,7 @@ const checkAuth = async () => {
             </p>
 
             {/* PLATFORM BUTTONS */}
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+            {/* <div className="mt-8 flex flex-wrap justify-center gap-3">
               <button
                 onClick={() => fetchDownloads("windows")}
                 className={`px-5 py-2 rounded-md cursor-pointer ${
@@ -175,7 +175,7 @@ const checkAuth = async () => {
                   Show All
                 </button>
               )}
-            </div>
+            </div> */}
 
             {/*  DOWNLOAD BUTTONS  */}
             {/* <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">

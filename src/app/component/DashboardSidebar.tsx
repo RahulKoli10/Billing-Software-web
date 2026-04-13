@@ -9,7 +9,6 @@ import {
   Users,
   Settings,
   LogOut,
-  Wallet,
   Activity,
   ShieldCheck,
   ClipboardMinus,
@@ -24,6 +23,7 @@ import { buildApiUrl } from "@/lib/api";
 import { notifyAuthStateChanged } from "@/lib/auth-events";
 import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
+import Image from "next/image";
 
 type SidebarProps = {
   role: string;
@@ -200,17 +200,24 @@ export default function DashboardSidebar({
 
         <div className="px-6 mb-10 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-md shadow-blue-600/20">
-             <Link href="/"><Wallet className="text-white w-5 h-5" /></Link> 
+            <div className="w-8 h-8 flex items-center justify-center shadow-md shadow-blue-600/20">
+             <Link href="/"><Image
+             
+                 src="/logo.png"
+                 alt="Billing"
+                 width={50}
+                 height={40}
+                 priority
+               /> </Link>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-blue-600 tracking-tighter">
+              <h1 className="text-xl font-bold text-[#2B3282] tracking-tighter">
                 BissBill
               </h1>
-              <p className="text-[10px] uppercase tracking-widest text-gray-500 opacity-80">
+              <p className="text-[10px] uppercase tracking-widest text-[#2B3282] opacity-80">
                 Smart Billing{" "}
               </p>
-              <p className="text-[10px] uppercase tracking-widest text-gray-500 opacity-80">
+              <p className="text-[10px] uppercase tracking-widest text-[#2B3282] opacity-80">
                 for Smart Business
               </p>
             </div>
