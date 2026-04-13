@@ -169,7 +169,7 @@ export default function Home() {
           <div className="mt-16">
             <div className="w-full rounded-2xl overflow-hidden">
               <Image
-                src="/heroBilling.jpeg"
+                src="/HeroBilling.jpeg"
                 alt="Billing Dashboard"
                 width={1200}
                 height={700}
