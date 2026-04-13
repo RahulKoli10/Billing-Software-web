@@ -141,7 +141,25 @@ export default function SalesPage() {
   const total = filtered.reduce((sum, s) => sum + +s.net_amount, 0);
   const received = filtered.reduce((sum, s) => sum + +s.received_amount, 0);
   const pending = filtered.reduce((sum, s) => sum + +s.balance_due, 0);
-
+function StatCard({
+  title,
+  value,
+  icon: Icon,
+}: {
+  title: string;
+  value: React.ReactNode;
+  icon: ComponentType<{ className?: string }>;
+}) {
+  return (
+    <div className="bg-white border rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+      <div className="flex justify-between items-center">
+        <p className="text-sm text-slate-500">{title}</p>
+        <Icon className="h-5 w-5 text-blue-600" />
+      </div>
+      <p className="text-xl font-bold mt-2">{value}</p>
+    </div>
+  );
+}
   //          UI         
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -292,22 +310,4 @@ export default function SalesPage() {
 }
 
 //          CARD         
-function StatCard({
-  title,
-  value,
-  icon: Icon,
-}: {
-  title: string;
-  value: string | number;
-  icon: ComponentType<{ className?: string }>;
-}) {
-  return (
-    <div className="bg-white border rounded-2xl p-4 shadow-sm hover:shadow-md transition">
-      <div className="flex justify-between items-center">
-        <p className="text-sm text-slate-500">{title}</p>
-        <Icon className="h-5 w-5 text-blue-600" />
-      </div>
-      <p className="text-xl font-bold mt-2">{value}</p>
-    </div>
-  );
-}
+

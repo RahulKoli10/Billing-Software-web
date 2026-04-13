@@ -284,7 +284,7 @@ function StatCard({
   icon: Icon,
 }: {
   title: string;
-  value: string | number;
+  value: React.ReactNode;
   icon: ComponentType<{ className?: string }>;
 }) {
   return (
@@ -293,7 +293,9 @@ function StatCard({
         <p className="text-sm text-slate-500">{title}</p>
         <Icon className="h-5 w-5 text-blue-600" />
       </div>
-      <p className="mt-2 text-xl font-bold text-black">{value}</p>
+      <div className="mt-2">
+        {value}
+      </div>
     </div>
   );
 }

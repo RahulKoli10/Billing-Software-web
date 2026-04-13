@@ -564,7 +564,7 @@ export default function AdminNewsPage() {
         </div>
 
         {/* ── Form ──── */}
-        <div className="space-y-6 order-1 lg:order-2">
+        {/* <div className="space-y-6 order-1 lg:order-2">
           <Card
             id="news-form"
             title={editingId ? "Edit Article" : "New Article"}
@@ -576,8 +576,7 @@ export default function AdminNewsPage() {
             className={editingId ? "border-blue-200 ring-4 ring-blue-50" : ""}
           >
             <form onSubmit={submitArticle} className="space-y-4">
-
-              {/* Category — dropdown for consistency */}
+ 
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Category
@@ -593,8 +592,7 @@ export default function AdminNewsPage() {
                   ))}
                 </select>
               </div>
-
-              {/* Title */}
+ 
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Headline
@@ -607,8 +605,7 @@ export default function AdminNewsPage() {
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none"
                 />
               </div>
-
-              {/* Slug */}
+ 
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Slug
@@ -621,8 +618,7 @@ export default function AdminNewsPage() {
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none"
                 />
               </div>
-
-              {/* Description */}
+ 
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Summary
@@ -635,8 +631,7 @@ export default function AdminNewsPage() {
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-blue-600/20 transition-all outline-none resize-none"
                 />
               </div>
-
-              {/* Content */}
+ 
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Full Article Content
@@ -659,8 +654,7 @@ export default function AdminNewsPage() {
                   )}
                 </div>
               </div>
-
-              {/* Tags */}
+ 
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Tags
@@ -672,8 +666,7 @@ export default function AdminNewsPage() {
                   onChange={handleChange("tags")}
                   placeholder="ai, tech news, india, startup"
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none"
-                />
-                {/* Live tag preview */}
+                /> 
                 {form.tags && (
                   <div className="flex flex-wrap gap-1 pt-1">
                     {form.tags.split(",").filter(Boolean).map((tag) => (
@@ -687,8 +680,7 @@ export default function AdminNewsPage() {
                   </div>
                 )}
               </div>
-
-              {/* Cover image upload */}
+ 
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Cover Image
@@ -707,8 +699,7 @@ export default function AdminNewsPage() {
                     : "Upload a cover image for the article."}
                 </p>
               </div>
-
-              {/* Author + Date */}
+ 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
                   <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
@@ -735,8 +726,7 @@ export default function AdminNewsPage() {
                   />
                 </div>
               </div>
-
-              {/* Read time (auto-filled but editable) */}
+ 
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Read Time
@@ -750,8 +740,7 @@ export default function AdminNewsPage() {
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none"
                 />
               </div>
-
-              {/* Author avatar upload */}
+  
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Author Avatar
@@ -770,8 +759,7 @@ export default function AdminNewsPage() {
                     : "Upload the author profile photo."}
                 </p>
               </div>
-
-              {/* Submit */}
+ 
               <div className="pt-4 flex gap-3">
                 {editingId && (
                   <Button
@@ -798,8 +786,7 @@ export default function AdminNewsPage() {
               </div>
             </form>
           </Card>
-
-          {/* Info card */}
+ 
           <div className="p-6 rounded-2xl bg-gray-900 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 rounded-full blur-3xl opacity-20 -mr-10 -mt-10 pointer-events-none" />
             <div className="relative z-10">
@@ -817,7 +804,7 @@ export default function AdminNewsPage() {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

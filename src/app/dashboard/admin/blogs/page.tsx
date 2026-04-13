@@ -531,7 +531,7 @@ export default function AdminBlogsPage() {
         </div>
 
         {/* ── Form ──────────────────────────────────────────────────────── */}
-        <div className="space-y-6 order-1 lg:order-2">
+        {/* <div className="space-y-6 order-1 lg:order-2">
           <Card
             id="blog-form"
             title={editingId ? "Edit Blog" : "Create Blog"}
@@ -543,8 +543,7 @@ export default function AdminBlogsPage() {
             className={editingId ? "border-blue-200 ring-4 ring-blue-50" : ""}
           >
             <form onSubmit={submitBlog} className="space-y-4">
-
-              {/* IMPROVEMENT: dropdown instead of freetext for category */}
+ 
               <div className="space-y-1">
                 <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   Category
@@ -610,8 +609,7 @@ export default function AdminBlogsPage() {
                   onChange={handleChange("content")}
                   placeholder={"Write the full blog here.\n\n## Add a sub heading\n\nWrite the next paragraph below it."}
                   className="w-full bg-gray-50 border-none rounded-lg px-4 py-3 text-sm font-medium leading-6 focus:ring-2 focus:ring-blue-600/20 transition-all outline-none resize-y"
-                />
-                {/* IMPROVEMENT: live read time counter */}
+                /> 
                 <div className="flex justify-between items-center">
                   <p className="text-xs text-gray-500">
                     Use ## before a line to add a sub heading.
@@ -732,7 +730,7 @@ export default function AdminBlogsPage() {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
