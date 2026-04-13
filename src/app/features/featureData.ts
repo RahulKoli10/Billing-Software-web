@@ -16,7 +16,7 @@ export const featureItems: FeatureItem[] = [
       "BissBill is built to make billing fast, accurate, and stress-free for every small business owner in India. As a complete GST invoice software, it auto-calculates CGST, SGST, and IGST on every transaction — so you stay GST-compliant without doing the math yourself. Whether you're raising a sale invoice, purchase entry, credit note, or debit note, everything is managed from one simple dashboard.",
       "Designed as an easy GST billing software for beginners, BissBill requires zero accounting knowledge to get started. Use barcode scanning for faster checkout, duplicate previous invoices to save time, and pick from custom templates that reflect your brand. Once done, share invoices instantly via WhatsApp, SMS, or Email — directly from the app. If you're looking for a smart Tally alternative billing software for India, BissBill is built exactly for you.",
     ],
-    src: "/invoice.jpeg",
+    src: "/Invoice.jpeg",
   },
   {
     slug: "inventory-management",
