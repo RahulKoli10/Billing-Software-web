@@ -29,17 +29,18 @@ export default function HelpCenterPage() {
     },
     {
       id: 4,
-      question: "Does BissBill support barcode scanning and WhatsApp invoice sharing?",
+      question:
+        "Does BissBill support barcode scanning and WhatsApp invoice sharing?",
       answer:
         "Yes, both features are built right into BissBill. Our billing software with barcode scanner India support lets you scan products instantly at the counter for faster billing with zero manual entry errors. Once the invoice is ready, you can share it directly with your customer via WhatsApp, SMS, or Email in a single tap. BissBill is one of the very few billing software with WhatsApp invoice sharing available in India making it the perfect choice for retail shops and wholesalers who want fast, paperless billing.",
     },
     {
       id: 5,
-      question: "Does BissBill work for retail shops and POS billing on PC or Windows?",
+      question:
+        "Does BissBill work for retail shops and POS billing on PC or Windows?",
       answer:
         "Yes. BissBill is a complete POS billing software for retail shop India that works seamlessly on PC and Windows. Whether you run a grocery store, clothing shop, electronics store, or any other retail business, BissBill handles high-volume billing at the counter with speed and accuracy. It supports barcode scanners, thermal printers, and cash drawers making it the most reliable billing software for PC Windows India for retail owners who need a fast and dependable point-of-sale system.",
     },
-     
   ];
   return (
     <main className="font-dm bg-white">
@@ -80,9 +81,9 @@ export default function HelpCenterPage() {
               <Image
                 src="/HeroBilling.jpeg"
                 alt="Help Center Dashboard"
-                fill
+                width={1200}
+                height={700}
                 className="object-cover object-top-left"
-                priority
               />
             </div>
           </div>
@@ -96,10 +97,10 @@ export default function HelpCenterPage() {
           <div>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h2>
             <p className="text-gray-500 text-lg leading-relaxed mb-10">
-              Can{`'`}t find what you{`'`}re looking for? Our support team is here to
-              help. Whether you have a question about GST invoicing, inventory
-              setup, pricing plans, or anything else — just drop us a message
-              and we{`'`}ll get back to you shortly.
+              Can{`'`}t find what you{`'`}re looking for? Our support team is
+              here to help. Whether you have a question about GST invoicing,
+              inventory setup, pricing plans, or anything else — just drop us a
+              message and we{`'`}ll get back to you shortly.
             </p>
 
             {/* Divider */}
