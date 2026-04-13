@@ -333,7 +333,7 @@ export default function AdminBlogsPage() {
             Create long blog posts and publish them to their own reading page.
           </p>
         </div>
-        <Button
+        {/* <Button
           size="sm"
           className="flex items-center gap-2 self-start sm:self-auto"
           onClick={() => {
@@ -345,7 +345,7 @@ export default function AdminBlogsPage() {
         >
           <Plus className="w-4 h-4" />
           Create Blog
-        </Button>
+        </Button> */}
       </div>
 
       {/* Stats */}
@@ -490,7 +490,7 @@ export default function AdminBlogsPage() {
                               <Eye className="w-4 h-4" />
                             )}
                           </button>
-                          <button
+                          {/* <button
                             type="button"
                             onClick={() => editBlog(blog)}
                             disabled={loading}
@@ -498,7 +498,7 @@ export default function AdminBlogsPage() {
                             title="Edit blog"
                           >
                             <Edit2 className="w-4 h-4" />
-                          </button>
+                          </button> */}
                           <button
                             type="button"
                             onClick={() => deleteBlog(blog.id)}

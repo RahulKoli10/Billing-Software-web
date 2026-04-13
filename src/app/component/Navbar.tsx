@@ -104,9 +104,7 @@ export default function Navbar() {
     notifyAuthStateChanged();
     router.push("/login");
   };
-
-  if (!authChecked) return null;
-
+  
   return (
     <header className="w-full bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
@@ -151,14 +149,13 @@ export default function Navbar() {
 
           {/* RIGHT SIDE (DESKTOP) */}
           <div className="hidden md:flex items-center relative" ref={menuRef}>
-            {!isLoggedIn ? (
-              <Link
-                href="/login"
-                className="bg-[#0032FF] text-white px-4 py-2 rounded-md hover:bg-blue-700"
-              >
-                Log in / Sign up
-              </Link>
-            ) : (
+            {!authChecked ? (
+  <div className="h-9 w-28 bg-gray-100 rounded-md animate-pulse" />
+) : !isLoggedIn ? (
+  <Link href="/login" className="bg-[#0032FF] text-white px-4 py-2 rounded-md hover:bg-blue-700">
+    Log in / Sign up
+  </Link>
+) : (
               <>
                 <button
                   onClick={() => setMenuOpen((p) => !p)}
@@ -261,22 +258,18 @@ export default function Navbar() {
             Help
           </Link>
 
-          {!isLoggedIn ? (
-            <Link
-              href="/login"
-              onClick={() => setOpen(false)}
-              className="block mt-6 bg-blue-600 text-white text-center py-2 rounded-md"
-            >
-              Log in / Sign up
-            </Link>
-          ) : (
-            <button
-              onClick={handleLogout}
-              className="mt-6 text-left text-red-600 font-medium"
-            >
-              Logout
-            </button>
-          )}
+          {!authChecked ? (
+  <div className="h-9 w-full bg-gray-100 rounded-md animate-pulse mt-6" />
+) : !isLoggedIn ? (
+  <Link href="/login" onClick={() => setOpen(false)}
+    className="block mt-6 bg-blue-600 text-white text-center py-2 rounded-md">
+    Log in / Sign up
+  </Link>
+) : (
+  <button onClick={handleLogout} className="mt-6 text-left text-red-600 font-medium">
+    Logout
+  </button>
+)}
         </div>
       </div>
     </header>

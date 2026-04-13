@@ -354,7 +354,7 @@ export default function AdminNewsPage() {
             Publish and manage news articles with tags, categories, and read time.
           </p>
         </div>
-        <Button
+        {/* <Button
           size="sm"
           className="flex items-center gap-2 self-start sm:self-auto"
           onClick={() => {
@@ -364,7 +364,7 @@ export default function AdminNewsPage() {
         >
           <Plus className="w-4 h-4" />
           New Article
-        </Button>
+        </Button> */}
       </div>
 
       {/* Stats row */}
@@ -523,7 +523,7 @@ export default function AdminNewsPage() {
                               <Eye className="w-4 h-4" />
                             )}
                           </button>
-                          <button
+                          {/* <button
                             type="button"
                             onClick={() => editArticle(article)}
                             disabled={loading}
@@ -531,7 +531,7 @@ export default function AdminNewsPage() {
                             title="Edit"
                           >
                             <Edit2 className="w-4 h-4" />
-                          </button>
+                          </button> */}
                           <button
                             type="button"
                             onClick={() => deleteArticle(article.id)}
