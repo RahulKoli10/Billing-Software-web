@@ -11,33 +11,33 @@ export default function HelpCenterPage() {
   const FAQS = [
     {
       id: 1,
-      question: "What is BillBiss and who is it best for?",
+      question: "What is BissBill and who is it best for?",
       answer:
-        "BillBiss is an all-in-one GST billing software designed specifically for small businesses in India. Whether you're a retail shop owner, wholesaler, or a beginner with no accounting knowledge, BillBiss makes it easy to create GST invoices, manage inventory, track payments, and generate reports — all from one simple platform. It is the best GST billing software for small business India that requires zero technical expertise to get started.",
+        "BissBill is an all-in-one GST billing software designed specifically for small businesses in India. Whether you're a retail shop owner, wholesaler, or a beginner with no accounting knowledge, BissBill makes it easy to create GST invoices, manage inventory, track payments, and generate reports — all from one simple platform. It is the best GST billing software for small business India that requires zero technical expertise to get started.",
     },
     {
       id: 2,
-      question: "Is BillBiss really free? What features do I get for free?",
+      question: "Is BissBill really free? What features do I get for free?",
       answer:
-        "Yes BillBiss is free to start. When you sign up, you instantly get access to 45% of our core features including GST invoicing, basic inventory management, and payment tracking — with no credit card required and no hidden charges. It is one of the few free GST billing software options in India that actually gives you meaningful features without asking for payment upfront. You can upgrade anytime to unlock the full power of BillBiss.",
+        "Yes BissBill is free to start. When you sign up, you instantly get access to 45% of our core features including GST invoicing, basic inventory management, and payment tracking — with no credit card required and no hidden charges. It is one of the few free GST billing software options in India that actually gives you meaningful features without asking for payment upfront. You can upgrade anytime to unlock the full power of BissBill.",
     },
     {
       id: 3,
-      question: "Can BillBiss replace Tally for my small business?",
+      question: "Can BissBill replace Tally for my small business?",
       answer:
-        "Absolutely. BillBiss is built as a modern, easy-to-use Tally alternative billing software for India. Unlike Tally, BillBiss requires no training or accounting background — your staff can start billing from day one. It covers everything a small business needs — GST invoicing, inventory tracking, purchase management, reports, and multi-user access all in one place. If you're looking for a simpler, faster, and more affordable online billing software India, BillBiss is the right switch.",
+        "Absolutely. BissBill is built as a modern, easy-to-use Tally alternative billing software for India. Unlike Tally, BissBill requires no training or accounting background — your staff can start billing from day one. It covers everything a small business needs — GST invoicing, inventory tracking, purchase management, reports, and multi-user access all in one place. If you're looking for a simpler, faster, and more affordable online billing software India, BissBill is the right switch.",
     },
     {
       id: 4,
-      question: "Does BillBiss support barcode scanning and WhatsApp invoice sharing?",
+      question: "Does BissBill support barcode scanning and WhatsApp invoice sharing?",
       answer:
-        "Yes, both features are built right into BillBiss. Our billing software with barcode scanner India support lets you scan products instantly at the counter for faster billing with zero manual entry errors. Once the invoice is ready, you can share it directly with your customer via WhatsApp, SMS, or Email in a single tap. BillBiss is one of the very few billing software with WhatsApp invoice sharing available in India making it the perfect choice for retail shops and wholesalers who want fast, paperless billing.",
+        "Yes, both features are built right into BissBill. Our billing software with barcode scanner India support lets you scan products instantly at the counter for faster billing with zero manual entry errors. Once the invoice is ready, you can share it directly with your customer via WhatsApp, SMS, or Email in a single tap. BissBill is one of the very few billing software with WhatsApp invoice sharing available in India making it the perfect choice for retail shops and wholesalers who want fast, paperless billing.",
     },
     {
       id: 5,
-      question: "Does BillBiss work for retail shops and POS billing on PC or Windows?",
+      question: "Does BissBill work for retail shops and POS billing on PC or Windows?",
       answer:
-        "Yes. BillBiss is a complete POS billing software for retail shop India that works seamlessly on PC and Windows. Whether you run a grocery store, clothing shop, electronics store, or any other retail business, BillBiss handles high-volume billing at the counter with speed and accuracy. It supports barcode scanners, thermal printers, and cash drawers making it the most reliable billing software for PC Windows India for retail owners who need a fast and dependable point-of-sale system.",
+        "Yes. BissBill is a complete POS billing software for retail shop India that works seamlessly on PC and Windows. Whether you run a grocery store, clothing shop, electronics store, or any other retail business, BissBill handles high-volume billing at the counter with speed and accuracy. It supports barcode scanners, thermal printers, and cash drawers making it the most reliable billing software for PC Windows India for retail owners who need a fast and dependable point-of-sale system.",
     },
      
   ];
@@ -55,7 +55,7 @@ export default function HelpCenterPage() {
             </h1>
 
             <p className="mt-6 text-gray-500 text-lg max-w-xl leading-relaxed">
-              Find instant answers to your questions about BillBiss — India{`'`}
+              Find instant answers to your questions about BissBill — India{`'`}
               s easiest GST billing software. Search from our help guides,
               tutorials, and support articles below.
             </p>

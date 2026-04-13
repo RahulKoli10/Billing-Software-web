@@ -27,7 +27,7 @@ const openSans = Open_Sans({
 export const metadata: Metadata = {
   title: "BissBill – GST Billing Software for Small Business India",
   description:
-    "BillBiss is the best free GST billing software for small business India. Create GST invoices, manage inventory, share bills on WhatsApp & more. Try free!",
+    "BissBill is the best free GST billing software for small business India. Create GST invoices, manage inventory, share bills on WhatsApp & more. Try free!",
   keywords: [
     "GST Billing Software",
     "Billing Software India",
