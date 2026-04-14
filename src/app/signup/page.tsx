@@ -194,7 +194,7 @@ export default function SignupPage() {
               className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
             >
               <Image
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                src="/google-icon.svg"
                 alt="Google"
                 width={18}
                 height={18}
