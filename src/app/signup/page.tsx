@@ -26,6 +26,11 @@ export default function SignupPage() {
   const passwordsMatch =
     confirmPassword.length > 0 && password === confirmPassword;
 
+  const isStrongPassword =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+      password
+    );
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -37,8 +42,8 @@ export default function SignupPage() {
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (!isStrongPassword) {
+      setError("Password must be 8+ chars with uppercase, lowercase, number, symbol");
       return;
     }
 
