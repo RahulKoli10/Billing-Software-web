@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { buildApiUrl } from "@/lib/api";
 import { notifyAuthStateChanged } from "@/lib/auth-events";
 
-export default function SigninPage() {
+function SigninPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -206,5 +206,19 @@ export default function SigninPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function SigninPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+          <p className="text-sm text-gray-600">Loading sign-in...</p>
+        </div>
+      }
+    >
+      <SigninPageContent />
+    </Suspense>
   );
 }
