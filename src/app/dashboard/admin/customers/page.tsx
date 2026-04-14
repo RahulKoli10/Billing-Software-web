@@ -20,6 +20,7 @@ interface Customer {
   current_plan?: string;
   total_revenue?: number;
   current_status?: string;
+  is_admin_disabled?: boolean;
 }
 
 export default function AdminCustomersPage() {
@@ -28,6 +29,7 @@ export default function AdminCustomersPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeOnly, setActiveOnly] = useState(false);
+  const [updatingUserId, setUpdatingUserId] = useState<number | null>(null);
 
   useEffect(() => {
     fetchCustomers();
@@ -66,6 +68,35 @@ export default function AdminCustomersPage() {
   const healthIndex = customers.length ? Math.round((activeCustomers / customers.length) * 100) : 0;
   const totalRevenue = customers.reduce((sum, c) => sum + Number(c.total_revenue || 0), 0);
   const pendingCompliance = customers.filter(c => !c.current_status || c.current_status === "pending" || c.current_status === "expired").length;
+
+  const toggleSubscriptionAccess = async (customer: Customer, enabled: boolean) => {
+    try {
+      setUpdatingUserId(customer.user_id);
+      const res = await fetch(buildApiUrl("/api/customer/admin/subscription-access"), {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: customer.user_id,
+          enabled,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || "Failed to update access");
+      }
+
+      await fetchCustomers();
+    } catch (error) {
+      console.error(error);
+      alert(error instanceof Error ? error.message : "Failed to update access");
+    } finally {
+      setUpdatingUserId(null);
+    }
+  };
 
   if (loading)
     return (
@@ -175,7 +206,12 @@ export default function AdminCustomersPage() {
                   {expanded === customer.user_id && (
                     <tr className="bg-gray-50/30">
                       <td colSpan={6} className="px-6 py-6 border-b border-gray-100">
-                        <ExpandedHistory userId={customer.user_id} />
+                        <ExpandedHistory
+                          userId={customer.user_id}
+                          customer={customer}
+                          updatingUserId={updatingUserId}
+                          onToggleAccess={toggleSubscriptionAccess}
+                        />
                       </td>
                     </tr>
                   )}
@@ -199,6 +235,7 @@ function StatusBadge({ status }: { status?: string }) {
 
   if (["active", "pushed"].includes(status)) return <Badge variant="success">{status}</Badge>;
   if (status === "expired") return <Badge variant="error">Expired</Badge>;
+  if (status === "disabled") return <Badge variant="error">Disabled</Badge>;
   if (status === "trial") return <Badge variant="warning">Trial</Badge>;
 
   return <Badge variant="warning">{status}</Badge>;
@@ -216,7 +253,17 @@ interface SubscriptionHistory {
   status: string;
 }
 
-function ExpandedHistory({ userId }: { userId: number }) {
+function ExpandedHistory({
+  userId,
+  customer,
+  updatingUserId,
+  onToggleAccess,
+}: {
+  userId: number;
+  customer: Customer;
+  updatingUserId: number | null;
+  onToggleAccess: (customer: Customer, enabled: boolean) => Promise<void>;
+}) {
   const [history, setHistory] = useState<SubscriptionHistory[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -240,8 +287,24 @@ function ExpandedHistory({ userId }: { userId: number }) {
 
   return (
     <div className="space-y-4">
-      <div className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400">
-        Subscription Architecture Node
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400">
+          Subscription Architecture Node
+        </div>
+        <Button
+          size="sm"
+          variant={customer.current_status === "disabled" ? "primary" : "outline"}
+          disabled={updatingUserId === customer.user_id}
+          onClick={() => {
+            void onToggleAccess(customer, customer.current_status === "disabled");
+          }}
+        >
+          {updatingUserId === customer.user_id
+            ? "Updating..."
+            : customer.current_status === "disabled"
+              ? "Enable access"
+              : "Disable access"}
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
