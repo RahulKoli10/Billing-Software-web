@@ -2,14 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { buildApiUrl } from "@/lib/api";
 import { notifyAuthStateChanged } from "@/lib/auth-events";
 
 export default function SigninPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +18,15 @@ export default function SigninPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    const oauthError = searchParams.get("oauthError");
+    if (!oauthError) {
+      return;
+    }
+
+    setError("Google login failed. Please try again.");
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -159,7 +169,9 @@ export default function SigninPage() {
               type="button"
               disabled={loading}
               onClick={() =>
-                (window.location.href = buildApiUrl("/api/auth/google"))
+                (window.location.href = buildApiUrl(
+                  "/api/auth/google?redirect=%2Fauth%2Fcallback"
+                ))
               }
               className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50"
             >
