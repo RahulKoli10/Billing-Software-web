@@ -250,7 +250,7 @@ export default function WriterBlogList() {
                           <StatusBadge status={blog.status} />
                         </td>
                         <td className="py-4 px-6 text-[13px] font-medium text-[#3d3d3d]">
-                          {formatDate(blog.date || blog.created_at)}
+                          {formatDate(blog.updated_at)}
                         </td>
                         <td className="py-4 px-6">
                           <div className="flex justify-end items-center gap-4">

@@ -151,15 +151,52 @@ export default function AdminContentWritersPage() {
     }
   }
 
-  async function resetPassword(writer: Writer) {
-    const isConfirmed = window.confirm(
-      `Are you sure you want to reset the password for ${writer.name}? The old password will be invalidated immediately.`
+async function resetPassword(writer: Writer) {
+    toast.custom(
+      () => (
+        <div className="p-4 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl shadow-lg max-w-sm mx-auto">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <KeyRound className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg">Reset Password?</h3>
+              <p className="text-sm opacity-90 mt-1">Old password for {writer.name} will be invalidated.</p>
+            </div>
+          </div>
+          <div className="flex gap-2 mt-4 pt-4 border-t border-white/20">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex-1 h-10 bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-white/30"
+              onClick={() => {
+                toast.dismiss();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button 
+              size="sm" 
+              className="flex-1 h-10 bg-white text-black hover:bg-white/90 font-semibold"
+              onClick={() => {
+                toast.dismiss();
+                proceedReset(writer);
+              }}
+            >
+              Reset
+            </Button>
+          </div>
+        </div>
+      ),
+      {
+        duration: 0,
+        dismissible: false,
+      }
     );
+  }
 
-    if (!isConfirmed) {
-      return;
-    }
-
+  async function proceedReset(writer: Writer) {
+    const loadingToast = toast.loading('Resetting password...');
     setResettingId(writer.id);
 
     try {
@@ -183,9 +220,11 @@ export default function AdminContentWritersPage() {
         title: "Password reset complete",
         description: "Copy the new password now and share it securely with the writer.",
       });
-      toast.success("Password reset");
+      toast.success("Password reset complete");
+      toast.dismiss(loadingToast);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Unable to reset password");
+      toast.dismiss(loadingToast);
     } finally {
       setResettingId(null);
     }

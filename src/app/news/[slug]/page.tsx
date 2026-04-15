@@ -156,6 +156,34 @@ export default function NewsDetailPage() {
         <p className="text-sm text-gray-500">
           {article.read_time ? `${article.read_time} - ${article.date}` : article.date}
         </p>
+
+        {/* Tags */}
+        {article.tags && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {String(article.tags)
+              .split(",")
+              .map((tag) => tag.trim())
+              .filter(Boolean)
+              .map((tag, index) => {
+                const colors = [
+                  'from-emerald-100 to-teal-100 text-emerald-800 border-emerald-200 hover:from-emerald-200 hover:to-teal-200',
+                  'from-blue-100 to-indigo-100 text-blue-800 border-blue-200 hover:from-blue-200 hover:to-indigo-200', 
+                  'from-purple-100 to-violet-100 text-purple-800 border-purple-200 hover:from-purple-200 hover:to-violet-200',
+                  'from-pink-100 to-rose-100 text-pink-800 border-pink-200 hover:from-pink-200 hover:to-rose-200',
+                  'from-orange-100 to-amber-100 text-orange-800 border-orange-200 hover:from-orange-200 hover:to-amber-200'
+                ];
+                const colorClass = colors[index % 5];
+                return (
+                  <span
+                    key={tag}
+                    className={`rounded-full bg-gradient-to-r ${colorClass} px-3 py-1 text-xs font-medium border hover:shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all`}
+                  >
+                    {tag}
+                  </span>
+                );
+              })}
+          </div>
+        )}
       </div>
     </div>
 

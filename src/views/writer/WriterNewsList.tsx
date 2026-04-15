@@ -239,8 +239,11 @@ export default function WriterNewsList() {
                             <Image
                               src={resolveImageUrl(article.image)}
                               alt={article.title || "article image"}
+                              width={56}
+                              height={40}
                               className="h-10 w-14 rounded-[10px] object-cover bg-[#f5f5f5] border border-[#ebebeb]"
                             />
+
                           </td>
                           <td className="py-4 px-6">
                             <div>
@@ -255,7 +258,7 @@ export default function WriterNewsList() {
                             <StatusBadge status={article.status} />
                           </td>
                           <td className="py-4 px-6 text-[13px] font-medium text-[#3d3d3d]">
-                            {formatDate(article.date || article.created_at)}
+                            {formatDate(article.updated_at)}
                           </td>
                           <td className="py-4 px-6">
                             <div className="flex flex-wrap gap-1">

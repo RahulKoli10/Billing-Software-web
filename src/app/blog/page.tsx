@@ -18,6 +18,9 @@ type Blog = {
   author: string;
   avatar: string;
   date: string;
+  updated_at?: string;
+  status?: string;
+  scheduled_at?: string;
 };
 
 export default function BlogPage() {
@@ -58,18 +61,19 @@ export default function BlogPage() {
   }, []);
 
   const filteredBlogs = useMemo(() => {
+    // Defensive filter: exclude scheduled items
+    let filtered = blogs.filter((blog) => blog.status !== 'scheduled');
+    
     const query = search.trim().toLowerCase();
-
-    if (!query) {
-      return blogs;
+    if (query) {
+      filtered = filtered.filter((blog) =>
+        [blog.category, blog.title, blog.description, blog.author]
+          .join(" ")
+          .toLowerCase()
+          .includes(query)
+      );
     }
-
-    return blogs.filter((blog) =>
-      [blog.category, blog.title, blog.description, blog.author]
-        .join(" ")
-        .toLowerCase()
-        .includes(query)
-    );
+    return filtered;
   }, [blogs, search]);
 
   return (
@@ -165,7 +169,7 @@ export default function BlogPage() {
 
                   <div className="text-sm">
                     <p className="font-bold text-black">{blog.author}</p>
-                    <p className="text-black">{blog.date}</p>
+    <p className="text-black">{blog.updated_at ? new Date(blog.updated_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : blog.date}</p>
                   </div>
                 </div>
               </div>

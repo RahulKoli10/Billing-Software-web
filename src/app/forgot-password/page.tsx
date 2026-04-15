@@ -20,12 +20,16 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
       const res = await fetch(buildApiUrl("/api/auth/forgot-password"), {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       const data = await res.json();
 
@@ -36,7 +40,11 @@ export default function ForgotPasswordPage() {
       toast.success("Password reset email sent! Check your inbox.");
       router.push("/login");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      if (err instanceof Error && err.name === "AbortError") {
+        setError("Request timed out. Please try again in a few seconds.");
+      } else {
+        setError(err instanceof Error ? err.message : "Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -81,8 +89,14 @@ export default function ForgotPasswordPage() {
                 disabled={loading}
                 className="w-full bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
-                {loading ? "Sending..." : "Send Reset Link"}
+                {loading ? "Sending reset link..." : "Send Reset Link"}
               </button>
+
+              {loading && (
+                <p className="text-xs text-gray-500 text-center">
+                  This can take up to 10-15 seconds while the email server responds.
+                </p>
+              )}
             </form>
 
             <div className="mt-8 text-center space-y-4">

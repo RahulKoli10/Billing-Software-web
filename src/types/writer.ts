@@ -36,6 +36,7 @@ export interface BlogFormState {
   metaDescription: string;
   categories: string[];
   content: string;
+  
 }
 
 export interface NewsFormState {
@@ -60,6 +61,7 @@ export interface WriterContentItem {
   status?: ContentStatus;
   date?: string;
   created_at?: string;
+  updated_at?: string;
   category?: string;
   description?: string;
   content?: string;

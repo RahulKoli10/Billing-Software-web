@@ -105,10 +105,11 @@ export default function WriterBlogForm() {
           cache: "no-store",
         });
 
-        const data = (await response.json().catch(() => ({}))) as Record<string, any>;
+        const data = (await response.json().catch(() => ({}))) as Record<string, string | number | boolean | null | undefined>;
 
         if (!response.ok) {
-          throw new Error(data?.message || "Unable to load blog");
+        const errorMessage = typeof data?.message === 'string' ? data.message : "Unable to load blog";;
+          throw new Error(errorMessage);
         }
 
         if (cancelled) {
@@ -116,22 +117,26 @@ export default function WriterBlogForm() {
         }
 
         setForm({
-          featuredImage: data?.image || "",
-          title: data?.title || "",
-          author: data?.author || writer?.name || "",
-          slug: data?.slug || "",
-          excerpt: data?.description || "",
+          featuredImage: String(data?.image || ""),
+          title: String(data?.title || ""),
+          author: String(data?.author || writer?.name || ""),
+          slug: String(data?.slug || ""),
+          excerpt: String(data?.description || ""),
           metaTitle: "",
           metaDescription: "",
-          categories: data?.category ? [data.category] : [],
-          content: data?.content || "",
+          categories: typeof data?.category === 'string' ? [data.category] : [],
+          content: String(data?.content || ""),
         });
-        setLocalBlogId(String(data?.id || blogId));
-        setCurrentStatus(data?.status || "draft");
-        if (data?.scheduled_at) {
-          setScheduledAt(new Date(data.scheduled_at).toISOString().slice(0, 16));
+        setLocalBlogId(String(data?.id ?? blogId));
+        setCurrentStatus(typeof data?.status === 'string' ? data.status as ContentStatus : "draft");
+        if (typeof data?.scheduled_at === 'string') {
+          // Parse DB 'YYYY-MM-DD HH:MM:SS' to datetime-local 'YYYY-MM-DDTHH:MM'
+          const dbStr = data.scheduled_at;
+          const dateLocalStr = dbStr.slice(0, 16).replace(' ', 'T');
+          setScheduledAt(dateLocalStr);
         }
         hasChangesRef.current = false;
+
 
 
       } catch (error) {

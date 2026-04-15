@@ -18,8 +18,11 @@ type NewsArticle = {
   author: string;
   avatar: string;
   date: string;
+  updated_at?: string;
   tags?: string;
   read_time?: string;
+  status?: string;
+  scheduled_at?: string;
 };
 
 export default function NewsPage() {
@@ -60,18 +63,19 @@ export default function NewsPage() {
   }, []);
 
   const filteredArticles = useMemo(() => {
+    // Defensive filter: exclude scheduled items
+    let filtered = articles.filter((article) => article.status !== 'scheduled');
+    
     const query = search.trim().toLowerCase();
-
-    if (!query) {
-      return articles;
+    if (query) {
+      filtered = filtered.filter((article) =>
+        [article.category, article.title, article.description, article.author, article.tags || '']
+          .join(" ")
+          .toLowerCase()
+          .includes(query)
+      );
     }
-
-    return articles.filter((article) =>
-      [article.category, article.title, article.description, article.author, article.tags]
-        .join(" ")
-        .toLowerCase()
-        .includes(query)
-    );
+    return filtered;
   }, [articles, search]);
 
   return (
@@ -168,7 +172,7 @@ export default function NewsPage() {
                   <div className="text-sm">
                     <p className="font-bold text-black">{article.author}</p>
                     <p className="text-black">
-                      {article.read_time ? `${article.read_time} - ${article.date}` : article.date}
+                      {article.read_time ? `${article.read_time} - ${article.updated_at ? new Date(article.updated_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : article.date}` : article.updated_at ? new Date(article.updated_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : article.date}
                     </p>
                   </div>
                 </div>

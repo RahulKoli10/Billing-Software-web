@@ -46,7 +46,7 @@ function createEmptyForm(author = ""): NewsFormState {
     content: "",
     author,
     category: "Technology",
-    publishDate: new Date().toISOString().split("T")[0],
+
     featuredImage: "",
     tags: [],
     metaTitle: "",
@@ -197,7 +197,7 @@ export default function WriterNewsForm() {
           cache: "no-store",
         });
 
-        const data = (await response.json().catch(() => ({}))) as Record<string, any>;
+        const data = (await response.json().catch(() => ({}))) as ApiMessage & { id?: string | number };
 
         if (!response.ok) {
           throw new Error(data?.message || "Unable to load article");
@@ -213,26 +213,23 @@ export default function WriterNewsForm() {
               .filter(Boolean);
 
         setForm({
-          title: data?.title || "",
-          slug: data?.slug || "",
-          description: data?.description || "",
-          content: data?.content || "",
-          author: data?.author || writer?.name || "",
-          category: data?.category || "Technology",
-          publishDate: data?.date
-            ? new Date(data.date).toString() !== "Invalid Date"
-              ? new Date(data.date).toISOString().split("T")[0]
-              : data.date
-            : new Date().toISOString().split("T")[0],
-          featuredImage: data?.image || "",
+          title: String(data?.title || ""),
+          slug: String(data?.slug || ""),
+          description: String(data?.description || ""),
+          content: String(data?.content || ""),
+          author: String(data?.author || writer?.name || ""),
+          category: String(data?.category || "Technology"),
+          publishDate: "",
+          featuredImage: String(data?.image || ""),
           tags: parsedTags,
           metaTitle: "",
           metaDescription: "",
         });
-        setLocalNewsId(String(data?.id || articleId));
-        setCurrentStatus(data?.status || "draft");
-        if (data?.scheduled_at) {
-          setScheduledAt(new Date(data.scheduled_at).toISOString().slice(0, 16));
+        setLocalNewsId(String(data?.id ?? articleId));
+        setCurrentStatus(typeof data?.status === 'string' ? data.status as ContentStatus : "draft");
+        if (typeof data?.scheduled_at === 'string') {
+          const date = new Date(data.scheduled_at);
+          setScheduledAt(date.toISOString().slice(0, 16));
         }
         hasChangesRef.current = false;
 
@@ -320,7 +317,7 @@ export default function WriterNewsForm() {
           content: currentForm.content,
           author: currentForm.author.trim(),
           category: currentForm.category,
-          date: currentForm.publishDate,
+          date: "",
           image: currentForm.featuredImage,
           tags: currentForm.tags.join(", "),
           status,
@@ -607,17 +604,7 @@ export default function WriterNewsForm() {
                   </select>
                 </label>
 
-                <label className="block">
-                  <span className="mb-1.5 block text-[13px] font-medium text-[#555]">
-                    Publish Date
-                  </span>
-                  <input
-                    type="date"
-                    value={form.publishDate}
-                    onChange={(event) => updateField("publishDate", event.target.value)}
-                    className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
-                  />
-                </label>
+
               </div>
             </section>
 
