@@ -159,7 +159,7 @@ export default function InventoryPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-black sm:text-3xl">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
           Inventory Report
         </h1>
         <p className="mt-1 text-slate-500">

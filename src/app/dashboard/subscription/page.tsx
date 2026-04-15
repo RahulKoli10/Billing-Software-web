@@ -278,7 +278,7 @@ function OverviewCard({
           <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
             {label}
           </p>
-          <p className="mt-3 text-2xl font-semibold tracking-tight text-black">
+          <p className="mt-3 text-xl font-semibold tracking-tight text-black">
             {value}
           </p>
           <p className="mt-2 text-sm text-slate-500">{detail}</p>

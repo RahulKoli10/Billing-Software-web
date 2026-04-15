@@ -148,7 +148,7 @@ export default function SalesPage() {
 
       {/* HEADER */}
       <div>
-        <h1 className="text-xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
           Sales Dashboard
         </h1>
         <p className="text-slate-500 mt-1">

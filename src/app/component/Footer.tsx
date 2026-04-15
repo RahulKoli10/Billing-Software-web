@@ -100,7 +100,7 @@ export default function Footer() {
           </div>
 
           {/* Software */}
-          <div>
+          {/* <div>
             <h4 className="font-medium text-black mb-4 text-xl">Software</h4>
             <ul className="space-y-1">
               <li>Accounting Software</li>
@@ -113,7 +113,7 @@ export default function Footer() {
               <li>Medical Billing</li>
               <li>Hotel Billing</li>
             </ul>
-          </div>
+          </div> */}
 
           {/* support */}
           <div>
@@ -152,8 +152,8 @@ export default function Footer() {
               <li>Help & Support</li>
               <li>Security & Legal</li>
               <li>Updates & Knowledge</li>
-              <li>Blog</li>
-              <li>FAQs</li>
+              {/* <li>Blog</li> */}
+              {/* <li>FAQs</li> */}
             </ul>
           </div>
 
@@ -171,7 +171,7 @@ export default function Footer() {
             </ul>
           </div>
           {/* GST */}
-          <div>
+          {/* <div>
             <h4 className="font-medium text-black mb-4 text-xl">GST</h4>
             <ul className="space-y-1">
               <li>GST Basics</li>
@@ -182,7 +182,7 @@ export default function Footer() {
               <li>Input Tax Credit (ITC)</li>
               <li>GST Penalties & Compliance</li>
             </ul>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom bar */}

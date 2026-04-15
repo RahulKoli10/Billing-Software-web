@@ -156,7 +156,7 @@ export default function PaymentHistory() {
                     {payment.plan_name || `Purchase #${index + 1}`}
                   </h3>
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${paymentTone(
+                    className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${paymentTone(
                       payment.payment_status
                     )}`}
                   >
@@ -172,7 +172,7 @@ export default function PaymentHistory() {
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
                   Amount
                 </p>
-                <p className="mt-3 text-2xl font-semibold tracking-tight text-black">
+                <p className="mt-3 text-xl font-semibold tracking-tight text-black">
                   {currency.format(Number(payment.amount || 0))}
                 </p>
                 <div className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-slate-500">
@@ -181,11 +181,11 @@ export default function PaymentHistory() {
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-slate-50 p-4">
+              <div className="rounded-lg bg-slate-50 p-4">
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
                   Date
                 </p>
-                <p className="mt-3 text-sm font-semibold text-black">
+                <p className="mt-3 text-lg font-semibold text-black">
                   {formatDate(payment.payment_date)}
                 </p>
                 <p className="mt-2 text-xs text-slate-500">
@@ -222,7 +222,7 @@ function MetricCard({
           <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
             {label}
           </p>
-          <p className="mt-3 text-2xl font-semibold tracking-tight text-black">
+          <p className="mt-3 text-xl font-semibold tracking-tight text-black">
             {value}
           </p>
           <p className="mt-2 text-sm text-slate-500">{detail}</p>
