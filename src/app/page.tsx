@@ -7,7 +7,9 @@ import Link from "next/link.js";
 import { Icon } from "@iconify/react";
 import Footer from "./component/Footer";
 import { buildApiUrl } from "@/lib/api";
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 export default function Home() {
   const scrollToPricing = () => {
     const pricingSection = document.getElementById("plan-pricing");
@@ -72,6 +74,31 @@ export default function Home() {
     },
   ];
 
+  // slider code
+  const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 2500,
+  arrows: false,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 2,
+      },
+    },
+    {
+      breakpoint: 640,
+      settings: {
+        slidesToShow: 1,
+      },
+    },
+  ],
+};
   const [openId, setOpenId] = useState<number | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
@@ -461,120 +488,123 @@ export default function Home() {
           </div>
 
           {/* Cards */}
-          <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {/* Card 1 */}
-            <div className="rounded-2xl bg-gray-100 p-6">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex text-yellow-400">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Icon
-                      key={index}
-                      icon="material-symbols:star"
-                      width="24"
-                      height="24"
-                    />
-                  ))}
-                </div>
-                <span className="text-gray-500">1 month ago</span>
-              </div>
+          <div className="mt-5">
+              <Slider {...settings}>
 
-              <p className="mt-4 text-[#6F6D6D] text-base leading-relaxed">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry. Lorem Ipsum has
-              </p>
+                {/* Card 1 */}
+                <div className="p-10">
+                  <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex text-yellow-400">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Icon key={i} icon="material-symbols:star" width="24" />
+                        ))}
+                      </div>
+                      <span className="text-gray-900">1 month ago</span>
+                    </div>
 
-              <div className="mt-6 flex items-center gap-3">
-                <Image
-                  src="/testimonial1.png"
-                  alt="Customer profile photo"
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-semibold text-xl">Full Name</p>
-                  <p className="text-base text-[#6F6D6D]">CEO of company</p>
+                    <p className="mt-4 text-gray-900">
+                      Switching to BissBill saved us hours daily. Billing is super fast and inventory updates automatically.
+                    </p>
+
+                    <div className="mt-6 flex items-center gap-3">
+                      <Image src="/testimonial1.png" alt="" width={40} height={40} className="rounded-full" />
+                      <div>
+                        <p className="font-semibold text-xl">Ramesh Agarwal</p>
+                        <p className="text-gray-900">
+                          Owner, Agarwal General Store — Jaipur
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+
+                {/* Card 2 */}
+                <div className="p-10">
+                  <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex text-yellow-400">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Icon key={i} icon="material-symbols:star" width="24" />
+                        ))}
+                      </div>
+                      <span className="text-gray-900">1 month ago</span>
+                    </div>
+
+                    <p className="mt-4 text-gray-900">
+                      WhatsApp invoice sharing is a game changer. Customers love instant bills and payments are easy to track.
+                    </p>
+
+                    <div className="mt-6 flex items-center gap-3">
+                      <Image src="/testimonial2.png" alt="" width={40} height={40} className="rounded-full" />
+                      <div>
+                        <p className="font-semibold text-xl">Priya Mehta</p>
+                        <p className="text-gray-900">
+                          Owner, Mehta Fashion House — Surat
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 3 */}
+                <div className="p-10">
+                  <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex text-yellow-400">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Icon key={i} icon="material-symbols:star" width="24" />
+                        ))}
+                      </div>
+                      <span className="text-gray-900">1 month ago</span>
+                    </div>
+
+                    <p className="mt-4 text-gray-900">
+                      Very simple and beginner friendly. Inventory alerts helped us avoid stock issues multiple times.
+                    </p>
+
+                    <div className="mt-6 flex items-center gap-3">
+                      <Image src="/testimonial2.png" alt="" width={40} height={40} className="rounded-full" />
+                      <div>
+                        <p className="font-semibold text-xl">Sunil Tiwari</p>
+                        <p className="text-gray-900">
+                          Owner, Tiwari Electronics — Lucknow
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 4 */}
+                <div className="p-10">
+                  <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex text-yellow-400">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Icon key={i} icon="material-symbols:star" width="24" />
+                        ))}
+                      </div>
+                      <span className="text-gray-900">1 month ago</span>
+                    </div>
+
+                    <p className="mt-4 text-gray-900">
+                      Easy to use software. My staff learned it quickly and billing errors are now zero.
+                    </p>
+
+                    <div className="mt-6 flex items-center gap-3">
+                      <Image src="/testimonial1.png" alt="" width={40} height={40} className="rounded-full" />
+                      <div>
+                        <p className="font-semibold text-xl">Amit Sharma</p>
+                        <p className="text-gray-900">
+                          Owner, Sharma Traders — <br /> Delhi
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </Slider>
             </div>
-
-            {/* Card 2 (Highlighted) */}
-            <div className="rounded-2xl bg-[#367AFF] p-6 text-white scale-[1.02]">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex ">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Icon
-                      key={index}
-                      icon="material-symbols:star"
-                      width="24"
-                      height="24"
-                    />
-                  ))}
-                </div>
-                <span className="text-blue-100">1 month ago</span>
-              </div>
-
-              <p className="mt-4 text-base leading-relaxed text-white">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry. Lorem Ipsum has
-              </p>
-
-              <div className="mt-6 flex items-center gap-3">
-                <Image
-                  src="/testimonial2.png"
-                  alt="Customer profile photo"
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-semibold text-xl">Full Name</p>
-                  <p className="text-base ">CEO of company</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="rounded-2xl bg-gray-100 p-6">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex text-yellow-400">
-                  {" "}
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Icon
-                      key={index}
-                      icon="material-symbols:star"
-                      width="24"
-                      height="24"
-                    />
-                  ))}
-                </div>
-                <span className="text-gray-500">1 month ago</span>
-              </div>
-
-              <p className="mt-4 text-gray-600 text-base leading-relaxed">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry. Lorem Ipsum has
-              </p>
-
-              <div className="mt-6 flex items-center gap-3">
-                <Image
-                  src="/testimonial2.png"
-                  alt="Customer profile photo"
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-
-                <div>
-                  <p className="font-semibold text-xl">Full Name</p>
-                  <p className="text-base text-[#6F6D6D]">CEO of company</p>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* Rating Footer */}
           <div className="mt-16 flex flex-col items-center gap-3">
