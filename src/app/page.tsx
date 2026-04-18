@@ -570,37 +570,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
-            {/* ✅ Inbuilt CSS */}
-            <style jsx global>{`
-        .testimonial-card {
-          transition: all 0.3s ease;
-        }
-        .slick-center .testimonial-card {
-          background: #367AFF;
-          transform: scale(1.05);
-        }
-
-        /* ⭐ FORCE white text */
-        .slick-center .testimonial-card p,
-        .slick-center .testimonial-card span,
-        .slick-center .testimonial-card div {
-          color: white !important;
-        }
-        .slick-center .testimonial-card {
-          background: #367AFF;
-          color: white;
-          transform: scale(1.05);
-        }
-
-        .slick-slide {
-          opacity: 0.6;
-        }
-
-        .slick-center {
-          opacity: 1;
-        }
-          `}</style>
           </>
 
           {/* Rating Footer */}
