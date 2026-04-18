@@ -18,6 +18,7 @@ type Blog = {
   author: string;
   avatar: string;
   date: string;
+  tags?: string;
   updated_at?: string;
   status?: string;
   scheduled_at?: string;
@@ -67,7 +68,7 @@ export default function BlogPage() {
     const query = search.trim().toLowerCase();
     if (query) {
       filtered = filtered.filter((blog) =>
-        [blog.category, blog.title, blog.description, blog.author]
+        [blog.category, blog.title, blog.description, blog.author, blog.tags || ""]
           .join(" ")
           .toLowerCase()
           .includes(query)
@@ -151,6 +152,24 @@ export default function BlogPage() {
                 <p className="mt-2 text-gray-600 text-sm line-clamp-3">
                   {blog.description}
                 </p>
+
+                {blog.tags && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {String(blog.tags)
+                      .split(",")
+                      .map((tag) => tag.trim())
+                      .filter(Boolean)
+                      .slice(0, 3)
+                      .map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                  </div>
+                )}
 
                 <p className="mt-4 text-sm font-semibold text-blue-600">
                   Read full blog

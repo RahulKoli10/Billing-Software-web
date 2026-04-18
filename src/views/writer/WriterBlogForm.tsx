@@ -38,10 +38,22 @@ function createEmptyForm(author = ""): BlogFormState {
     excerpt: "",
     metaTitle: "",
     metaDescription: "",
-    categories: [],
+    category: "",
+    tags: [],
     content: "",
   };
 }
+
+const BLOG_CATEGORIES = [
+  "App Development",
+  "Web Development",
+  "AI & Tech",
+  "Business",
+  "Design",
+  "DevOps",
+  "Tutorials",
+  "Case Study",
+];
 
 function countPlainText(html = "") {
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -127,7 +139,14 @@ export default function WriterBlogForm() {
           excerpt: String(data?.description || ""),
           metaTitle: "",
           metaDescription: "",
-          categories: typeof data?.category === 'string' ? [data.category] : [],
+          category: String(data?.category || ""),
+          tags:
+            Array.isArray(data?.tags)
+              ? data.tags.map((tag) => String(tag))
+              : String(data?.tags || "")
+                  .split(",")
+                  .map((tag) => tag.trim())
+                  .filter(Boolean),
           content: String(data?.content || ""),
         });
         setLocalBlogId(String(data?.id ?? blogId));
@@ -189,8 +208,8 @@ export default function WriterBlogForm() {
           return;
         }
 
-        if (!currentForm.categories.length) {
-          toast.error("Add at least one category.");
+        if (!currentForm.category.trim()) {
+          toast.error("Select a category.");
           return;
         }
 
@@ -219,7 +238,7 @@ export default function WriterBlogForm() {
       try {
         const payload = {
           slug: slugify(currentForm.slug || currentForm.title),
-          category: currentForm.categories[0] || "Uncategorized",
+          category: currentForm.category || "Uncategorized",
           title: currentForm.title.trim() || "Untitled Draft",
           description: currentForm.excerpt.trim(),
           content: currentForm.content,
@@ -227,11 +246,11 @@ export default function WriterBlogForm() {
           author: currentForm.author.trim(),
           avatar: "",
           date: "",
+          tags: currentForm.tags.join(", "),
           status,
           scheduled_at: status === "scheduled" ? (overrideScheduledAt || scheduledAt) : null,
           metaTitle: currentForm.metaTitle.trim(),
           metaDescription: currentForm.metaDescription.trim(),
-          categories: currentForm.categories,
         };
 
 
@@ -293,11 +312,17 @@ export default function WriterBlogForm() {
 
   // Mark changes when form fields update
   useEffect(() => {
-    const isActuallyEmpty = !form.featuredImage && !form.title && !form.excerpt && !form.content && !form.categories.length;
+    const isActuallyEmpty =
+      !form.featuredImage &&
+      !form.title &&
+      !form.excerpt &&
+      !form.content &&
+      !form.category &&
+      !form.tags.length;
     if (!isActuallyEmpty) {
       hasChangesRef.current = true;
     }
-  }, [form.title, form.content, form.excerpt, form.featuredImage, form.categories, form.slug]);
+  }, [form.title, form.content, form.excerpt, form.featuredImage, form.category, form.tags, form.slug]);
 
   // Debounced auto-save (3s)
   useEffect(() => {
@@ -501,12 +526,33 @@ export default function WriterBlogForm() {
               <p className="mt-2 text-[12px] text-[#aaa] text-right">Recommended length: 150–160 characters</p>
             </label>
 
+            <label className="block">
+              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Category</span>
+              <select
+                value={form.category}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    category: event.target.value,
+                  }))
+                }
+                className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+              >
+                <option value="">Select a category...</option>
+                {BLOG_CATEGORIES.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </label>
+
             <div className="block">
-              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Categories</span>
+              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Tags</span>
               <TagInput
-                tags={form.categories}
-                onChange={(categories) => setForm((current) => ({ ...current, categories }))}
-                placeholder="Add a category"
+                tags={form.tags}
+                onChange={(tags) => setForm((current) => ({ ...current, tags }))}
+                placeholder="Add a tag"
               />
             </div>
           </div>

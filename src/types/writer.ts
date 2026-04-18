@@ -34,9 +34,9 @@ export interface BlogFormState {
   excerpt: string;
   metaTitle: string;
   metaDescription: string;
-  categories: string[];
+  category: string;
+  tags: string[];
   content: string;
-  
 }
 
 export interface NewsFormState {

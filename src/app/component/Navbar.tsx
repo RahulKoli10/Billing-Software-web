@@ -13,7 +13,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { buildApiUrl } from "@/lib/api";
 import {
-  AUTH_STATE_CHANGED_EVENT,
   notifyAuthStateChanged,
 } from "@/lib/auth-events";
 import { useAuth } from "@/lib/useAuth";
@@ -26,6 +25,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
+  const dashboardPath = user?.role === "superadmin" ? "/dashboard/admin" : "/dashboard";
 
   const linkClass = (path: string) =>
     `block font-medium transition ${
@@ -111,6 +111,13 @@ export default function Navbar() {
               </Link>
             ) : (
               <>
+                <Link
+                  href={dashboardPath}
+                  className="mr-3 hidden rounded-md bg-[#0032FF] px-4 py-2 text-white hover:bg-blue-700 lg:hidden"
+                >
+                  Dashboard
+                </Link>
+
                 <button
                   onClick={() => setMenuOpen((p) => !p)}
                   className="text-green-700 hover:text-blue-600"
@@ -123,12 +130,7 @@ export default function Navbar() {
                     <button
                       onClick={() => {
                         setMenuOpen(false);
-
-                        if (user?.role === "superadmin") {
-                          router.push("/dashboard/admin");
-                        } else {
-                          router.push("/dashboard");
-                        }
+                        router.push(dashboardPath);
                       }}
                       className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
                     >
@@ -217,12 +219,22 @@ export default function Navbar() {
               Log in / Sign up
             </Link>
           ) : (
-            <button
-              onClick={handleLogout}
-              className="mt-6 text-left text-red-600 font-medium"
-            >
-              Logout
-            </button>
+            <>
+              <Link
+                href={dashboardPath}
+                onClick={() => setOpen(false)}
+                className="mt-6 block rounded-md bg-[#0032FF] py-2 text-center font-medium text-white"
+              >
+                Dashboard
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="mt-4 text-left text-red-600 font-medium"
+              >
+                Logout
+              </button>
+            </>
           )}
         </div>
       </div>
