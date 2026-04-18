@@ -131,6 +131,9 @@ export default function Navbar() {
             <Link href="/" className={linkClass("/")}>
               Home
             </Link>
+            <Link href="/about" className={linkClass("/about")}>
+              About Us
+            </Link>
             <Link href="/download" className={linkClass("/download")}>
               Download
             </Link>
