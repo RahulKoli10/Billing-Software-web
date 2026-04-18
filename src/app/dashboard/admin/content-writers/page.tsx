@@ -1,7 +1,8 @@
 "use client";
 
+import type { FormEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Copy, KeyRound, Loader2, PenSquare, Plus, Power, X } from "lucide-react";
+import { Copy, KeyRound, Loader2, PenSquare, Plus, Power, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Badge, Button, Card } from "@/components/ui/atoms";
 import { buildApiUrl } from "@/lib/api";
@@ -41,6 +42,7 @@ export default function AdminContentWritersPage() {
   const [submitting, setSubmitting] = useState(false);
   const [togglingId, setTogglingId] = useState<number | null>(null);
   const [resettingId, setResettingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -91,7 +93,7 @@ export default function AdminContentWritersPage() {
     }
   }
 
-  async function createWriter(event: React.FormEvent<HTMLFormElement>) {
+  async function createWriter(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitting(true);
 
@@ -151,10 +153,10 @@ export default function AdminContentWritersPage() {
     }
   }
 
-async function resetPassword(writer: Writer) {
+  async function resetPassword(writer: Writer) {
     toast.custom(
       () => (
-        <div className="p-4 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl shadow-lg max-w-sm mx-auto">
+        <div className="p-4 bg-linear-to-r from-gray-500 to-gray-600 text-white rounded-xl shadow-lg max-w-sm mx-auto">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg">
               <KeyRound className="h-5 w-5 text-white" />
@@ -193,6 +195,83 @@ async function resetPassword(writer: Writer) {
         dismissible: false,
       }
     );
+  }
+
+  function confirmDeleteWriter(writer: Writer) {
+    toast.custom(
+      (toastId) => (
+        <div className="w-full max-w-md rounded-2xl border border-rose-200 bg-white p-5 shadow-2xl">
+          <div className="flex items-start gap-3">
+            <div className="rounded-xl bg-rose-50 p-2 text-rose-600">
+              <Trash2 className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-base font-bold text-gray-900">Remove content writer?</h3>
+              <p className="mt-1 text-sm text-gray-600">
+                {writer.name} will lose writer access immediately. Existing blogs and news will stay in the system.
+              </p>
+              <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
+                {writer.email}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 flex justify-end gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => toast.dismiss(toastId)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="bg-rose-600 text-white hover:bg-rose-700"
+              onClick={() => {
+                toast.dismiss(toastId);
+                void deleteWriter(writer);
+              }}
+            >
+              Delete Writer
+            </Button>
+          </div>
+        </div>
+      ),
+      {
+        duration: 12000,
+      }
+    );
+  }
+
+  async function deleteWriter(writer: Writer) {
+    setDeletingId(writer.id);
+    const loadingToast = toast.loading(`Removing ${writer.name}...`);
+
+    try {
+      const response = await fetch(buildApiUrl(`/api/admin/writers/${writer.id}`), {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Unable to remove writer");
+      }
+
+      setWriters((current) => current.filter((currentWriter) => currentWriter.id !== writer.id));
+      toast.dismiss(loadingToast);
+      toast.success("Content writer removed", {
+        description: `${writer.name} no longer has access to the writer workspace.`,
+      });
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error(error instanceof Error ? error.message : "Unable to remove writer", {
+        description: "The writer account was not deleted. Please try again.",
+      });
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   async function proceedReset(writer: Writer) {
@@ -322,12 +401,12 @@ async function resetPassword(writer: Writer) {
 
       <Card className="overflow-hidden p-0">
         {loading ? (
-          <div className="flex min-h-[260px] items-center justify-center">
+          <div className="flex min-h-65 items-center justify-center">
             <Loader2 className="h-7 w-7 animate-spin text-blue-600" />
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-[720px] w-full text-left">
+            <table className="min-w-180 w-full text-left">
               <thead className="border-b border-gray-100 bg-gray-50/60">
                 <tr>
                   <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.22em] text-gray-400">
@@ -392,6 +471,15 @@ async function resetPassword(writer: Writer) {
                         >
                           <KeyRound className="h-4 w-4" />
                           {resettingId === writer.id ? "Resetting..." : "Reset password"}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="flex items-center gap-2 border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700"
+                          disabled={deletingId === writer.id}
+                          onClick={() => confirmDeleteWriter(writer)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          {deletingId === writer.id ? "Deleting..." : ""}
                         </Button>
                       </div>
                     </td>

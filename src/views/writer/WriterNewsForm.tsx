@@ -2,14 +2,19 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Calendar, Clock, LoaderCircle, Save, Search, X } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, LoaderCircle, X } from "lucide-react";
 import { toast } from "sonner";
 import ImageUploadBox from "@/components/writer/ImageUploadBox";
 import RichTextEditor from "@/components/writer/RichTextEditor";
 import SlugInput from "@/components/writer/SlugInput";
 import TagInput from "@/components/writer/TagInput";
 import { useWriterAuth } from "@/context/WriterAuthContext";
-import { buildApiUrl } from "@/lib/api";
+import {
+  formatIstDateTimeLabel,
+  getCurrentIstDateTimeLocalValue,
+  toIstDateTimeLocalValue,
+} from "@/lib/istDateTime";
+import { writerApiFetch } from "@/lib/writerApi";
 import type { ContentStatus, NewsFormState, SeoModalProps } from "@/types/writer";
 
 const CATEGORY_OPTIONS = [
@@ -148,7 +153,6 @@ export default function WriterNewsForm() {
   const [localNewsId, setLocalNewsId] = useState<string | null>(articleId);
   const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
-  const [showStatusMessage, setShowStatusMessage] = useState(false);
   const [scheduledAt, setScheduledAt] = useState<string>("");
   const [showSchedulePopup, setShowSchedulePopup] = useState(false);
   const [currentStatus, setCurrentStatus] = useState<ContentStatus | "scheduled">("draft");
@@ -193,16 +197,17 @@ export default function WriterNewsForm() {
       setLoadingArticle(true);
 
       try {
-        const response = await fetch(buildApiUrl(`/api/writer/news/${articleId}`), {
-          credentials: "include",
+        const response = await writerApiFetch(`/api/writer/news/${articleId}`, {
           cache: "no-store",
         });
 
-        const data = (await response.json().catch(() => ({}))) as any;
+        const data = (await response.json().catch(() => ({}))) as Record<string, string | number | boolean | null | undefined>;
 
         if (!response.ok) {
-          throw new Error(data?.message || "Unable to load article");
-        } 
+          const errorMessage =
+            typeof data?.message === "string" ? data.message : "Unable to load article";
+          throw new Error(errorMessage);
+        }
         if (cancelled) {
           return;
         } 
@@ -226,11 +231,10 @@ export default function WriterNewsForm() {
           metaTitle: "",
           metaDescription: "",
         });
-          setLocalNewsId(String(data?.id ?? articleId));
+        setLocalNewsId(String(data?.id ?? articleId));
         setCurrentStatus(typeof data?.status === 'string' ? data.status as ContentStatus : "draft");
         if (typeof data?.scheduled_at === 'string') {
-          const date = new Date(data.scheduled_at);
-          setScheduledAt(date.toISOString().slice(0, 16));
+          setScheduledAt(toIstDateTimeLocalValue(data.scheduled_at));
         }
         hasChangesRef.current = false;
       } catch (error) {
@@ -326,11 +330,10 @@ const descriptionCount = useMemo(() => countPlainText(form.description).length, 
           metaDescription: currentForm.metaDescription.trim(),
         };
 
-        const response = await fetch(
-          buildApiUrl(editMode ? `/api/writer/news/${currentId}` : "/api/writer/news"),
+        const response = await writerApiFetch(
+          editMode ? `/api/writer/news/${currentId}` : "/api/writer/news",
           {
             method: editMode ? "PUT" : "POST",
-            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },
@@ -353,8 +356,6 @@ const descriptionCount = useMemo(() => countPlainText(form.description).length, 
         if (isAutoSave) {
           setAutoSaveStatus("success");
           setLastSavedAt(new Date());
-          setShowStatusMessage(true);
-          setTimeout(() => setShowStatusMessage(false), 5000);
         } else {
           toast.success(
             status === "published" 
@@ -666,7 +667,7 @@ const descriptionCount = useMemo(() => countPlainText(form.description).length, 
                           type="datetime-local"
                           value={scheduledAt}
                           onChange={(e) => setScheduledAt(e.target.value)}
-                          min={new Date().toISOString().slice(0, 16)}
+                          min={getCurrentIstDateTimeLocalValue()}
                           className="w-full rounded-xl border border-[#e5e5e5] bg-[#fafaf8] px-4 py-3 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
                         />
                         <button
@@ -695,7 +696,7 @@ const descriptionCount = useMemo(() => countPlainText(form.description).length, 
                   <div className="flex items-center gap-3 rounded-xl bg-[#ede9fe] px-4 py-2.5 text-xs font-semibold text-[#5b4ced]">
                     <Clock className="h-3.5 w-3.5" />
                     <span>
-                      Scheduled for {new Date(scheduledAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      Scheduled for {formatIstDateTimeLabel(scheduledAt)}
                     </span>
                     <button
                       onClick={() => {

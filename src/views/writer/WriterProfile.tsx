@@ -3,9 +3,9 @@
 import type { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { useWriterAuth } from "@/context/WriterAuthContext";
-import { buildApiUrl } from "@/lib/api";
 import { toast } from "sonner";
 import { Icon } from "@iconify/react";
+import { writerApiFetch } from "@/lib/writerApi";
 
 export default function WriterProfile() {
   const { writer, refreshWriter } = useWriterAuth();
@@ -48,12 +48,11 @@ export default function WriterProfile() {
 
     try {
       setIsSavingProfile(true);
-      const response = await fetch(buildApiUrl("/api/writer/auth/profile"), {
+      const response = await writerApiFetch("/api/writer/auth/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
         body: JSON.stringify({ name: name.trim() }),
       });
 
@@ -92,12 +91,11 @@ export default function WriterProfile() {
 
     try {
       setIsUpdatingPassword(true);
-      const response = await fetch(buildApiUrl("/api/writer/auth/change-password"), {
+      const response = await writerApiFetch("/api/writer/auth/change-password", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
         body: JSON.stringify({ currentPassword, newPassword }),
       });
 

@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-import { buildApiUrl } from "@/lib/api";
 import { useWriterAuth } from "@/context/WriterAuthContext";
+import { writerApiFetch } from "@/lib/writerApi";
 import type { ContentStatus, DashboardStats, WriterContentItem } from "@/types/writer";
 
 interface StatusBadgeProps {
@@ -74,12 +74,10 @@ export default function WriterDashboard() {
     async function loadData() {
       try {
         const [blogsResponse, newsResponse] = await Promise.all([
-          fetch(buildApiUrl("/api/writer/blogs"), {
-            credentials: "include",
+          writerApiFetch("/api/writer/blogs", {
             cache: "no-store",
           }),
-          fetch(buildApiUrl("/api/writer/news"), {
-            credentials: "include",
+          writerApiFetch("/api/writer/news", {
             cache: "no-store",
           }),
         ]);

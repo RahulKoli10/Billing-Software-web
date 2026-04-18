@@ -3,14 +3,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { Calendar, Clock, LoaderCircle, Save, X } from "lucide-react";
+import { Calendar, Clock, LoaderCircle, X } from "lucide-react";
 import { toast } from "sonner";
 import ImageUploadBox from "@/components/writer/ImageUploadBox";
 import RichTextEditor from "@/components/writer/RichTextEditor";
 import SlugInput from "@/components/writer/SlugInput";
 import TagInput from "@/components/writer/TagInput";
 import { useWriterAuth } from "@/context/WriterAuthContext";
-import { buildApiUrl } from "@/lib/api";
+import {
+  formatIstDateTimeLabel,
+  getCurrentIstDateTimeLocalValue,
+  toIstDateTimeLocalValue,
+} from "@/lib/istDateTime";
+import { writerApiFetch } from "@/lib/writerApi";
 import type { BlogFormState, ContentStatus } from "@/types/writer";
 
 function slugify(value = "") {
@@ -54,7 +59,6 @@ export default function WriterBlogForm() {
   const [localBlogId, setLocalBlogId] = useState<string | null>(blogId);
   const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
-  const [showStatusMessage, setShowStatusMessage] = useState(false);
   const [scheduledAt, setScheduledAt] = useState<string>("");
   const [showSchedulePopup, setShowSchedulePopup] = useState(false);
   const [currentStatus, setCurrentStatus] = useState<ContentStatus | "scheduled">("draft");
@@ -100,8 +104,7 @@ export default function WriterBlogForm() {
       setLoadingBlog(true);
 
       try {
-        const response = await fetch(buildApiUrl(`/api/writer/blogs/${blogId}`), {
-          credentials: "include",
+        const response = await writerApiFetch(`/api/writer/blogs/${blogId}`, {
           cache: "no-store",
         });
 
@@ -130,10 +133,7 @@ export default function WriterBlogForm() {
         setLocalBlogId(String(data?.id ?? blogId));
         setCurrentStatus(typeof data?.status === 'string' ? data.status as ContentStatus : "draft");
         if (typeof data?.scheduled_at === 'string') {
-          // Parse DB 'YYYY-MM-DD HH:MM:SS' to datetime-local 'YYYY-MM-DDTHH:MM'
-          const dbStr = data.scheduled_at;
-          const dateLocalStr = dbStr.slice(0, 16).replace(' ', 'T');
-          setScheduledAt(dateLocalStr);
+          setScheduledAt(toIstDateTimeLocalValue(data.scheduled_at));
         }
         hasChangesRef.current = false;
 
@@ -235,11 +235,10 @@ export default function WriterBlogForm() {
         };
 
 
-        const response = await fetch(
-          buildApiUrl(editMode ? `/api/writer/blogs/${currentId}` : "/api/writer/blogs"),
+        const response = await writerApiFetch(
+          editMode ? `/api/writer/blogs/${currentId}` : "/api/writer/blogs",
           {
             method: editMode ? "PUT" : "POST",
-            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },
@@ -262,9 +261,6 @@ export default function WriterBlogForm() {
         if (isAutoSave) {
           setAutoSaveStatus("success");
           setLastSavedAt(new Date());
-          setShowStatusMessage(true);
-          // Set timeout to hide status message after 5 seconds
-          setTimeout(() => setShowStatusMessage(false), 5000);
         } else {
           toast.success(
             status === "published" 
@@ -576,7 +572,7 @@ export default function WriterBlogForm() {
                       type="datetime-local"
                       value={scheduledAt}
                       onChange={(e) => setScheduledAt(e.target.value)}
-                      min={new Date().toISOString().slice(0, 16)}
+                      min={getCurrentIstDateTimeLocalValue()}
                       className="w-full rounded-xl border border-[#e5e5e5] bg-[#fafaf8] px-4 py-3 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
                     />
                     <button
@@ -605,7 +601,7 @@ export default function WriterBlogForm() {
               <div className="flex items-center gap-3 rounded-xl bg-[#ede9fe] px-4 py-2.5 text-xs font-semibold text-[#5b4ced]">
                 <Clock className="h-3.5 w-3.5" />
                 <span>
-                  Scheduled for {new Date(scheduledAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  Scheduled for {formatIstDateTimeLabel(scheduledAt)}
                 </span>
                 <button
                   onClick={() => {
