@@ -101,7 +101,7 @@ export default function Footer() {
           </div>
 
           {/* Software */}
-          <div>
+          {/* <div>
             <h4 className="font-medium text-black mb-4 text-xl">Software</h4>
             <ul className="space-y-1">
               <li><Link href="/help">Accounting Software</Link></li>
@@ -113,7 +113,7 @@ export default function Footer() {
               <li><Link href="/help">Medical Billing</Link></li>
               <li><Link href="/help">Hotel Billing</Link></li>
             </ul>
-          </div>
+          </div> */}
 
           {/* support */}
           <div>
@@ -133,8 +133,8 @@ export default function Footer() {
             <div>
             <h4 className="font-medium text-black mb-4 text-xl">Company</h4>
             <ul className="space-y-1">
-              <li><Link href="/help">About</Link></li>
-              <li><Link href="/help">Contact Us</Link></li>
+              {/* <li><Link href="/help">About</Link></li> */}
+              {/* <li><Link href="/help">Contact Us</Link></li> */}
               <li><Link href="/help">Privacy Policy</Link></li>
               <li><Link href="/help">Terms & Conditions</Link></li>
               <li><Link href="/help">Pricing Policy</Link></li>
@@ -155,7 +155,7 @@ export default function Footer() {
               <li><Link href="/help">Help & Support</Link></li>
               <li><Link href="/help">Security & Legal</Link></li>
               <li><Link href="/help">Updates & Knowledge</Link></li> 
-              <li><Link href="/help">FAQs</Link></li>
+              {/* <li><Link href="/help">FAQs</Link></li> */}
             </ul>
           </div>
 
@@ -173,7 +173,7 @@ export default function Footer() {
             </ul>
           </div>
           {/* GST */}
-          <div>
+          {/* <div>
             <h4 className="font-medium text-black mb-4 text-xl">GST</h4>
             <ul className="space-y-1">
               <li><Link href="/">GST Basics</Link></li>
@@ -184,7 +184,7 @@ export default function Footer() {
               <li><Link href="/">Input Tax Credit (ITC)</Link></li>
               <li><Link href="/">GST Penalties & Compliance</Link></li>
             </ul>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom bar */}
