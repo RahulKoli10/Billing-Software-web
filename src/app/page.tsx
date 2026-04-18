@@ -9,9 +9,6 @@ import Footer from "./component/Footer";
 import { buildApiUrl } from "@/lib/api";
 import { featureItems } from "./features/featureData";
 import { useAuth } from "@/lib/useAuth";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 export default function Home() {
   const scrollToPricing = () => {
     const pricingSection = document.getElementById("plan-pricing");
@@ -107,23 +104,6 @@ export default function Home() {
     },
 
   ];
-  // testimonial slider code
-  const settings = {
-    dots: true,
-    arrows: true, // ✅ correct
-    infinite: true,
-    slidesToShow: 3,
-    centerMode: true,
-    centerPadding: "0px",
-    autoplay: true,
-    speed: 700,
-    autoplaySpeed: 2000,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 2 } },
-      { breakpoint: 640, settings: { slidesToShow: 1 } },
-    ],
-  };
-
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
