@@ -3,8 +3,6 @@ import "./globals.css";
 import { DM_Sans, Open_Sans,Montserrat } from "next/font/google";
 import { Toaster } from "sonner"; 
 import { AuthProvider } from "@/lib/auth-context";
-import Navbar from './component/Navbar'
-import Footer from "./component/Footer";
 
 export const montserrat = Montserrat({
   subsets: ["latin"],
@@ -54,28 +52,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // <html lang="en" data-scroll-behavior="smooth">
-    //   <body className={`${dmSans.variable} ${openSans.variable} antialiased`}>
-    //     <AuthProvider>
-    //       <Toaster richColors position="top-right" />
-    //       {children}
-    //     </AuthProvider>
-    //   </body>
-    // </html>
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={`${dmSans.variable} ${openSans.variable} antialiased`}>
         <AuthProvider>
           <Toaster richColors position="top-right" />
-
-          {/* ✅ ADD THIS */}
-          <Navbar />
-
-          {/* 🔥 THIS IS YOUR PAGE */}
           {children}
-
-          {/* ✅ ADD THIS */}
-          <Footer />
-
         </AuthProvider>
       </body>
     </html>

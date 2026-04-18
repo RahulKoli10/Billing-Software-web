@@ -46,10 +46,7 @@ export default function Hero() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-slate-950 mb-6 md:mb-8 leading-[1.1]">
-            Let's solve your <br />
-            <span className="text-blue-600 underline decoration-blue-100 underline-offset-4 md:underline-offset-8">
-              billing hurdles.
-            </span>
+            Let's solve your <span className="text-blue-600 underline decoration-blue-100 underline-offset-4 md:underline-offset-8"> billing hurdles.</span>
           </h1>
 
           <p className="text-base md:text-xl text-slate-600 leading-relaxed font-medium">
