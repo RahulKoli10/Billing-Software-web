@@ -310,9 +310,7 @@ function StatCard({
 }
 
 //          CARD         
-<<<<<<< HEAD
 
-=======
 function StatCard({
   title,
   value,
@@ -332,4 +330,3 @@ function StatCard({
     </div>
   );
 }
->>>>>>> change-ui

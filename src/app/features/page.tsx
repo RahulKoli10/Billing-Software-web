@@ -1,79 +1,30 @@
+"use client";
+
 import Footer from "../component/Footer";
 import Navbar from "../component/Navbar";
 import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
-<<<<<<< HEAD
 import { featureItems } from "./featureData";
 
-export default function featurePage() {
-=======
-export default function SigninPage() {
-    const features = [
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        image:"/billing-invoices.png"
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        image:"/gst-and-tax.png"
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        image:"/inventory-managment.png"
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        image:"/point-and-sales.png"
-    },
-     {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        image:"/report-and-analytics.png"
-    },
-    {
-      title: "Auto-Discount Engine",
-      description:
-        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        image:"/user-managment-and-security.png"
-    },
-  ];
->>>>>>> change-ui
+export default function FeaturePage() {
   return (
     <main className="font-dm">
-        <Navbar/>
-        <section className="w-full bg-white py-10">
+      <Navbar />
+
+      {/* Features Section */}
+      <section className="w-full bg-white py-10">
         <div className="max-w-7xl mx-auto px-4">
+          
           {/* Header */}
           <div className="text-center max-w-4xl mx-auto text-black">
-            <h2 className="text-3xl md:text-[42px] font-bold ">
-              Everything Your Business Needs to <br/>Bill Smarter
+            <h2 className="text-3xl md:text-[42px] font-bold">
+              Everything Your Business Needs to <br />Bill Smarter
             </h2>
             <p className="mt-4 text-base md:text-lg">
-               From GST invoicing to inventory, payments to analytics — BissBill is the only GST billing software your business will ever need. Built for Indian small businesses, designed for simplicity.
-
+              From GST invoicing to inventory, payments to analytics — BissBill is the only GST billing software your business will ever need. Built for Indian small businesses, designed for simplicity.
             </p>
           </div>
-
-          {/* View all */}
-          {/* <div className="mt-8 flex justify-end">
-            <Link
-              href="#"
-              className="  text-lg font-medium underline flex items-center gap-1"
-            >
-              View all{" "}
-              <Icon icon="line-md:arrow-right" width="20" height="20" />
-            </Link>
-          </div> */}
 
           {/* Feature Grid */}
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -88,41 +39,30 @@ export default function SigninPage() {
 
                 <p className="mt-2 text-base">{item.cardDescription}</p>
 
-                {/* Image Placeholder */}
-<<<<<<< HEAD
+                {/* Image */}
                 <Link
                   href={`/features-details?feature=${item.slug}`}
                   className="block mt-4 rounded-lg border border-gray-100 overflow-hidden"
                 >
                   <Image
-                    src={item.src}
+                    src={item.src }
                     alt={item.title}
                     width={600}
                     height={400}
                     className="w-full h-auto"
                   />
-=======
-                <Link href="/features-details"><div className="mt-4 rounded-lg border border-gray-100 overflow-hidden">
-                  {/* <Image
-                    src="/homeFeature.png"
-                    alt="Feature"
-                    width={600}
-                    height={400}
-                    className="w-full h-auto"
-                  /> */}
-                  <img src={item.image} alt="" />
-                </div>
->>>>>>> change-ui
                 </Link>
               </div>
             ))}
           </div>
         </div>
       </section>
-      {/* Ready to Make Billing Effortless? */}
-      <section className="py-10 ">
+
+      {/* CTA Section */}
+      <section className="py-10">
         <div className="max-w-7xl mx-auto px-5 py-8 rounded-xl bg-[#EFF1F8]">
-          <div className="flex flex-col-reverse md:flex-row items-center gap-12  ">
+          <div className="flex flex-col-reverse md:flex-row items-center gap-12">
+            
             {/* Left Content */}
             <div className="flex-1">
               <h2 className="text-2xl md:text-3xl font-bold text-black">
@@ -138,9 +78,10 @@ export default function SigninPage() {
 
               <Link
                 href="/signup"
-                className="inline-flex items-center gap-1 mt-6 bg-[#0032FF  ] text-white px-6 py-3 rounded-lg font-medium bg-[#0032FF] hover:bg-blue-700 transition"
+                className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
               >
-                Start Free <Icon icon="line-md:arrow-right" width="20" height="20" />
+                Start Free
+                <Icon icon="line-md:arrow-right" width="20" height="20" />
               </Link>
             </div>
 
@@ -155,10 +96,12 @@ export default function SigninPage() {
                 priority
               />
             </div>
+
           </div>
         </div>
-      </section>    
-      <Footer/>
+      </section>
+
+      <Footer />
     </main>
   );
 }
