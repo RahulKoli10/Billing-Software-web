@@ -94,12 +94,9 @@ export default function Navbar() {
             <Link href="/features" className={linkClass("/features")}>
               Features
             </Link>
-<<<<<<< HEAD
-=======
             <Link href="/blog" className={linkClass("/blog")}>
               Blog
             </Link>
->>>>>>> change-ui
             <Link href="/help" className={linkClass("/help")}>
               Help
             </Link>
