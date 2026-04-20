@@ -119,9 +119,9 @@ function CheckoutForm() {
   const params = useSearchParams();
   const router = useRouter();
 
-  const planId = params?.get("planId");
-  const billing = params?.get("billing");
-  const mode = params?.get("mode");
+  const planId = params.get("planId");
+  const billing = params.get("billing");
+  const mode = params.get("mode");
   const isTrialMode = mode === "trial";
 
   const [accepted, setAccepted] = useState(false);

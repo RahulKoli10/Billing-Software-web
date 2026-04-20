@@ -299,7 +299,7 @@ export default function DashboardHome() {
     <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-700">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
-          <h2 className="text-2xl text-black font-bold font-headline tracking-tighter sm:text-3xl">Dashboard Overview</h2>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-black">Dashboard Overview</h2>
           <p className="text-gray-500 font-medium">Subscription status plus important sales and inventory highlights in one place.</p>
         </div>
         <div className="flex gap-3 self-start sm:self-auto">
@@ -320,7 +320,11 @@ export default function DashboardHome() {
             </div>
             <h4 className="text-sm font-bold text-gray-400 mb-1 uppercase tracking-widest">{stat.title}</h4>
             <div className="flex items-center gap-3">
+<<<<<<< HEAD
               <p className="text-2xl text-black font-medium font-headline truncate" title={stat.value}>{stat.value}</p>
+=======
+              <p className="text-xl text-black font-semibold font-headline truncate" title={stat.value}>{stat.value}</p>
+>>>>>>> change-ui
               {stat.title === "License Key" && (
                 <button 
                   onClick={(e) => { e.stopPropagation(); handleCopy(stat.value, 'license_stat'); }} 
@@ -349,7 +353,11 @@ export default function DashboardHome() {
               <TrendingUp className="w-4 h-4 text-gray-300" />
             </div>
             <p className="text-sm font-bold uppercase tracking-widest text-gray-400">{stat.title}</p>
+<<<<<<< HEAD
             <p className="mt-2 text-2xl font-medium text-black">{stat.value}</p>
+=======
+            <p className="mt-2 text-xl font-semibold text-gray-900">{stat.value}</p>
+>>>>>>> change-ui
             <p className="mt-2 text-xs font-medium text-gray-500">{stat.helper}</p>
           </Card>
         ))}
@@ -710,7 +718,7 @@ Button.displayName = "Button";
 
 export const Card = ({ children, className, title, subtitle }: { children: React.ReactNode, className?: string, title?: string, subtitle?: string }) => {
   return (
-    <div className={cn("bg-white rounded-2xl p-6 shadow-sm border border-gray-100", className)}>
+    <div className={cn("bg-white rounded-lg p-6 shadow-sm border border-gray-100", className)}>
       {(title || subtitle) && (
         <div className="mb-6">
           {title && <h3 className="text-lg font-bold font-headline text-gray-900 tracking-tight">{title}</h3>}

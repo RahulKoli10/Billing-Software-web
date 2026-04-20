@@ -3,9 +3,51 @@ import Navbar from "../component/Navbar";
 import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
+<<<<<<< HEAD
 import { featureItems } from "./featureData";
 
 export default function featurePage() {
+=======
+export default function SigninPage() {
+    const features = [
+    {
+      title: "Auto-Discount Engine",
+      description:
+        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/billing-invoices.png"
+    },
+    {
+      title: "Auto-Discount Engine",
+      description:
+        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/gst-and-tax.png"
+    },
+    {
+      title: "Auto-Discount Engine",
+      description:
+        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/inventory-managment.png"
+    },
+    {
+      title: "Auto-Discount Engine",
+      description:
+        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/point-and-sales.png"
+    },
+     {
+      title: "Auto-Discount Engine",
+      description:
+        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/report-and-analytics.png"
+    },
+    {
+      title: "Auto-Discount Engine",
+      description:
+        "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
+        image:"/user-managment-and-security.png"
+    },
+  ];
+>>>>>>> change-ui
   return (
     <main className="font-dm">
         <Navbar/>
@@ -47,6 +89,7 @@ export default function featurePage() {
                 <p className="mt-2 text-base">{item.cardDescription}</p>
 
                 {/* Image Placeholder */}
+<<<<<<< HEAD
                 <Link
                   href={`/features-details?feature=${item.slug}`}
                   className="block mt-4 rounded-lg border border-gray-100 overflow-hidden"
@@ -58,6 +101,18 @@ export default function featurePage() {
                     height={400}
                     className="w-full h-auto"
                   />
+=======
+                <Link href="/features-details"><div className="mt-4 rounded-lg border border-gray-100 overflow-hidden">
+                  {/* <Image
+                    src="/homeFeature.png"
+                    alt="Feature"
+                    width={600}
+                    height={400}
+                    className="w-full h-auto"
+                  /> */}
+                  <img src={item.image} alt="" />
+                </div>
+>>>>>>> change-ui
                 </Link>
               </div>
             ))}

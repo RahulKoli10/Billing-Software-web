@@ -166,7 +166,7 @@ function StatCard({
 
       {/* HEADER */}
       <div>
-        <h1 className="text-xl font-bold tracking-tight sm:text-3xl">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
           Sales Dashboard
         </h1>
         <p className="text-slate-500 mt-1">
@@ -196,31 +196,31 @@ function StatCard({
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           title="Total Revenue"
-          value={<span className="text-xl font-semibold">{currency.format(total)}</span>}
+          value={currency.format(total)}
           icon={IndianRupee}
         />
 
         <StatCard
           title="Received"
-          value={<span className="text-xl font-semibold">{currency.format(received)}</span>}
+          value={currency.format(received)}
           icon={CreditCard}
         />
 
         <StatCard
           title="Pending"
-          value={<span className="text-xl font-semibold">{currency.format(pending)}</span>}
+          value={currency.format(pending)}
           icon={AlertCircle}
         />
 
         <StatCard
           title="Invoices"
-          value={<span className="text-xl font-semibold">{filtered.length}</span>}
+          value={filtered.length}
           icon={FileText}
         />
       </div>
 
       {/* TABLE */}
-      <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
+      <div className="overflow-hidden rounded-lg border bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-215 w-full text-sm">
 
@@ -310,4 +310,26 @@ function StatCard({
 }
 
 //          CARD         
+<<<<<<< HEAD
 
+=======
+function StatCard({
+  title,
+  value,
+  icon: Icon,
+}: {
+  title: string;
+  value: string | number;
+  icon: ComponentType<{ className?: string }>;
+}) {
+  return (
+    <div className="bg-white border rounded-lg p-4 shadow-sm hover:shadow-md transition">
+      <div className="flex justify-between items-center">
+        <p className="text-sm text-slate-500">{title}</p>
+        <Icon className="h-5 w-5 text-blue-600" />
+      </div>
+      <p className="text-xl font-semibold mt-2">{value}</p>
+    </div>
+  );
+}
+>>>>>>> change-ui

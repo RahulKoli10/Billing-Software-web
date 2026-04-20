@@ -45,6 +45,7 @@ export default function Footer() {
         </div>
 
         {/* Links grid */}
+<<<<<<< HEAD
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-10 py-12 text-base text-[#5A5A5A]">
           {/* Quick Links */}
           <div>
@@ -102,6 +103,65 @@ export default function Footer() {
 
           {/* Software */}
           {/* <div>
+=======
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center gap-10 px-30 py-12 text-base text-[#5A5A5A]">
+            {/* Quick Links */}
+            <div>
+              <h4 className="font-medium text-black mb-4 text-xl">Quick Links</h4>
+              <ul className="space-y-1 ">
+                <li>
+                  <Link href="/">Home</Link>
+                </li>
+                <li>
+                  <Link href="/features">Features</Link>
+                </li>
+                <li>
+                  <Link href="/pricing">Pricing</Link>
+                </li>
+                <li>
+                  <Link href="/download">Download</Link>
+                </li>
+                <li>
+                  <Link href="/">Resources</Link>
+                </li>
+                <li>
+                  <Link href="/">FAQs</Link>
+                </li>
+                <li>
+                  <Link href="/blog">Blog</Link>
+                </li>
+                <li>
+                  <Link href="/news">News</Link>
+                </li>
+                <li>
+                  <Link href="/">About Us</Link>
+                </li>
+                <li>
+                  <Link href="/help">Help Centre</Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Popular Services */}
+            <div>
+              <h4 className="font-medium text-black mb-4 text-xl">
+                Popular Services
+              </h4>
+              <ul className="space-y-1 ">
+                <li>TaxFlow System</li>
+                <li>QuickCharge Billing</li>
+                <li>LedgerSmart</li>
+                <li>StockPilot</li>
+                <li>Invoicely Core</li>
+                <li>Invoice</li>
+                <li>E-Invoice</li>
+              </ul>
+            </div>
+
+            {/* Software */}
+            {/* <div>
+>>>>>>> change-ui
             <h4 className="font-medium text-black mb-4 text-xl">Software</h4>
             <ul className="space-y-1">
               <li><Link href="/help">Accounting Software</Link></li>
@@ -115,6 +175,7 @@ export default function Footer() {
             </ul>
           </div> */}
 
+<<<<<<< HEAD
           {/* support */}
           <div>
             <h4 className="font-medium text-black mb-4 text-xl">Support</h4>
@@ -158,9 +219,22 @@ export default function Footer() {
               {/* <li><Link href="/help">FAQs</Link></li> */}
             </ul>
           </div>
-
-          {/* Guides  */}
+=======
+            {/* support */}
             <div>
+              <h4 className="font-medium text-black mb-4 text-xl">Support</h4>
+              <ul className="space-y-1">
+>>>>>>> change-ui
+
+                <li><Link href="/help">Contact Us</Link></li>
+                <li><Link href="/help">Help & Support</Link></li>
+
+              </ul>
+            </div>
+
+            {/* Compoany  */}
+            <div>
+<<<<<<< HEAD
             <h4 className="font-medium text-black mb-4 text-xl">Company</h4>
             <ul className="space-y-1">
               <li><Link href="/help">Invoicing Guides</Link></li>
@@ -174,6 +248,52 @@ export default function Footer() {
           </div>
           {/* GST */}
           {/* <div>
+=======
+              <h4 className="font-medium text-black mb-4 text-xl">Company</h4>
+              <ul className="space-y-1">
+                {/* <li>About</li> */}
+                {/* <li>Contact Us</li> */}
+                <li>Privacy Policy</li>
+                <li>Terms & Conditions</li>
+                <li>Pricing Policy</li>
+                <li>Refund Policy</li>
+                <li>Cancellation Policy</li>
+                <li>Cookie Policy</li>
+                <li>Disclaimer</li>
+                <li>Compliance Policy</li>
+              </ul>
+            </div>
+            {/* Resources */}
+            <div>
+              <h4 className="font-medium text-black mb-4 text-xl">Resources</h4>
+              <ul className="space-y-1">
+                <li>Templates & Downloads</li>
+                <li>Free Tools</li>
+                <li>Videos & Demos</li>
+                {/* <li>Help & Support</li> */}
+                <li>Security & Legal</li>
+                <li>Updates & Knowledge</li>
+                {/* <li>Blog</li> */}
+                {/* <li>FAQs</li> */}
+              </ul>
+            </div>
+
+            {/* Guides  */}
+            <div>
+              <h4 className="font-medium text-black mb-4 text-xl">Company</h4>
+              <ul className="space-y-1">
+                <li>Invoicing Guides</li>
+                <li>Payments & Checkout</li>
+                <li>Pricing & Subscription</li>
+                <li>Inventory Management</li>
+                <li>GST & Compliance</li>
+                <li>Reports & Analytics</li>
+                <li>Case Study</li>
+              </ul>
+            </div>
+            {/* GST */}
+            {/* <div>
+>>>>>>> change-ui
             <h4 className="font-medium text-black mb-4 text-xl">GST</h4>
             <ul className="space-y-1">
               <li><Link href="/">GST Basics</Link></li>
@@ -185,6 +305,10 @@ export default function Footer() {
               <li><Link href="/">GST Penalties & Compliance</Link></li>
             </ul>
           </div> */}
+<<<<<<< HEAD
+=======
+          </div>
+>>>>>>> change-ui
         </div>
 
         {/* Bottom bar */}

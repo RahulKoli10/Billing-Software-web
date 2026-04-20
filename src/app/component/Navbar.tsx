@@ -27,8 +27,7 @@ export default function Navbar() {
   const dashboardPath = user?.role === "superadmin" ? "/dashboard/admin" : "/dashboard";
 
   const linkClass = (path: string) =>
-    `block font-medium transition ${
-      pathname === path ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
+    `block font-medium transition ${pathname === path ? "text-blue-600" : "text-gray-700 hover:text-blue-600"
     }`;
 
   /*  CLOSE DROPDOWN ON OUTSIDE CLICK   */
@@ -52,7 +51,7 @@ export default function Navbar() {
         method: "POST",
         credentials: "include",
       });
-    } catch {}
+    } catch { }
 
     notifyAuthStateChanged();
     router.push("/login");
@@ -83,6 +82,9 @@ export default function Navbar() {
             <Link href="/" className={linkClass("/")}>
               Home
             </Link>
+            <Link href="/about" className={linkClass("/about")}>
+              About Us
+            </Link>
             <Link href="/download" className={linkClass("/download")}>
               Download
             </Link>
@@ -92,6 +94,12 @@ export default function Navbar() {
             <Link href="/features" className={linkClass("/features")}>
               Features
             </Link>
+<<<<<<< HEAD
+=======
+            <Link href="/blog" className={linkClass("/blog")}>
+              Blog
+            </Link>
+>>>>>>> change-ui
             <Link href="/help" className={linkClass("/help")}>
               Help
             </Link>
@@ -119,26 +127,26 @@ export default function Navbar() {
 
                 <button
                   onClick={() => setMenuOpen((p) => !p)}
-                  className="text-green-700 hover:text-blue-600"
+                  className="text-green-700 hover:text-blue-600 cursor-pointer"
                 >
                   <Icon icon="qlementine-icons:user-24" width="25" />
                 </button>
 
                 {menuOpen && (
-                  <div className="absolute right-0 top-12 w-44 bg-white  rounded-lg shadow-lg">
+                  <div className="absolute right-0 top-12 w-44 bg-white  rounded-lg shadow-lg ">
                     <button
                       onClick={() => {
                         setMenuOpen(false);
                         router.push(dashboardPath);
                       }}
-                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer"
                     >
                       Dashboard
                     </button>
 
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 cursor-pointer"
                     >
                       Logout
                     </button>

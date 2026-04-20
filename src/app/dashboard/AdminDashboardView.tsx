@@ -224,7 +224,7 @@ export default function AdminDashboardView() {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <Badge variant="primary">Admin Workspace</Badge>
-          <h1 className="mt-3 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-black">
             Billing admin dashboard
           </h1>
           <p className="mt-2 max-w-2xl text-sm text-gray-500">
@@ -262,7 +262,7 @@ export default function AdminDashboardView() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 md:gap-6">
-        <Card>
+        <Card className="rounded-lg">
           <div className="mb-4 flex items-start justify-between">
             <Users className="h-8 w-8 text-blue-600" />
             <Badge variant="neutral">{data.customers.length} total</Badge>
@@ -270,12 +270,12 @@ export default function AdminDashboardView() {
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Active customers
           </p>
-          <p className="mt-2 text-2xl font-bold text-gray-900">
+          <p className="mt-2 text-xl font-semibold text-gray-900">
             {activeCustomers}
           </p>
         </Card>
 
-        <Card>
+        <Card className="rounded-lg">
           <div className="mb-4 flex items-start justify-between">
             <CreditCard className="h-8 w-8 text-emerald-600" />
             <Badge variant={featuredPlans > 0 ? "success" : "neutral"}>
@@ -285,10 +285,10 @@ export default function AdminDashboardView() {
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Active pricing plans
           </p>
-          <p className="mt-2 text-2xl font-bold text-gray-900">{activePlans}</p>
+          <p className="mt-2 text-xl font-semibold text-gray-900">{activePlans}</p>
         </Card>
 
-        <Card>
+        <Card className="rounded-lg">
           <div className="mb-4 flex items-start justify-between">
             <Download className="h-8 w-8 text-violet-600" />
             <Badge variant="primary">{data.downloads.length} files</Badge>
@@ -296,12 +296,12 @@ export default function AdminDashboardView() {
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Total revenue
           </p>
-          <p className="mt-2 text-2xl font-bold text-gray-900">
+          <p className="mt-2 text-xl font-semibold text-gray-900">
             {currency.format(totalRevenue)}
           </p>
         </Card>
 
-        <Card>
+        <Card className="rounded-lg">
           <div className="mb-4 flex items-start justify-between">
             <ShieldCheck className="h-8 w-8 text-amber-600" />
             <Badge variant={pendingCustomers > 0 ? "warning" : "success"}>
@@ -311,7 +311,7 @@ export default function AdminDashboardView() {
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400">
             Pending approvals
           </p>
-          <p className="mt-2 text-2xl font-bold text-gray-900">
+          <p className="mt-2 text-xl font-semibold text-gray-900">
             {pendingCustomers}
           </p>
         </Card>
@@ -321,7 +321,7 @@ export default function AdminDashboardView() {
         <Card
           title="Recent customers"
           subtitle="Latest customer records returned by the admin customer API"
-          className="lg:col-span-2"
+          className="lg:col-span-2 rounded-lg"
         >
           {recentCustomers.length ? (
             <div className="space-y-4">
@@ -377,7 +377,7 @@ export default function AdminDashboardView() {
         </Card>
 
         <div className="space-y-6">
-          <Card title="Admin modules" subtitle="Working links into each section">
+          <Card title="Admin modules" subtitle="Working links into each section" className="rounded-lg">
             <div className="space-y-3">
               <AdminLink
                 href="/dashboard/admin/customers"
@@ -410,6 +410,7 @@ export default function AdminDashboardView() {
           <Card
             title="Latest releases"
             subtitle="Most recent software entries from the downloads API"
+            className="rounded-lg"
           >
             {latestDownloads.length ? (
               <div className="space-y-3">

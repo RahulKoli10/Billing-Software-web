@@ -109,7 +109,7 @@ export default function AdminCustomersPage() {
     <div className="space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-right-4 duration-700">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
-          <h2 className="text-2xl font-bold font-headline text-gray-900 tracking-tighter sm:text-3xl">Customer Directory</h2>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-black">Customer Directory</h2>
           <p className="text-gray-500 font-medium">Manage entity relationships and health metrics.</p>
         </div>
         <Button size="sm" className="flex items-center gap-2 self-start sm:self-auto">
@@ -119,28 +119,28 @@ export default function AdminCustomersPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-        <Card className="flex flex-col border border-gray-200 items-center text-center h-40 p-8 bg-blue-50/50 shadow-none">
+        <Card className="flex flex-col rounded-lg border border-gray-200 items-center text-center h-40 p-8 bg-blue-50/50 shadow-none">
           <div className="rounded-2xl flex items-center justify-center mb-4">
             <Users className="text-blue-600 w-8 h-8" />
           </div>
-          <h4 className="font-bold font-headline text-xl text-gray-900">{customers.length}</h4>
+          <h4 className="font-semibold font-headline text-xl text-gray-900">{customers.length}</h4>
           <p className="text-sm font-bold text-gray-400 opacity-80 uppercase tracking-widest">Total Entities</p>
         </Card>
-        <Card className="flex flex-col items-center text-center p-13 border-none h-40 bg-gray-50">
-          <h4 className="font-bold font-headline text-xl text-green-600">{healthIndex}%</h4>
+        <Card className="flex flex-col rounded-lg items-center text-center p-13 border-none h-40 bg-gray-50">
+          <h4 className="font-semibold font-headline text-xl text-green-600">{healthIndex}%</h4>
           <p className="text-xs font-bold text-black pt-3 opacity-80 uppercase tracking-widest">Health Index</p>
         </Card>
-        <Card className="flex flex-col items-center text-center p-13 border-none h-40 bg-gray-50 shadow-none">
-          <h4 className="font-bold font-headline text-xl text-blue-600">₹{totalRevenue.toLocaleString()}</h4>
+        <Card className="flex flex-col rounded-lg items-center text-center p-13 border-none h-40 bg-gray-50 shadow-none">
+          <h4 className="font-semibold font-headline text-xl text-blue-600">₹{totalRevenue.toLocaleString()}</h4>
           <p className="text-xs font-bold text-black pt-3 opacity-80 uppercase tracking-widest">Total Revenue</p>
         </Card>
-        <Card className="flex flex-col items-center text-center p-13 border-none h-40 bg-gray-50 shadow-none">
-          <h4 className="font-bold font-headline text-xl text-amber-600">{pendingCompliance}</h4>
+        <Card className="flex flex-col rounded-lg items-center text-center p-13 border-none h-40 bg-gray-50 shadow-none">
+          <h4 className="font-semibold font-headline text-xl text-amber-600">{pendingCompliance}</h4>
           <p className="text-xs font-bold text-black pt-3 opacity-80 uppercase tracking-widest">Pending Status</p>
         </Card>
       </div>
 
-      <Card className="p-0 overflow-hidden">
+      <Card className="p-0 overflow-hidden rounded-lg">
         <div className="flex flex-col gap-4 border-b border-gray-100 bg-white p-4 sm:p-6 md:flex-row md:items-center md:justify-between">
           <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 md:w-auto">
              <div className="relative flex-1 md:w-64">

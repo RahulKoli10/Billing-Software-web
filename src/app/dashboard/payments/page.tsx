@@ -64,7 +64,7 @@ export default function PaymentHistory() {
           {[0, 1, 2].map((item) => (
             <div
               key={item}
-              className="h-28 animate-pulse rounded-2xl border border-slate-100 bg-white"
+              className="h-28 animate-pulse rounded-lg border border-slate-100 bg-white"
             />
           ))}
         </div>
@@ -134,7 +134,7 @@ export default function PaymentHistory() {
         />
       </div>
 
-      <div className="rounded-3xl border border-slate-100 bg-white shadow-sm">
+      <div className="rounded-lg border border-slate-100 bg-white shadow-sm">
         <div className="border-b border-slate-100 px-6 py-5">
           <h2 className="text-lg font-bold tracking-tight text-black">
             Billing Timeline
@@ -156,7 +156,7 @@ export default function PaymentHistory() {
                     {payment.plan_name || `Purchase #${index + 1}`}
                   </h3>
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${paymentTone(
+                    className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${paymentTone(
                       payment.payment_status
                     )}`}
                   >
@@ -168,11 +168,11 @@ export default function PaymentHistory() {
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-slate-50 p-4">
+              <div className="rounded-lg bg-slate-50 p-4">
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
                   Amount
                 </p>
-                <p className="mt-3 text-2xl font-bold tracking-tight text-black">
+                <p className="mt-3 text-xl font-semibold tracking-tight text-black">
                   {currency.format(Number(payment.amount || 0))}
                 </p>
                 <div className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-slate-500">
@@ -181,11 +181,11 @@ export default function PaymentHistory() {
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-slate-50 p-4">
+              <div className="rounded-lg bg-slate-50 p-4">
                 <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
                   Date
                 </p>
-                <p className="mt-3 text-sm font-semibold text-black">
+                <p className="mt-3 text-lg font-semibold text-black">
                   {formatDate(payment.payment_date)}
                 </p>
                 <p className="mt-2 text-xs text-slate-500">
@@ -216,13 +216,13 @@ function MetricCard({
   bg: string;
 }) {
   return (
-    <div className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
+    <div className="rounded-lg border border-slate-100 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
             {label}
           </p>
-          <p className="mt-3 text-2xl font-bold tracking-tight text-black">
+          <p className="mt-3 text-xl font-semibold tracking-tight text-black">
             {value}
           </p>
           <p className="mt-2 text-sm text-slate-500">{detail}</p>

@@ -163,7 +163,7 @@ export default function AdminUploadSoftware() {
     <div className="space-y-6 sm:space-y-8 animate-in zoom-in-95 duration-700">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
-          <h2 className="text-2xl font-bold font-headline text-gray-900 tracking-tighter sm:text-3xl">Software Repository</h2>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-black">Software Repository</h2>
           <p className="text-gray-500 font-medium">Manage distribution and metadata of software assets.</p>
         </div>
         <div className="flex gap-3 self-start sm:self-auto">
@@ -180,7 +180,7 @@ export default function AdminUploadSoftware() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <Card id="upload-section" className="p-8 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/20 transition-all">
+          <Card id="upload-section" className="rounded-lg p-8 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center bg-gray-50/50 hover:border-blue-300 hover:bg-blue-50/20 transition-all">
             <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-6">
               <Upload className="w-8 h-8 text-blue-600" />
             </div>
@@ -265,7 +265,7 @@ export default function AdminUploadSoftware() {
             </div>
           </Card>
 
-          <Card className="overflow-hidden p-0">
+          <Card className="overflow-hidden p-0 rounded-lg">
             <div className="flex flex-col gap-4 border-b border-gray-100 bg-white p-4 sm:p-6 md:flex-row md:items-center md:justify-between">
               <h3 className="font-bold font-headline text-lg">Asset Inventory</h3>
               <div className="relative">

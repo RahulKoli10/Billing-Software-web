@@ -41,7 +41,7 @@ export default function DashboardShell({
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F3F6FB] lg:flex">
+    <div className="min-h-screen bg-[#f1f1f1] lg:flex">
       <DashboardSidebar
         role={role}
         mobileOpen={sidebarOpen}
