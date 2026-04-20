@@ -38,22 +38,11 @@ function createEmptyForm(author = ""): BlogFormState {
     excerpt: "",
     metaTitle: "",
     metaDescription: "",
-    category: "",
+    category: "Uncategorized",
     tags: [],
     content: "",
   };
 }
-
-const BLOG_CATEGORIES = [
-  "App Development",
-  "Web Development",
-  "AI & Tech",
-  "Business",
-  "Design",
-  "DevOps",
-  "Tutorials",
-  "Case Study",
-];
 
 function countPlainText(html = "") {
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -139,7 +128,7 @@ export default function WriterBlogForm() {
           excerpt: String(data?.description || ""),
           metaTitle: "",
           metaDescription: "",
-          category: String(data?.category || ""),
+          category: String(data?.category || "Uncategorized"),
           tags:
             Array.isArray(data?.tags)
               ? data.tags.map((tag) => String(tag))
@@ -208,11 +197,6 @@ export default function WriterBlogForm() {
           return;
         }
 
-        if (!currentForm.category.trim()) {
-          toast.error("Select a category.");
-          return;
-        }
-
         if (!countPlainText(currentForm.content)) {
           toast.error("Content is required.");
           return;
@@ -238,7 +222,7 @@ export default function WriterBlogForm() {
       try {
         const payload = {
           slug: slugify(currentForm.slug || currentForm.title),
-          category: currentForm.category || "Uncategorized",
+          category: currentForm.category.trim() || "Uncategorized",
           title: currentForm.title.trim() || "Untitled Draft",
           description: currentForm.excerpt.trim(),
           content: currentForm.content,
@@ -317,12 +301,11 @@ export default function WriterBlogForm() {
       !form.title &&
       !form.excerpt &&
       !form.content &&
-      !form.category &&
       !form.tags.length;
     if (!isActuallyEmpty) {
       hasChangesRef.current = true;
     }
-  }, [form.title, form.content, form.excerpt, form.featuredImage, form.category, form.tags, form.slug]);
+  }, [form.title, form.content, form.excerpt, form.featuredImage, form.tags, form.slug]);
 
   // Debounced auto-save (3s)
   useEffect(() => {
@@ -526,26 +509,8 @@ export default function WriterBlogForm() {
               <p className="mt-2 text-[12px] text-[#aaa] text-right">Recommended length: 150–160 characters</p>
             </label>
 
-            <label className="block">
-              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Category</span>
-              <select
-                value={form.category}
-                onChange={(event) =>
-                  setForm((current) => ({
-                    ...current,
-                    category: event.target.value,
-                  }))
-                }
-                className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
-              >
-                <option value="">Select a category...</option>
-                {BLOG_CATEGORIES.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </label>
+            {/* Category input intentionally hidden for now.
+                We keep form.category in state/payload so it can be restored later without changing blog data shape. */}
 
             <div className="block">
               <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Tags</span>
