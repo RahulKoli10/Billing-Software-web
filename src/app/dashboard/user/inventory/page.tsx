@@ -293,13 +293,8 @@ function StatCard({
         <p className="text-sm text-slate-500">{title}</p>
         <Icon className="h-5 w-5 text-blue-600" />
       </div>
-<<<<<<< HEAD
-      <div className="mt-2">
-        {value}
-      </div>
-=======
+
       <p className="mt-2 text-xl font-semibold text-black">{value}</p>
->>>>>>> change-ui
     </div>
   );
 }

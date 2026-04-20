@@ -45,7 +45,7 @@ export default function FeaturePage() {
                   className="block mt-4 rounded-lg border border-gray-100 overflow-hidden"
                 >
                   <Image
-                    src={item.src || item.image}
+                    src={item.src }
                     alt={item.title}
                     width={600}
                     height={400}
