@@ -64,6 +64,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-16">
           {/* LOGO */}
+            <Link href="/" className="">           
           <div className="flex items-center gap-2">
             <Image
               src="/logo.png"
@@ -79,6 +80,7 @@ export default function Navbar() {
               BissBill
             </h1>
           </div>
+            </Link>
           {/* DESKTOP MENU */}
           <nav className="hidden lg:flex gap-8 text-base">
             <Link href="/" className={linkClass("/")}>
