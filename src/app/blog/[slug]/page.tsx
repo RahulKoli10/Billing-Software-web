@@ -19,6 +19,7 @@ type Blog = {
   author: string;
   avatar: string;
   date: string;
+  tags?: string;
 };
 
 export default function BlogDetailPage() {
@@ -154,6 +155,23 @@ export default function BlogDetailPage() {
         <p className="text-sm text-gray-500">{blog.date}</p>
       </div>
     </div>
+
+    {blog.tags && (
+      <div className="mt-6 flex flex-wrap gap-2">
+        {String(blog.tags)
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+          .map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700"
+            >
+              #{tag}
+            </span>
+          ))}
+      </div>
+    )}
 
     {/* Content */}
     <div 

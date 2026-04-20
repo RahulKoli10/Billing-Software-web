@@ -3,6 +3,13 @@
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { buildApiUrl } from "@/lib/api";
+import {
+  clearWriterSessionToken,
+  getWriterSessionToken,
+  setWriterSessionToken,
+  withWriterAuthHeaders,
+  writerApiFetch,
+} from "@/lib/writerApi";
 import type { WriterAuthContextValue, WriterAuthState, WriterUser } from "@/types/writer";
 
 const WriterAuthContext = createContext<WriterAuthContextValue | null>(null);
@@ -16,9 +23,14 @@ export function WriterAuthProvider({ children }: { children: ReactNode }) {
       setLoading(true);
     }
 
+    if (!getWriterSessionToken()) {
+      setWriter(null);
+      setLoading(false);
+      return { authenticated: false, writer: null };
+    }
+
     try {
-      const response = await fetch(buildApiUrl("/api/writer/auth/me"), {
-        credentials: "include",
+      const response = await writerApiFetch("/api/writer/auth/me", {
         cache: "no-store",
       });
 
@@ -42,18 +54,27 @@ export function WriterAuthProvider({ children }: { children: ReactNode }) {
   async function login(email: string, password: string) {
     const response = await fetch(buildApiUrl("/api/writer/auth/login"), {
       method: "POST",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
 
-    const data = await response.json().catch(() => ({}));
+    const data = (await response.json().catch(() => ({}))) as {
+      message?: string;
+      token?: string;
+      writer?: WriterUser;
+    };
 
     if (!response.ok) {
       throw new Error(data?.message || "Login failed");
     }
+
+    if (!data?.token) {
+      throw new Error("Login token missing");
+    }
+
+    setWriterSessionToken(data.token);
 
     const authState = await checkAuth();
 
@@ -69,8 +90,10 @@ export function WriterAuthProvider({ children }: { children: ReactNode }) {
       await fetch(buildApiUrl("/api/writer/auth/logout"), {
         method: "POST",
         credentials: "include",
+        headers: withWriterAuthHeaders(),
       });
     } finally {
+      clearWriterSessionToken();
       setWriter(null);
     }
   }

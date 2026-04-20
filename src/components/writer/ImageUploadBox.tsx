@@ -4,6 +4,7 @@ import type { ChangeEvent, KeyboardEvent, MouseEvent } from "react";
 import { useRef, useState } from "react";
 import { ImagePlus, LoaderCircle, X } from "lucide-react";
 import { buildApiUrl } from "@/lib/api";
+import { writerApiFetch } from "@/lib/writerApi";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -77,9 +78,8 @@ export default function ImageUploadBox({
       const payload = new FormData();
       payload.append("image", file);
 
-      const response = await fetch(buildApiUrl("/api/writer/upload-image"), {
+      const response = await writerApiFetch("/api/writer/upload-image", {
         method: "POST",
-        credentials: "include",
         body: payload,
       });
 

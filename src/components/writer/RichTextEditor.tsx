@@ -35,7 +35,7 @@ import {
 } from "lucide-react";
 import { Icon } from "@iconify/react";
 
-import { buildApiUrl } from "@/lib/api";
+import { writerApiFetch } from "@/lib/writerApi";
 
 const ACTIVE_BUTTON_CLASS = "bg-[#7c6ff7] text-white border-[#7c6ff7]";
 const INACTIVE_BUTTON_CLASS =
@@ -199,9 +199,8 @@ export default function RichTextEditor({
       const payload = new FormData();
       payload.append("image", file);
 
-      const response = await fetch(buildApiUrl("/api/writer/upload-image"), {
+      const response = await writerApiFetch("/api/writer/upload-image", {
         method: "POST",
-        credentials: "include",
         body: payload,
       });
 

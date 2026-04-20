@@ -3,14 +3,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { Calendar, Clock, LoaderCircle, Save, X } from "lucide-react";
+import { Calendar, Clock, LoaderCircle, X } from "lucide-react";
 import { toast } from "sonner";
 import ImageUploadBox from "@/components/writer/ImageUploadBox";
 import RichTextEditor from "@/components/writer/RichTextEditor";
 import SlugInput from "@/components/writer/SlugInput";
 import TagInput from "@/components/writer/TagInput";
 import { useWriterAuth } from "@/context/WriterAuthContext";
-import { buildApiUrl } from "@/lib/api";
+import {
+  formatIstDateTimeLabel,
+  getCurrentIstDateTimeLocalValue,
+  toIstDateTimeLocalValue,
+} from "@/lib/istDateTime";
+import { writerApiFetch } from "@/lib/writerApi";
 import type { BlogFormState, ContentStatus } from "@/types/writer";
 
 function slugify(value = "") {
@@ -33,10 +38,22 @@ function createEmptyForm(author = ""): BlogFormState {
     excerpt: "",
     metaTitle: "",
     metaDescription: "",
-    categories: [],
+    category: "",
+    tags: [],
     content: "",
   };
 }
+
+const BLOG_CATEGORIES = [
+  "App Development",
+  "Web Development",
+  "AI & Tech",
+  "Business",
+  "Design",
+  "DevOps",
+  "Tutorials",
+  "Case Study",
+];
 
 function countPlainText(html = "") {
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -54,7 +71,6 @@ export default function WriterBlogForm() {
   const [localBlogId, setLocalBlogId] = useState<string | null>(blogId);
   const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
-  const [showStatusMessage, setShowStatusMessage] = useState(false);
   const [scheduledAt, setScheduledAt] = useState<string>("");
   const [showSchedulePopup, setShowSchedulePopup] = useState(false);
   const [currentStatus, setCurrentStatus] = useState<ContentStatus | "scheduled">("draft");
@@ -100,8 +116,7 @@ export default function WriterBlogForm() {
       setLoadingBlog(true);
 
       try {
-        const response = await fetch(buildApiUrl(`/api/writer/blogs/${blogId}`), {
-          credentials: "include",
+        const response = await writerApiFetch(`/api/writer/blogs/${blogId}`, {
           cache: "no-store",
         });
 
@@ -124,16 +139,20 @@ export default function WriterBlogForm() {
           excerpt: String(data?.description || ""),
           metaTitle: "",
           metaDescription: "",
-          categories: typeof data?.category === 'string' ? [data.category] : [],
+          category: String(data?.category || ""),
+          tags:
+            Array.isArray(data?.tags)
+              ? data.tags.map((tag) => String(tag))
+              : String(data?.tags || "")
+                  .split(",")
+                  .map((tag) => tag.trim())
+                  .filter(Boolean),
           content: String(data?.content || ""),
         });
         setLocalBlogId(String(data?.id ?? blogId));
         setCurrentStatus(typeof data?.status === 'string' ? data.status as ContentStatus : "draft");
         if (typeof data?.scheduled_at === 'string') {
-          // Parse DB 'YYYY-MM-DD HH:MM:SS' to datetime-local 'YYYY-MM-DDTHH:MM'
-          const dbStr = data.scheduled_at;
-          const dateLocalStr = dbStr.slice(0, 16).replace(' ', 'T');
-          setScheduledAt(dateLocalStr);
+          setScheduledAt(toIstDateTimeLocalValue(data.scheduled_at));
         }
         hasChangesRef.current = false;
 
@@ -189,8 +208,8 @@ export default function WriterBlogForm() {
           return;
         }
 
-        if (!currentForm.categories.length) {
-          toast.error("Add at least one category.");
+        if (!currentForm.category.trim()) {
+          toast.error("Select a category.");
           return;
         }
 
@@ -219,7 +238,7 @@ export default function WriterBlogForm() {
       try {
         const payload = {
           slug: slugify(currentForm.slug || currentForm.title),
-          category: currentForm.categories[0] || "Uncategorized",
+          category: currentForm.category || "Uncategorized",
           title: currentForm.title.trim() || "Untitled Draft",
           description: currentForm.excerpt.trim(),
           content: currentForm.content,
@@ -227,19 +246,18 @@ export default function WriterBlogForm() {
           author: currentForm.author.trim(),
           avatar: "",
           date: "",
+          tags: currentForm.tags.join(", "),
           status,
           scheduled_at: status === "scheduled" ? (overrideScheduledAt || scheduledAt) : null,
           metaTitle: currentForm.metaTitle.trim(),
           metaDescription: currentForm.metaDescription.trim(),
-          categories: currentForm.categories,
         };
 
 
-        const response = await fetch(
-          buildApiUrl(editMode ? `/api/writer/blogs/${currentId}` : "/api/writer/blogs"),
+        const response = await writerApiFetch(
+          editMode ? `/api/writer/blogs/${currentId}` : "/api/writer/blogs",
           {
             method: editMode ? "PUT" : "POST",
-            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },
@@ -262,9 +280,6 @@ export default function WriterBlogForm() {
         if (isAutoSave) {
           setAutoSaveStatus("success");
           setLastSavedAt(new Date());
-          setShowStatusMessage(true);
-          // Set timeout to hide status message after 5 seconds
-          setTimeout(() => setShowStatusMessage(false), 5000);
         } else {
           toast.success(
             status === "published" 
@@ -297,11 +312,17 @@ export default function WriterBlogForm() {
 
   // Mark changes when form fields update
   useEffect(() => {
-    const isActuallyEmpty = !form.featuredImage && !form.title && !form.excerpt && !form.content && !form.categories.length;
+    const isActuallyEmpty =
+      !form.featuredImage &&
+      !form.title &&
+      !form.excerpt &&
+      !form.content &&
+      !form.category &&
+      !form.tags.length;
     if (!isActuallyEmpty) {
       hasChangesRef.current = true;
     }
-  }, [form.title, form.content, form.excerpt, form.featuredImage, form.categories, form.slug]);
+  }, [form.title, form.content, form.excerpt, form.featuredImage, form.category, form.tags, form.slug]);
 
   // Debounced auto-save (3s)
   useEffect(() => {
@@ -505,12 +526,33 @@ export default function WriterBlogForm() {
               <p className="mt-2 text-[12px] text-[#aaa] text-right">Recommended length: 150–160 characters</p>
             </label>
 
+            <label className="block">
+              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Category</span>
+              <select
+                value={form.category}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    category: event.target.value,
+                  }))
+                }
+                className="h-10 w-full rounded-[10px] border border-[#e5e5e5] bg-[#fafaf8] px-3.5 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
+              >
+                <option value="">Select a category...</option>
+                {BLOG_CATEGORIES.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </label>
+
             <div className="block">
-              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Categories</span>
+              <span className="mb-1.5 block text-[13px] font-medium text-[#555]">Tags</span>
               <TagInput
-                tags={form.categories}
-                onChange={(categories) => setForm((current) => ({ ...current, categories }))}
-                placeholder="Add a category"
+                tags={form.tags}
+                onChange={(tags) => setForm((current) => ({ ...current, tags }))}
+                placeholder="Add a tag"
               />
             </div>
           </div>
@@ -576,7 +618,7 @@ export default function WriterBlogForm() {
                       type="datetime-local"
                       value={scheduledAt}
                       onChange={(e) => setScheduledAt(e.target.value)}
-                      min={new Date().toISOString().slice(0, 16)}
+                      min={getCurrentIstDateTimeLocalValue()}
                       className="w-full rounded-xl border border-[#e5e5e5] bg-[#fafaf8] px-4 py-3 text-sm text-[#111827] outline-none transition focus:border-[#5b4ced]"
                     />
                     <button
@@ -605,7 +647,7 @@ export default function WriterBlogForm() {
               <div className="flex items-center gap-3 rounded-xl bg-[#ede9fe] px-4 py-2.5 text-xs font-semibold text-[#5b4ced]">
                 <Clock className="h-3.5 w-3.5" />
                 <span>
-                  Scheduled for {new Date(scheduledAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  Scheduled for {formatIstDateTimeLabel(scheduledAt)}
                 </span>
                 <button
                   onClick={() => {

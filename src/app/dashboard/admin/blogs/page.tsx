@@ -8,16 +8,15 @@ import { Badge, Button, Card } from "@/components/ui/atoms";
 import { toast } from "sonner";
 import {
   BookOpen,
-  Edit2,
   Eye,
   EyeOff,
   ExternalLink,
-  Plus,
   Search,
   Trash2,
   X,
   FileText,
   Clock,
+  Tag,
 } from "lucide-react";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -33,6 +32,7 @@ type Blog = {
   author: string;
   avatar: string;
   date: string;
+  tags: string;
   is_active: boolean;
 };
 
@@ -46,6 +46,7 @@ const emptyForm = {
   author: "",
   avatar: "",
   date: "",
+  tags: "",
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -164,6 +165,7 @@ export default function AdminBlogsPage() {
       payload.append("description", form.description);
       payload.append("content", form.content);
       payload.append("author", form.author);
+      payload.append("tags", form.tags);
       payload.append(
         "date",
         form.date ||
@@ -220,6 +222,7 @@ export default function AdminBlogsPage() {
       author: blog.author,
       avatar: blog.avatar,
       date: blog.date,
+      tags: blog.tags,
     });
     setImageFile(null);
     setAvatarFile(null);
@@ -307,7 +310,7 @@ export default function AdminBlogsPage() {
     return blogs.filter((blog) => {
       const matchesSearch =
         !query ||
-        [blog.title, blog.slug, blog.category, blog.author]
+        [blog.title, blog.slug, blog.category, blog.author, blog.tags]
           .join(" ")
           .toLowerCase()
           .includes(query);
@@ -333,7 +336,7 @@ export default function AdminBlogsPage() {
             Create long blog posts and publish them to their own reading page.
           </p>
         </div>
-        {/* <Button
+        <Button
           size="sm"
           className="flex items-center gap-2 self-start sm:self-auto"
           onClick={() => {
@@ -343,9 +346,8 @@ export default function AdminBlogsPage() {
               ?.scrollIntoView({ behavior: "smooth" });
           }}
         >
-          <Plus className="w-4 h-4" />
           Create Blog
-        </Button> */}
+        </Button>
       </div>
 
       {/* Stats */}
@@ -420,7 +422,7 @@ export default function AdminBlogsPage() {
               <table className="min-w-[620px] w-full text-left">
                 <thead>
                   <tr className="bg-gray-50/50 border-b border-gray-100">
-                    {["ID", "Blog", "Slug", "Status", ""].map((h) => (
+                    {["ID", "Blog", "Slug", "Tags", "Status", ""].map((h) => (
                       <th
                         key={h}
                         className="px-6 py-4 font-headline text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400"
@@ -460,6 +462,24 @@ export default function AdminBlogsPage() {
                         </p>
                         <p className="text-[10px] text-gray-400">{blog.author}</p>
                       </td>
+                      <td className="px-6 py-5 max-w-[160px]">
+                        <div className="flex flex-wrap gap-1">
+                          {blog.tags
+                            ? blog.tags
+                                .split(",")
+                                .slice(0, 3)
+                                .map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className="inline-flex items-center gap-0.5 text-[10px] font-semibold bg-gray-100 text-gray-600 rounded-full px-2 py-0.5"
+                                  >
+                                    <Tag className="w-2.5 h-2.5" />
+                                    {tag.trim()}
+                                  </span>
+                                ))
+                            : <span className="text-[10px] text-gray-400">—</span>}
+                        </div>
+                      </td>
                       <td className="px-6 py-5">
                         <Badge
                           variant={blog.is_active ? "success" : "neutral"}
@@ -490,15 +510,15 @@ export default function AdminBlogsPage() {
                               <Eye className="w-4 h-4" />
                             )}
                           </button>
-                          {/* <button
+                          <button
                             type="button"
                             onClick={() => editBlog(blog)}
                             disabled={loading}
                             className="p-2 rounded-lg transition-colors text-blue-600 hover:bg-blue-50"
                             title="Edit blog"
                           >
-                            <Edit2 className="w-4 h-4" />
-                          </button> */}
+                            Edit
+                          </button>
                           <button
                             type="button"
                             onClick={() => deleteBlog(blog.id)}
@@ -515,7 +535,7 @@ export default function AdminBlogsPage() {
                   {filteredBlogs.length === 0 && (
                     <tr>
                       <td
-                        colSpan={5}
+                        colSpan={6}
                         className="px-6 py-12 text-center text-gray-500 font-medium"
                       >
                         {search || filterCategory
@@ -531,7 +551,7 @@ export default function AdminBlogsPage() {
         </div>
 
         {/* ── Form ──────────────────────────────────────────────────────── */}
-        {/* <div className="space-y-6 order-1 lg:order-2">
+        <div className="space-y-6 order-1 lg:order-2">
           <Card
             id="blog-form"
             title={editingId ? "Edit Blog" : "Create Blog"}
@@ -620,6 +640,32 @@ export default function AdminBlogsPage() {
                     </p>
                   )}
                 </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-[10px] uppercase font-bold tracking-widest text-gray-400">
+                  Tags
+                  <span className="ml-1 normal-case font-normal text-gray-400">(comma-separated)</span>
+                </label>
+                <input
+                  type="text"
+                  value={form.tags}
+                  onChange={handleChange("tags")}
+                  placeholder="business, crm, productivity"
+                  className="w-full bg-gray-50 border-none rounded-lg px-4 py-2 text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 transition-all outline-none"
+                />
+                {form.tags && (
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {form.tags.split(",").filter(Boolean).map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-0.5 text-[11px] font-semibold bg-blue-50 text-blue-700 rounded-full px-2 py-0.5"
+                      >
+                        #{tag.trim()}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="space-y-1">
@@ -728,9 +774,12 @@ export default function AdminBlogsPage() {
                 <code className="text-blue-300">/blog/[slug]</code>. Use ## for
                 subheadings in the content editor.
               </p>
+              <p className="text-sm opacity-60 font-body">
+                Blogs now support a fixed category dropdown and tags, matching the structure used in News.
+              </p>
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );

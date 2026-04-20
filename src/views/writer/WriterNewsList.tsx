@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { toast } from "sonner";
 import { buildApiUrl } from "@/lib/api";
+import { writerApiFetch } from "@/lib/writerApi";
 import type { ContentStatus, WriterContentItem } from "@/types/writer";
 import Image from "next/image";
 const PAGE_SIZE = 10;
@@ -131,8 +132,7 @@ export default function WriterNewsList() {
   async function loadArticles() {
     try {
       setLoading(true);
-      const response = await fetch(buildApiUrl("/api/writer/news"), {
-        credentials: "include",
+      const response = await writerApiFetch("/api/writer/news", {
         cache: "no-store",
       });
       if (!response.ok) throw new Error("Unable to load articles");
@@ -164,9 +164,8 @@ export default function WriterNewsList() {
     const loadingToast = toast.loading("Deleting article...");
 
     try {
-      const response = await fetch(buildApiUrl(`/api/writer/news/${id}`), {
+      const response = await writerApiFetch(`/api/writer/news/${id}`, {
         method: "DELETE",
-        credentials: "include",
       });
       const data = (await response.json().catch(() => ({}))) as ApiMessage;
       if (!response.ok) throw new Error(data?.message || "Unable to delete article");

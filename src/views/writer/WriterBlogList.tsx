@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { toast } from "sonner";
 import { buildApiUrl } from "@/lib/api";
+import { writerApiFetch } from "@/lib/writerApi";
 import type { ContentStatus, WriterContentItem } from "@/types/writer";
 import Image from "next/image";
 const PAGE_SIZE = 10;
@@ -131,8 +132,7 @@ export default function WriterBlogList() {
   async function loadBlogs(nextPage = 1) {
     try {
       setLoading(true);
-      const response = await fetch(buildApiUrl(`/api/writer/blogs?page=${nextPage}&limit=${PAGE_SIZE}`), {
-        credentials: "include",
+      const response = await writerApiFetch(`/api/writer/blogs?page=${nextPage}&limit=${PAGE_SIZE}`, {
         cache: "no-store",
       });
       if (!response.ok) throw new Error("Unable to load blogs");
@@ -164,9 +164,8 @@ export default function WriterBlogList() {
     const loadingToast = toast.loading("Deleting blog...");
 
     try {
-      const response = await fetch(buildApiUrl(`/api/writer/blogs/${id}`), {
+      const response = await writerApiFetch(`/api/writer/blogs/${id}`, {
         method: "DELETE",
-        credentials: "include",
       });
       const data = (await response.json().catch(() => ({}))) as ApiMessage;
       if (!response.ok) throw new Error(data?.message || "Unable to delete blog");

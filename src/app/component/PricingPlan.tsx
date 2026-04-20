@@ -20,6 +20,13 @@ type TrialSettings = {
   is_enabled: boolean;
 };
 
+type CurrentSubscription = {
+  id: number;
+  plan_id: number;
+  plan_name: string;
+  status: string;
+};
+
 function PricingSkeleton() {
   return (
     <div className="relative rounded-2xl border p-8 animate-pulse bg-gray-50 border-gray-200 h-150">
@@ -65,6 +72,7 @@ export default function PricingSection() {
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
   const router = useRouter();
   const [pricingPlans, setPricingPlans] = useState<PricingPlan[]>([]);
+  const [currentSubscription, setCurrentSubscription] = useState<CurrentSubscription | null>(null);
   const [trialSettings, setTrialSettings] = useState<TrialSettings>({
     trial_days: 7,
     is_enabled: true,
@@ -74,9 +82,12 @@ export default function PricingSection() {
   useEffect(() => {
     const fetchPricing = async () => {
       try {
-        const [pricingRes, trialRes] = await Promise.all([
+        const [pricingRes, trialRes, subscriptionRes] = await Promise.all([
           fetch(buildApiUrl("/api/pricing")),
           fetch(buildApiUrl("/api/pricing/trial-settings")),
+          fetch(buildApiUrl("/api/subscription/my"), {
+            credentials: "include",
+          }),
         ]);
 
         if (!pricingRes.ok) throw new Error("Failed to fetch pricing");
@@ -90,6 +101,22 @@ export default function PricingSection() {
             trial_days: Number(trialData.trial_days || 7),
             is_enabled: Boolean(trialData.is_enabled),
           });
+        }
+
+        if (subscriptionRes.ok) {
+          const subscriptionData = await subscriptionRes.json();
+          if (subscriptionData) {
+            setCurrentSubscription({
+              id: Number(subscriptionData.id),
+              plan_id: Number(subscriptionData.plan_id),
+              plan_name: String(subscriptionData.plan_name || ""),
+              status: String(subscriptionData.status || ""),
+            });
+          } else {
+            setCurrentSubscription(null);
+          }
+        } else {
+          setCurrentSubscription(null);
         }
       } catch (err) {
         console.error(err);
@@ -176,6 +203,14 @@ export default function PricingSection() {
             </>
           ) : pricingPlans.map((plan) => {
             const monthlyPrice = plan.monthly_price;
+            const hasSubscription = Boolean(
+              currentSubscription &&
+              ["active", "trial", "disabled"].includes(currentSubscription.status)
+            );
+            const isCurrentPlan = currentSubscription?.plan_id === plan.id;
+            const primaryCtaLabel = hasSubscription
+                ? "Upgrade plan"
+                : "Choose plan";
             
             return (
               <div
@@ -189,6 +224,12 @@ export default function PricingSection() {
                   }
                 `}
               >
+                {isCurrentPlan && (
+                  <span className="absolute left-2 top-2 rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">
+                    Current plan
+                  </span>
+                )}
+
                 {/* Discount Badge */}
                 <span
                   className={`
@@ -303,10 +344,16 @@ export default function PricingSection() {
                     }
                   `}
                 >
-                  Choose plan
+                  {primaryCtaLabel}
                 </button>
 
-                {trialSettings.is_enabled && (
+                {isCurrentPlan && (
+                  <p className="mt-3 text-center text-xs font-medium text-emerald-700">
+                    You are currently on {currentSubscription?.plan_name}.
+                  </p>
+                )}
+
+                {trialSettings.is_enabled && !hasSubscription && (
                   <button
                     onClick={() =>
                       router.push(
@@ -318,6 +365,12 @@ export default function PricingSection() {
                     Start {trialSettings.trial_days}-day trial
                   </button>
                 )}
+
+                {/* {hasSubscription && !isCurrentPlan && (
+                  <p className="mt-3 text-center text-xs font-medium text-blue-700">
+                    Current plan: {currentSubscription?.plan_name}
+                  </p>
+                )} */}
 
                 {/* Note */}
                 <p className="mt-6 text-sm text-gray-500">
