@@ -24,25 +24,25 @@ export default function Home() {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        image:"/billing-invoices.png"
+      image: "/billing-invoices.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        image:"/gst-and-tax.png"
+      image: "/gst-and-tax.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        image:"/inventory-managment.png"
+      image: "/inventory-managment.png"
     },
     {
       title: "Auto-Discount Engine",
       description:
         "Automatically suggests the best discount for a customer based on their purchase history and loyalty level.",
-        image:"/point-and-sales.png"
+      image: "/point-and-sales.png"
     },
   ];
 
@@ -76,29 +76,31 @@ export default function Home() {
 
   // slider code
   const settings = {
-  dots: true,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 3,
-  slidesToScroll: 1,
-  autoplay: true,
-  autoplaySpeed: 2500,
-  arrows: false,
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 2,
+    dots: true,
+    infinite: true,
+    speed: 500,
+    centerMode: true,   // ✅ MUST
+    // centerPadding: "40px",
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2500,
+    arrows: false,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
       },
-    },
-    {
-      breakpoint: 640,
-      settings: {
-        slidesToShow: 1,
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+        },
       },
-    },
-  ],
-};
+    ],
+  };
   const [openId, setOpenId] = useState<number | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
@@ -489,122 +491,147 @@ export default function Home() {
 
           {/* Cards */}
           <div className="mt-5">
-              <Slider {...settings}>
+            <Slider {...settings}>
 
-                {/* Card 1 */}
-                <div className="p-10">
-                  <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex text-yellow-400">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Icon key={i} icon="material-symbols:star" width="24" />
-                        ))}
-                      </div>
-                      <span className="text-gray-900">1 month ago</span>
+              {/* Card 1 */}
+              <div className="p-10">
+                <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex text-yellow-400">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Icon key={i} icon="material-symbols:star" width="24" />
+                      ))}
                     </div>
+                    <span className="text-gray-900">1 month ago</span>
+                  </div>
 
-                    <p className="mt-4 text-gray-900">
-                      Switching to BissBill saved us hours daily. Billing is super fast and inventory updates automatically.
-                    </p>
+                  <p className="mt-4 text-gray-900">
+                    Switching to BissBill saved us hours daily. Billing is super fast and inventory updates automatically.
+                  </p>
 
-                    <div className="mt-6 flex items-center gap-3">
-                      <Image src="/testimonial1.png" alt="" width={40} height={40} className="rounded-full" />
-                      <div>
-                        <p className="font-semibold text-xl">Ramesh Agarwal</p>
-                        <p className="text-gray-900">
-                          Owner, Agarwal General Store — Jaipur
-                        </p>
-                      </div>
+                  <div className="mt-6 flex items-center gap-3">
+                    <Image src="/testimonial1.png" alt="" width={40} height={40} className="rounded-full" />
+                    <div>
+                      <p className="font-semibold text-xl">Ramesh Agarwal</p>
+                      <p className="text-gray-900">
+                        Owner, Agarwal General Store — Jaipur
+                      </p>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Card 2 */}
-                <div className="p-10">
-                  <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex text-yellow-400">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Icon key={i} icon="material-symbols:star" width="24" />
-                        ))}
-                      </div>
-                      <span className="text-gray-900">1 month ago</span>
+              {/* Card 2 */}
+              <div className="p-10">
+                <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex text-yellow-400">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Icon key={i} icon="material-symbols:star" width="24" />
+                      ))}
                     </div>
+                    <span className="text-gray-900">1 month ago</span>
+                  </div>
 
-                    <p className="mt-4 text-gray-900">
-                      WhatsApp invoice sharing is a game changer. Customers love instant bills and payments are easy to track.
-                    </p>
+                  <p className="mt-4 text-gray-900">
+                    WhatsApp invoice sharing is a game changer. Customers love instant bills and payments are easy to track.
+                  </p>
 
-                    <div className="mt-6 flex items-center gap-3">
-                      <Image src="/testimonial2.png" alt="" width={40} height={40} className="rounded-full" />
-                      <div>
-                        <p className="font-semibold text-xl">Priya Mehta</p>
-                        <p className="text-gray-900">
-                          Owner, Mehta Fashion House — Surat
-                        </p>
-                      </div>
+                  <div className="mt-6 flex items-center gap-3">
+                    <Image src="/testimonial2.png" alt="" width={40} height={40} className="rounded-full" />
+                    <div>
+                      <p className="font-semibold text-xl">Priya Mehta</p>
+                      <p className="text-gray-900">
+                        Owner, Mehta Fashion House — Surat
+                      </p>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Card 3 */}
-                <div className="p-10">
-                  <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex text-yellow-400">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Icon key={i} icon="material-symbols:star" width="24" />
-                        ))}
-                      </div>
-                      <span className="text-gray-900">1 month ago</span>
+              {/* Card 3 */}
+              <div className="p-10">
+                <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex text-yellow-400">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Icon key={i} icon="material-symbols:star" width="24" />
+                      ))}
                     </div>
+                    <span className="text-gray-900">1 month ago</span>
+                  </div>
 
-                    <p className="mt-4 text-gray-900">
-                      Very simple and beginner friendly. Inventory alerts helped us avoid stock issues multiple times.
-                    </p>
+                  <p className="mt-4 text-gray-900">
+                    Very simple and beginner friendly. Inventory alerts helped us avoid stock issues multiple times.
+                  </p>
 
-                    <div className="mt-6 flex items-center gap-3">
-                      <Image src="/testimonial2.png" alt="" width={40} height={40} className="rounded-full" />
-                      <div>
-                        <p className="font-semibold text-xl">Sunil Tiwari</p>
-                        <p className="text-gray-900">
-                          Owner, Tiwari Electronics — Lucknow
-                        </p>
-                      </div>
+                  <div className="mt-6 flex items-center gap-3">
+                    <Image src="/testimonial2.png" alt="" width={40} height={40} className="rounded-full" />
+                    <div>
+                      <p className="font-semibold text-xl">Sunil Tiwari</p>
+                      <p className="text-gray-900">
+                        Owner, Tiwari Electronics — Lucknow
+                      </p>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Card 4 */}
-                <div className="p-10">
-                  <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex text-yellow-400">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Icon key={i} icon="material-symbols:star" width="24" />
-                        ))}
-                      </div>
-                      <span className="text-gray-900">1 month ago</span>
+              {/* Card 4 */}
+              <div className="p-10">
+                <div className="testimonial-card rounded-2xl bg-gray-100 p-6">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex text-yellow-400">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Icon key={i} icon="material-symbols:star" width="24" />
+                      ))}
                     </div>
+                    <span className="text-gray-900">1 month ago</span>
+                  </div>
 
-                    <p className="mt-4 text-gray-900">
-                      Easy to use software. My staff learned it quickly and billing errors are now zero.
-                    </p>
+                  <p className="mt-4 text-gray-900">
+                    Easy to use software. My staff learned it quickly and billing errors are now zero.
+                  </p>
 
-                    <div className="mt-6 flex items-center gap-3">
-                      <Image src="/testimonial1.png" alt="" width={40} height={40} className="rounded-full" />
-                      <div>
-                        <p className="font-semibold text-xl">Amit Sharma</p>
-                        <p className="text-gray-900">
-                          Owner, Sharma Traders — <br /> Delhi
-                        </p>
-                      </div>
+                  <div className="mt-6 flex items-center gap-3">
+                    <Image src="/testimonial1.png" alt="" width={40} height={40} className="rounded-full" />
+                    <div>
+                      <p className="font-semibold text-xl">Amit Sharma</p>
+                      <p className="text-gray-900">
+                        Owner, Sharma Traders — <br /> Delhi
+                      </p>
                     </div>
                   </div>
                 </div>
+              </div>
 
-              </Slider>
-            </div>
+            </Slider>
+          </div>
+          {/* ✅ Inbuilt CSS */}
+          <style jsx global>{`
+  .testimonial-card {
+    transition: all 0.3s ease;
+  }
+
+  .slick-center .testimonial-card {
+    background: #367AFF;
+    transform: scale(1.05);
+    color: white;
+  }
+
+  .slick-center .testimonial-card p,
+  .slick-center .testimonial-card span {
+    color: white !important;
+  }
+
+  .slick-slide {
+    opacity: 0.6;
+  }
+
+  .slick-center {
+    opacity: 1;
+  }
+`}</style>
 
           {/* Rating Footer */}
           <div className="mt-16 flex flex-col items-center gap-3">

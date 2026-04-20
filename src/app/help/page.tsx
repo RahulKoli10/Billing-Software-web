@@ -82,7 +82,7 @@ export default function Hero() {
           
           {/* Left */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="bg-slate-900 rounded-3xl p-8 text-white shadow-2xl">
+            <div className="bg-slate-900 h-full rounded-3xl p-8 text-white shadow-2xl">
               <h3 className="text-xl font-bold mb-6">Why talk to us?</h3>
 
               <ul className="space-y-4">
@@ -111,7 +111,7 @@ export default function Hero() {
                 <input placeholder="Email" className="w-full p-4 border rounded-xl" />
                 <textarea placeholder="Message" className="w-full p-4 border rounded-xl" />
 
-                <button className="bg-blue-600 text-white px-6 py-3 rounded-xl flex items-center gap-2">
+                <button className="bg-blue-600 text-white px-6 py-3 rounded-xl flex items-center gap-2 cursor-pointer">
                   Send Inquiry <FaArrowRight />
                 </button>
               </form>
