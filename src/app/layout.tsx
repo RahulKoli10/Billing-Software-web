@@ -17,7 +17,7 @@ const dmSans = DM_Sans({
 const openSans = Open_Sans({
   subsets: ["latin"],
   variable: "--font-open-sans",
-  weight: ["400", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 // export const metadata: Metadata = {
