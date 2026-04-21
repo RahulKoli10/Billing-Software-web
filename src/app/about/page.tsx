@@ -1,156 +1,126 @@
+"use client";
 import React from "react";
 import Navbar from "../component/Navbar";
 import Footer from "../component/Footer";
-function page() {
+import { motion } from "framer-motion";
+import { CheckCircle } from "lucide-react";
+
+function Page() {
   return (
-    <div className="bg-white text-gray-800">
-        <Navbar />
-      {/* Hero Section */}
-      <section className="text-center py-16 px-6 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          About BissBill
-        </h1>
-        <p className="text-lg max-w-3xl mx-auto leading-relaxed">
-          Empowering Indian businesses with smart, simple, and powerful{" "}
-          <strong>GST Billing Software</strong> that saves time, reduces errors, 
-          and helps you grow faster 🚀
-        </p>
-      </section>
+    <>
+      <Navbar />
 
-      {/* Intro */}
-      <section className="max-w-5xl mx-auto px-6 py-12">
-        <p className="text-lg leading-relaxed mb-6">
-          BissBill is not just another <strong>billing software India</strong> — 
-          it's a complete business solution built for modern entrepreneurs. 
-          From creating GST-compliant invoices to managing inventory and sales, 
-          our platform is designed to make your daily operations smooth and stress-free.
-        </p>
+      <div className="bg-gray-50 text-gray-900">
+        {/* Hero Section */}
+        <section className="max-w-6xl mx-auto px-6 py-16 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-indigo-600 mb-6">
+            About BissBill
+          </h1>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            BissBill is a smart and easy-to-use GST billing software built especially
+            for small businesses in India.
+          </p>
+        </section>
 
-        <p className="text-lg leading-relaxed">
-          Whether you run a retail shop, wholesale business, or startup, our 
-          <strong> GST invoice software</strong> ensures accuracy, speed, and simplicity 
-          — even if you're just getting started.
-        </p>
-      </section>
+        {/* Features Section */}
+        <section className="max-w-6xl mx-auto px-6 py-10 grid md:grid-cols-2 gap-8">
+          {[
+            {
+              title: "Built for Indian Businesses",
+              desc: "Create GST invoices, manage stock, and track payments easily.",
+            },
+            {
+              title: "Simple & Powerful",
+              desc: "POS, barcode scanning, and WhatsApp sharing features.",
+            },
+            {
+              title: "Free to Start",
+              desc: "Start free and scale as your business grows.",
+            },
+            {
+              title: "Grow Faster",
+              desc: "Get insights and reports for better decisions.",
+            },
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="bg-white p-6 rounded-2xl shadow-sm hover:shadow-lg transition"
+            >
+              <h3 className="text-xl font-semibold text-indigo-600 mb-2">
+                {item.title}
+              </h3>
+              <p className="text-gray-600">{item.desc}</p>
+            </motion.div>
+          ))}
+        </section>
 
-      {/* Mission & Vision */}
-      <section className="bg-gray-50 py-12 px-6">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-          
-          <div className="p-6 bg-white rounded-2xl shadow-md">
-            <h2 className="text-2xl font-semibold mb-3">🎯 Our Mission</h2>
-            <p className="leading-relaxed">
-              To deliver the <strong>best GST billing software for small business India</strong> 
-              that is powerful yet easy to use. We aim to provide an 
-              <strong> easy GST billing software for beginners</strong> so anyone can manage 
-              their business without confusion.
+        {/* Why Choose Section */}
+        <section className="bg-white py-16 px-6">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-center text-indigo-600 mb-10">
+              Why Choose BissBill?
+            </h2>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {[
+                "GST billing software for small businesses",
+                "Inventory management system",
+                "POS billing for retail shops",
+                "Barcode-enabled billing",
+                "WhatsApp invoice sharing",
+                "Works on Windows PCs",
+              ].map((point, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <CheckCircle className="text-green-500" />
+                  <span className="text-gray-700">{point}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Vision Section */}
+        <section className="bg-gray-100 py-16 px-6 text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold text-indigo-600 mb-6">
+              Our Vision
+            </h2>
+            <p className="text-gray-600 text-lg">
+              We aim to empower every small business owner in India with smart
+              technology that saves time, reduces errors, and increases profits.
             </p>
           </div>
+        </section>
 
-          <div className="p-6 bg-white rounded-2xl shadow-md">
-            <h2 className="text-2xl font-semibold mb-3">🌍 Our Vision</h2>
-            <p className="leading-relaxed">
-              To become India's most trusted <strong>online billing software India</strong> 
-              and empower every small and medium business with digital tools that drive growth.
+        {/* CTA Section */}
+        <section className="py-16 text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="max-w-xl mx-auto"
+          >
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Start Using BissBill Today 🚀
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Create invoices, manage inventory, and grow your business — all in one place.
             </p>
-          </div>
+            <a
+              href="/"
+              className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition"
+            >
+              Get Started Free
+            </a>
+          </motion.div>
+        </section>
+      </div>
 
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="max-w-5xl mx-auto px-6 py-12">
-        <h2 className="text-3xl font-semibold mb-8 text-center">
-          What Makes BissBill Powerful?
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-6">
-
-          <div className="p-5 border rounded-xl hover:shadow-md transition">
-            <h3 className="font-semibold text-lg mb-2">
-              📄 Smart GST Invoicing
-            </h3>
-            <p>
-              Create professional invoices instantly with our advanced{" "}
-              <strong>GST invoice software</strong>.
-            </p>
-          </div>
-
-          <div className="p-5 border rounded-xl hover:shadow-md transition">
-            <h3 className="font-semibold text-lg mb-2">
-              📦 Inventory Management
-            </h3>
-            <p>
-              Track stock in real-time with our <strong>billing software with inventory</strong>.
-            </p>
-          </div>
-
-          <div className="p-5 border rounded-xl hover:shadow-md transition">
-            <h3 className="font-semibold text-lg mb-2">
-              🧾 Barcode Support
-            </h3>
-            <p>
-              Fast billing using <strong>billing software with barcode scanner India</strong>.
-            </p>
-          </div>
-
-          <div className="p-5 border rounded-xl hover:shadow-md transition">
-            <h3 className="font-semibold text-lg mb-2">
-              💬 WhatsApp Integration
-            </h3>
-            <p>
-              Send invoices instantly with <strong>billing software with WhatsApp invoice sharing</strong>.
-            </p>
-          </div>
-
-          <div className="p-5 border rounded-xl hover:shadow-md transition">
-            <h3 className="font-semibold text-lg mb-2">
-              💻 Windows Support
-            </h3>
-            <p>
-              Smooth experience with <strong>billing software for PC Windows India</strong>.
-            </p>
-          </div>
-
-          <div className="p-5 border rounded-xl hover:shadow-md transition">
-            <h3 className="font-semibold text-lg mb-2">
-              🏪 Retail POS System
-            </h3>
-            <p>
-              Perfect <strong>POS billing software for retail shop India</strong>.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Why Choose */}
-      <section className="bg-indigo-50 py-12 px-6 text-center">
-        <h2 className="text-3xl font-semibold mb-4">
-          Why Businesses Choose BissBill?
-        </h2>
-
-        <p className="max-w-3xl mx-auto text-lg leading-relaxed">
-          BissBill is a smart <strong>Tally alternative billing software India</strong> 
-          designed for speed, simplicity, and scalability. Whether you're a beginner 
-          or an experienced business owner, our platform helps you automate billing, 
-          reduce errors, and focus on growth.
-        </p>
-      </section>
-
-      {/* Closing */}
-      <section className="max-w-5xl mx-auto px-6 py-12 text-center">
-        <h2 className="text-2xl font-semibold mb-4">
-          🚀 Built for Indian Businesses
-        </h2>
-        <p className="text-lg leading-relaxed">
-          With BissBill, you get more than just a <strong>free GST billing software</strong> — 
-          you get a complete ecosystem to manage, grow, and scale your business in India.
-        </p>
-      </section>
-    <Footer />
-    </div>
+      <Footer />
+    </>
   );
 }
 
-export default page;
+export default Page;

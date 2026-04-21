@@ -96,9 +96,9 @@ export default function Navbar() {
             <Link href="/features" className={linkClass("/features")}>
               Features
             </Link>
-            <Link href="/blog" className={linkClass("/blog")}>
+            {/* <Link href="/blog" className={linkClass("/blog")}>
               Blog
-            </Link>
+            </Link> */}
             <Link href="/help" className={linkClass("/help")}>
               Help
             </Link>
