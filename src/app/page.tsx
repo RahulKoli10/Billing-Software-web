@@ -12,6 +12,9 @@ import { useAuth } from "@/lib/useAuth";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { dot } from "node:test/reporters";
+import SliderPart from "./SliderPart";
+
 export default function Home() {
   const scrollToPricing = () => {
     const pricingSection = document.getElementById("plan-pricing");
@@ -108,51 +111,69 @@ export default function Home() {
 
   ];
   // review slider
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    centerMode: true,          // ⭐ important
-    centerPadding: "0px",
-    autoplay: true,
-    autoplaySpeed: 2000,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: { slidesToShow: 2 }
-      },
-      {
-        breakpoint: 640,
-        settings: { slidesToShow: 1 }
-      }
-    ]
-  };
+  // const settings = {
+  //   dots: true,
+  //   infinite: true,
+  //   speed: 500,
+  //   slidesToShow: 3,          // Desktop default
+  //   slidesToScroll: 1,
+  //   centerMode: true,
+  //   centerPadding: "40px",    // Desktop me thoda side space
+  //   autoplay: true,
+  //   autoplaySpeed: 2000,
 
-  const cards = [
-    {
-      bg: "bg-gray-100",
-      text: "We were using a manual register for years and switching to BillBiss was the best decision we made. GST invoices are ready in seconds, stock is always updated, and my staff learned it in a single day. Highly recommend it to every shop owner in India",
-      img: "/testimonial1.png",
-      name: "Ramesh Agarwal",
-      title: "Owner, Agarwal General Store — Jaipur"
-    },
-    {
-      bg: "bg-[#367AFF] text-white scale-[1.02]",
-      text: "BillBiss completely changed how we run our retail business. Earlier we were spending hours on billing and GST calculations — now it takes minutes. The WhatsApp invoice sharing feature is a game changer. Our customers love getting instant bills and we love how easy it is to track payments.",
-      img: "/testimonial2.png",
-      name: "Priya Mehta Designation",
-      title: "Owner, Mehta Fashion House — Surat"
-    },
-    {
-      bg: "bg-gray-100",
-      text: "I tried multiple billing software before BillBiss but they were all too complicated. This one is simple, fast, and perfect for someone with no accounting background. The inventory tracking and low stock alerts have saved us so many times. Best GST billing software for small business in India.",
-      img: "/testimonial1.png",
-      name: "Sunil Tiwari",
-      title: "Owner, Tiwari Electronics — Lucknow"
-    },
-  ];
+  //   responsive: [
+  //     {
+  //       breakpoint: 1024,     // Tablet
+  //       settings: {
+  //         slidesToShow: 2,
+  //         slidesToScroll: 1,
+  //         centerMode: false,
+  //         centerPadding: "0px"
+  //       }
+  //     },
+  //     {
+  //       breakpoint: 768,      // Mobile
+  //       settings: {
+  //         slidesToShow: 1,
+  //         slidesToScroll: 1,
+  //         centerMode: false,
+  //         centerPadding: "0px"
+  //       }
+  //     }
+  //   ]
+  // };
+
+  // const cards = [
+  //   {
+  //     bg: "bg-gray-100",
+  //     text: "We were using a manual register for years and switching to BillBiss was the best decision we made. GST invoices are ready in seconds, stock is always updated, and my staff learned it in a single day. Highly recommend it to every shop owner in India",
+  //     img: "/testimonial1.png",
+  //     name: "Ramesh Agarwal",
+  //     title: "Owner, Agarwal General Store — Jaipur"
+  //   },
+  //   {
+  //     bg: "bg-[#367AFF] text-white scale-[1.02]",
+  //     text: "BillBiss completely changed how we run our retail business. Earlier we were spending hours on billing and GST calculations — now it takes minutes. The WhatsApp invoice sharing feature is a game changer. Our customers love getting instant bills and we love how easy it is to track payments.",
+  //     img: "/testimonial2.png",
+  //     name: "Priya Mehta Designation",
+  //     title: "Owner, Mehta Fashion House — Surat"
+  //   },
+  //   {
+  //     bg: "bg-gray-100",
+  //     text: "I tried multiple billing software before BillBiss but they were all too complicated. This one is simple, fast, and perfect for someone with no accounting background. The inventory tracking and low stock alerts have saved us so many times. Best GST billing software for small business in India.",
+  //     img: "/testimonial1.png",
+  //     name: "Sunil Tiwari",
+  //     title: "Owner, Tiwari Electronics — Lucknow"
+  //   },
+  //   {
+  //     bg: "bg-gray-100",
+  //     text: "BillBiss ne hamare business ko kaafi simplify kar diya hai. Pehle daily sales aur stock manage karna bahut hectic tha, lekin ab sab kuch ek hi jagah easily track ho jata hai. Reports clear hain, GST filing easy ho gayi hai, aur overall kaam kaafi fast ho gaya hai.",
+  //     img: "/testimonial4.png",
+  //     name: "Amit Sharma",
+  //     title: "Owner, Sharma Kirana Store — Delhi"
+  //   }
+  // ];
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
@@ -505,49 +526,49 @@ export default function Home() {
 
           {/* Cards */}
           <>
-            <div className="mt-16">
-              <Slider {...settings}> {cards.map((card, i) => (<div key={i} className="px-3">
-                {/* Parent ko full height dene ke liye */} <div className="h-96"> {/* ⭐ FIXED CARD */}
-                  <div className="testimonial-card rounded-lg p-6 h-full flex flex-col justify-between"> {/* TOP CONTENT */}
-                    <div> {/* Stars */}
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex stars">
-                          {Array.from({ length: 5 }).map((_, index) =>
-                            (<Icon key={index} icon="material-symbols:star" width="24" height="24" />))}
-                        </div> <span className="time">1 month ago</span>
-                      </div> {/* Text */}
-                      <p className="mt-4 text-base leading-relaxed"> {card.text} </p>
-                    </div> {/* BOTTOM PROFILE */} <div className="mt-6 flex items-center gap-3">
-                      <Image src={card.img} alt="Customer profile" width={40} height={40} className="rounded-full object-cover" />
-                      <div>
-                        <p className="font-semibold text-xl">{card.name}</p>
-                        <p className="text-base opacity-70">{card.title}</p>
+            {/* <div className="mt-16 slider-container">
+              <Slider {...settings}>
+                {cards.map((card, i) => (
+                  <div key={i} className="px-2">
+                    <div className="lg:h-96 h-full flex">
+                      <div className="testimonial-card rounded-lg p-10 h-full flex flex-col justify-between">
+
+                        <div>
+                          <div className="flex lg:flex-row flex-col items-center justify-between text-sm">
+                            <div className="flex stars">
+                              {Array.from({ length: 5 }).map((_, index) => (
+                                <Icon key={index} icon="material-symbols:star" width="24" height="24" />
+                              ))}
+                            </div>
+                            <span className="time">1 month ago</span>
+                          </div>
+
+                          <p className="mt-4 text-base leading-relaxed">
+                            {card.text}
+                          </p>
+                        </div>
+
+                        <div className="mt-6 flex items-center gap-3">
+                          <Image
+                            src={card.img}
+                            alt="Customer profile"
+                            width={40}
+                            height={40}
+                            className="rounded-full object-cover"
+                          />
+                          <div>
+                            <p className="font-semibold text-xl">{card.name}</p>
+                            <p className="text-base opacity-70">{card.title}</p>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>))}
+                ))}
               </Slider>
-            </div>
-            <style jsx global>{`
-  .testimonial-card {
-    background: #f3f4f6;
-    color: #6b7280;
-    transition: all 0.3s ease;
-  }
-.slick-list {
-  overflow: visible !important;
-}
-  .slick-center .testimonial-card {
-    background: #367AFF !important;
-    color: white !important;
-    transform: scale(1.05);
-  }
-
-  .slick-center .testimonial-card svg {
-    color: white !important;
-  }
-`}</style>
+            </div> */}
+<SliderPart />
           </>
 
           {/* Rating Footer */}
