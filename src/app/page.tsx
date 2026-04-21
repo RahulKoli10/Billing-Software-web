@@ -9,6 +9,9 @@ import Footer from "./component/Footer";
 import { buildApiUrl } from "@/lib/api";
 import { featureItems } from "./features/featureData";
 import { useAuth } from "@/lib/useAuth";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 export default function Home() {
   const scrollToPricing = () => {
     const pricingSection = document.getElementById("plan-pricing");
@@ -103,6 +106,51 @@ export default function Home() {
         "Yes. BissBill is a complete POS billing software for retail shop India that works seamlessly on PC and Windows. Whether you run a grocery store, clothing shop, electronics store, or any other retail business, BissBill handles high-volume billing at the counter with speed and accuracy. It supports barcode scanners, thermal printers, and cash drawers making it the most reliable billing software for PC Windows India for retail owners who need a fast and dependable point-of-sale system.",
     },
 
+  ];
+  // review slider
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    centerMode: true,          // ⭐ important
+    centerPadding: "0px",
+    autoplay: true,
+    autoplaySpeed: 2000,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: { slidesToShow: 2 }
+      },
+      {
+        breakpoint: 640,
+        settings: { slidesToShow: 1 }
+      }
+    ]
+  };
+
+  const cards = [
+    {
+      bg: "bg-gray-100",
+      text: "text-gray-600",
+      img: "/testimonial1.png"
+    },
+    {
+      bg: "bg-[#367AFF] text-white scale-[1.02]",
+      text: "text-white",
+      img: "/testimonial2.png"
+    },
+    {
+      bg: "bg-gray-100",
+      text: "text-gray-600",
+      img: "/testimonial2.png"
+    },
+    {
+      bg: "bg-gray-100",
+      text: "text-gray-600",
+      img: "/testimonial2.png"
+    }
   ];
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -456,120 +504,72 @@ export default function Home() {
 
           {/* Cards */}
           <>
-            <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {/* Card 1 */}
-            <div className="rounded-2xl bg-gray-100 p-6">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex text-yellow-400">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Icon
-                      key={index}
-                      icon="material-symbols:star"
-                      width="24"
-                      height="24"
-                    />
-                  ))}
-                </div>
-                <span className="text-gray-500">1 month ago</span>
-              </div>
+            <div className="mt-16">
+              <Slider {...settings}>
+                {cards.map((card, i) => (
+                  <div key={i} className="px-3 p-10">
 
-              <p className="mt-4 text-[#6F6D6D] text-base leading-relaxed">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry. Lorem Ipsum has
-              </p>
+                    {/* ⭐ IMPORTANT CLASS */}
+                    <div className="testimonial-card rounded-2xl p-6">
 
-              <div className="mt-6 flex items-center gap-3">
-                <Image
-                  src="/testimonial1.png"
-                  alt="Customer profile photo"
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-semibold text-xl">Full Name</p>
-                  <p className="text-base text-[#6F6D6D]">CEO of company</p>
-                </div>
-              </div>
+                      {/* Stars */}
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex stars">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <Icon
+                              key={index}
+                              icon="material-symbols:star"
+                              width="24"
+                              height="24"
+                              // className="text-yellow-500"
+                            />
+                          ))}
+                        </div>
+                        <span className="time">1 month ago</span>
+                      </div>
+
+                      {/* Text */}
+                      <p className="mt-4 text-base leading-relaxed">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                      </p>
+
+                      {/* Profile */}
+                      <div className="mt-6 flex items-center gap-3">
+                        <Image
+                          src={card.img}
+                          alt="Customer profile"
+                          width={40}
+                          height={40}
+                          className="rounded-full object-cover"
+                        />
+                        <div>
+                          <p className="font-semibold text-xl">Full Name</p>
+                          <p className="text-base opacity-70">CEO of company</p>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                ))}
+              </Slider>
             </div>
+            <style jsx global>{`
+  .testimonial-card {
+    background: #f3f4f6;
+    color: #6b7280;
+    transition: all 0.3s ease;
+  }
 
-            {/* Card 2 (Highlighted) */}
-            <div className="rounded-2xl bg-[#367AFF] p-6 text-white scale-[1.02]">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex ">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Icon
-                      key={index}
-                      icon="material-symbols:star"
-                      width="24"
-                      height="24"
-                    />
-                  ))}
-                </div>
-                <span className="text-blue-100">1 month ago</span>
-              </div>
+  .slick-center .testimonial-card {
+    background: #367AFF !important;
+    color: white !important;
+    transform: scale(1.05);
+  }
 
-              <p className="mt-4 text-base leading-relaxed text-white">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry. Lorem Ipsum has
-              </p>
-
-              <div className="mt-6 flex items-center gap-3">
-                <Image
-                  src="/testimonial2.png"
-                  alt="Customer profile photo"
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-semibold text-xl">Full Name</p>
-                  <p className="text-base ">CEO of company</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="rounded-2xl bg-gray-100 p-6">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex text-yellow-400">
-                  {" "}
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Icon
-                      key={index}
-                      icon="material-symbols:star"
-                      width="24"
-                      height="24"
-                    />
-                  ))}
-                </div>
-                <span className="text-gray-500">1 month ago</span>
-              </div>
-
-              <p className="mt-4 text-gray-600 text-base leading-relaxed">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry. Lorem Ipsum has
-              </p>
-
-              <div className="mt-6 flex items-center gap-3">
-                <Image
-                  src="/testimonial2.png"
-                  alt="Customer profile photo"
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-
-                <div>
-                  <p className="font-semibold text-xl">Full Name</p>
-                  <p className="text-base text-[#6F6D6D]">CEO of company</p>
-                </div>
-              </div>
-            </div>
-          </div>
+  .slick-center .testimonial-card svg {
+    color: white !important;
+  }
+`}</style>
           </>
 
           {/* Rating Footer */}
