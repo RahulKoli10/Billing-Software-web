@@ -31,13 +31,13 @@ export default function FeaturePage() {
             {featureItems.map((item) => (
               <div
                 key={item.slug}
-                className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition bg-white"
+                className="hover:border hover:border-blue-600 rounded-xl p-6 hover:shadow-xl transition duration-500 hover:scale-104 bg-white"
               >
-                <h3 className="text-2xl font-semibold text-gray-900 font-open">
+                {/* <h3 className="text-2xl font-semibold text-gray-900 font-open">
                   {item.title}
-                </h3>
+                </h3> */}
 
-                <p className="mt-2 text-base">{item.cardDescription}</p>
+                {/* <p className="mt-2 text-base">{item.cardDescription}</p> */}
 
                 {/* Image */}
                 <Link
@@ -51,6 +51,10 @@ export default function FeaturePage() {
                     height={400}
                     className="w-full h-auto"
                   />
+                  <h3 className="text-2xl mt-5 font-semibold text-gray-900 font-open">
+                  {item.title}
+                </h3>
+                <p className="text-base mt-3">{item.cardDescription}</p>
                 </Link>
               </div>
             ))}

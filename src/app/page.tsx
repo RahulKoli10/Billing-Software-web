@@ -280,13 +280,13 @@ export default function Home() {
             {featureItems.slice(0, 4).map((item) => (
               <div
                 key={item.slug}
-                className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition bg-white"
+                className="hover:border hover:border-blue-600 rounded-xl p-6 hover:shadow-xl transition duration-500 hover:scale-104 bg-white"
               >
-                <h3 className="text-2xl font-semibold text-gray-900 font-open">
+                {/* <h3 className="text-2xl font-semibold text-gray-900 font-open">
                   {item.title}
-                </h3>
+                </h3> */}
 
-                <p className="mt-2 text-base">{item.cardDescription}</p>
+                {/* <p className="mt-2 text-base">{item.cardDescription}</p> */}
 
                 {/* Image Placeholder */}
                 <Link
@@ -300,6 +300,10 @@ export default function Home() {
                     height={400}
                     className="w-full h-auto"
                   />
+                  <h3 className="text-2xl mt-5 font-semibold text-gray-900 font-open">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-base">{item.cardDescription}</p>
                 </Link>
               </div>
             ))}
@@ -407,63 +411,84 @@ export default function Home() {
           </div>
 
           {/* Content Grid */}
-          <div className="mt-14 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="mt-14 grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* LEFT SIDE (Feature Cards) */}
             <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Card 1 */}
-              <div className="bg-[#F4F7FF] rounded-xl p-6">
-                <div className="w-12 h-12  rounded-full border flex items-center justify-center mb-4">
-                  <Icon icon="uit:rocket" width="28" height="28" />
+              <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
+
+                <div className="w-12 h-12 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
+                  <Icon
+                    icon="uit:rocket"
+                    width="28"
+                    height="28"
+                    className="group-hover:text-white"
+                  />
                 </div>
-                <h3 className="text-2xl font-semibold text-gray-900">
+
+                <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white">
                   Business Growth
                 </h3>
-                <p className="mt-2 text-sm text-[#202020]">
+
+                <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
                   BissBill is designed to grow with your business. From your
                   first invoice to managing multiple branches, our GST billing
                   software scales with every stage of your journey giving you
                   the tools to sell more, manage better, and earn more every
                   single day.
                 </p>
+
               </div>
 
               {/* Card 2 */}
-              <div className="bg-[#F4F7FF] rounded-xl p-6">
-                <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4">
-                  <Icon icon="uit:rocket" width="28" height="28" />
+              <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
+
+                <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
+                  <Icon
+                    icon="uit:rocket"
+                    width="28"
+                    height="28"
+                    className="group-hover:text-white"
+                  />
                 </div>
-                <h3 className="text-2xl font-semibold text-gray-900">
+
+                <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white">
                   Faster Payments
                 </h3>
-                <p className="mt-2 text-sm text-[#202020]">
+
+                <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
                   Stop chasing payments manually. BissBill lets you share
                   invoices instantly via WhatsApp, SMS and Email, track
                   outstanding dues in real time, and send payment reminders in
                   one click so your cash flow stays healthy and collections stay
                   on track.
                 </p>
+
               </div>
 
               {/* Card 3 (Full width) */}
-              <div className="bg-[#F4F7FF] rounded-xl p-6 md:col-span-2">
-                <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4">
-                  <Icon icon="uit:rocket" width="28" height="28" />
+              <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 md:col-span-2 transition duration-500 hover:scale-105 hover:shadow-lg">
+
+                <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
+                  <Icon icon="uit:rocket" width="28" height="28" className="group-hover:text-white" />
                 </div>
-                <h3 className="text-2xl font-semibold text-gray-900">
+
+                <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white transition duration-500">
                   Real-Time Inventory
                 </h3>
-                <p className="mt-2 text-sm text-[#202020]">
+
+                <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
                   Never run out of stock unexpectedly again. BissBill gives you
                   live inventory tracking, low stock alerts, barcode support,
                   and multi-warehouse management — all built into your billing
-                  software with inventory management. Know exactly what you
-                  have, where it is, and when to reorder.
+                  software. Know exactly what you have, where it is, and when to reorder.
                 </p>
+
               </div>
             </div>
 
             {/* RIGHT SIDE (CTA PANEL) */}
-            <div className="bg-[#1D2D65] rounded-xl p-8 text-white flex flex-col justify-between">
+            <div className="bg-[#3a5ee1] rounded-xl p-8 text-white flex flex-col justify-between transition duration-500 hover:scale-105 hover:shadow-lg">
               <div>
                 <div className="w-10 h-10 rounded-full border border-white flex items-center justify-center mb-6">
                   <Icon icon="uit:rocket" width="28" height="28" />
@@ -497,7 +522,7 @@ export default function Home() {
               {!isLoggedIn && !authLoading && (
                 <Link
                   href="/login"
-                  className="mt-8 w-fit bg-blue-600 hover:bg-blue-700 transition px-6 py-3 rounded-lg text-sm font-medium"
+                  className="mt-8 w-fit bg-white text-blue-600 hover:scale-105 hover:shadow-lg transition px-6 py-3 rounded-lg text-sm font-bold"
                 >
                   Log in / Sign up
                 </Link>
@@ -568,7 +593,7 @@ export default function Home() {
                 ))}
               </Slider>
             </div> */}
-<SliderPart />
+            <SliderPart />
           </>
 
           {/* Rating Footer */}

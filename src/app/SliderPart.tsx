@@ -63,19 +63,12 @@ export default function TestimonialSlider() {
   ];
 
   return (
-    <section className="py-16 bg-[#f9fafb] overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 text-center mb-12">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
-        <p className="text-gray-600 max-w-md mx-auto">
-          Thousands of Indian small business owners trust BillBiss as their go-to GST billing software — here's what they have to say.
-        </p>
-      </div>
-
+    <section className="py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 pb-12">
         <Slider {...settings}>
           {cards.map((card, i) => (
             <div key={i} className="px-4 py-10">
-              <div className="testimonial-card flex flex-col justify-between lg:p-8 p-3 rounded-2xl shadow-lg border border-gray-100 transition-all duration-500">
+              <div className="testimonial-card flex flex-col justify-between lg:p-8 p-3 w-full rounded-2xl shadow-lg border border-gray-100 transition-all duration-500">
                 <div>
                   <div className="flex gap-1 mb-5 rating-stars">
                     {Array.from({ length: 5 }).map((_, index) => (

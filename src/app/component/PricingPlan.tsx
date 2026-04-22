@@ -145,11 +145,10 @@ export default function PricingSection() {
         {/* Toggle */}
         <div className="my-12 flex justify-center items-center gap-4 text-2xl">
           <span
-            className={`transition-colors ${
-              billing === "monthly"
-                ? "font-semibold text-black"
-                : "text-gray-400"
-            }`}
+            className={`transition-colors ${billing === "monthly"
+              ? "font-semibold text-black"
+              : "text-gray-400"
+              }`}
           >
             Monthly
           </span>
@@ -177,11 +176,10 @@ export default function PricingSection() {
           </button>
 
           <span
-            className={`transition-colors ${
-              billing === "yearly"
-                ? "font-semibold text-black"
-                : "text-gray-400"
-            }`}
+            className={`transition-colors ${billing === "yearly"
+              ? "font-semibold text-black"
+              : "text-gray-400"
+              }`}
           >
             Annually
           </span>
@@ -205,22 +203,41 @@ export default function PricingSection() {
             const monthlyPrice = plan.monthly_price;
             const hasSubscription = Boolean(
               currentSubscription &&
-              ["active", "trial", "disabled"].includes(currentSubscription.status)
+              ["active", "trial"].includes(currentSubscription.status)
             );
+
             const isCurrentPlan = currentSubscription?.plan_id === plan.id;
-            const primaryCtaLabel = hasSubscription
-                ? "Upgrade plan"
-                : "Choose plan";
-            
+
+            // 🔥 NEW LOGIC
+            let primaryCtaLabel = "Choose plan";
+            let isDisabled = false;
+
+            if (hasSubscription && currentSubscription) {
+              if (plan.id === currentSubscription.plan_id) {
+                primaryCtaLabel = "Renew";
+              } else {
+                const currentPlanData = pricingPlans.find(
+                  (p) => p.id === currentSubscription.plan_id
+                );
+
+                if (currentPlanData) {
+                  if (plan.monthly_price > currentPlanData.monthly_price) {
+                    primaryCtaLabel = "Upgrade";
+                  } else {
+                    primaryCtaLabel = "Not available";
+                    isDisabled = true;
+                  }
+                }
+              }
+            }
             return (
               <div
                 key={plan.id}
                 className={`relative rounded-2xl border p-8
                   transition-all duration-500 ease-in-out
-                  ${
-                    plan.highlighted
-                      ? "border-[#7D9AEE] shadow-lg scale-[1.05] border-t-4"
-                      : "border-[#7D9AEE]"
+                  ${plan.highlighted
+                    ? "border-[#7D9AEE] shadow-lg scale-[1.05] border-t-4"
+                    : "border-[#7D9AEE]"
                   }
                 `}
               >
@@ -238,11 +255,10 @@ export default function PricingSection() {
     px-3 py-1 text-xs font-medium text-blue-600
     transition-all duration-500 ease-in-out
     will-change-[opacity,transform]
-    ${
-      billing === "yearly"
-        ? "opacity-100 translate-y-0 scale-100 blur-0"
-        : "opacity-0 -translate-y-2 scale-90 blur-sm pointer-events-none"
-    }
+    ${billing === "yearly"
+                      ? "opacity-100 translate-y-0 scale-100 blur-0"
+                      : "opacity-0 -translate-y-2 scale-90 blur-sm pointer-events-none"
+                    }
   `}
                 >
                   {plan.yearly_discount}% OFF
@@ -253,10 +269,9 @@ export default function PricingSection() {
                   <h3
                     className={`absolute inset-0 text-2xl font-semibold
                       transition-all duration-500 ease-in-out
-                      ${
-                        billing === "monthly"
-                          ? "opacity-100 translate-y-0"
-                          : "opacity-0 -translate-y-2"
+                      ${billing === "monthly"
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 -translate-y-2"
                       }
                     `}
                   >
@@ -269,11 +284,10 @@ export default function PricingSection() {
     text-2xl font-semibold tracking-tight
     transition-all duration-500 ease-in-out
     will-change-[opacity,transform]
-    ${
-      billing === "yearly"
-        ? "opacity-100 translate-y-0 scale-100 blur-0"
-        : "opacity-0 translate-y-3 scale-95 blur-sm"
-    }
+    ${billing === "yearly"
+                        ? "opacity-100 translate-y-0 scale-100 blur-0"
+                        : "opacity-0 translate-y-3 scale-95 blur-sm"
+                      }
   `}
                   >
                     {plan.name}
@@ -292,11 +306,10 @@ export default function PricingSection() {
         absolute inset-0
         text-3xl font-bold tabular-nums
         transition-all duration-500 ease-in-out
-        ${
-          billing === "monthly"
-            ? "opacity-100 translate-y-0 scale-100 blur-0"
-            : "opacity-0 -translate-y-3 scale-95 blur-sm"
-        }
+        ${billing === "monthly"
+                          ? "opacity-100 translate-y-0 scale-100 blur-0"
+                          : "opacity-0 -translate-y-3 scale-95 blur-sm"
+                        }
       `}
                     >
                       ₹{monthlyPrice}
@@ -308,18 +321,17 @@ export default function PricingSection() {
         absolute inset-0
         text-3xl font-bold tabular-nums
         transition-all duration-500 ease-in-out
-        ${
-          billing === "yearly"
-            ? "opacity-100 translate-y-0 scale-100 blur-0"
-            : "opacity-0 translate-y-3 scale-95 blur-sm"
-        }
+        ${billing === "yearly"
+                          ? "opacity-100 translate-y-0 scale-100 blur-0"
+                          : "opacity-0 translate-y-3 scale-95 blur-sm"
+                        }
       `}
                     >
                       ₹
                       {Math.round(
                         (monthlyPrice * 12 * (1 - plan.yearly_discount / 100)) /
-                          12,
-                      )}   
+                        12,
+                      )}
                     </span>
                   </div>
 
@@ -330,19 +342,24 @@ export default function PricingSection() {
                 </div>
 
                 {/* CTA */}
+                {/* CTA */}
                 <button
-                  onClick={() =>
+                  disabled={isDisabled}
+                  onClick={() => {
+                    if (isDisabled) return;
+
                     router.push(
-                      `/checkout?planId=${plan.id}&billing=${billing}`,
-                    )
-                  }
+                      `/checkout?planId=${plan.id}&billing=${billing}`
+                    );
+                  }}
                   className={`mt-6 w-full py-2 rounded-lg font-medium transition
-                    ${
-                      plan.highlighted
-                        ? "bg-blue-600 text-white hover:bg-blue-950"
-                        : "border border-blue-600 text-blue-600 hover:bg-blue-100"
+                  ${isDisabled
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : plan.highlighted
+                        ? "bg-blue-600 text-white hover:bg-blue-950 cursor-pointer"
+                        : "border border-blue-600 text-blue-600 hover:bg-blue-100 cursor-pointer"
                     }
-                  `}
+`}
                 >
                   {primaryCtaLabel}
                 </button>

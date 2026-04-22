@@ -54,10 +54,10 @@ export default function Footer() {
           <div>
             <h4 className="font-medium text-black mb-4 text-xl">Popular Services</h4>
             <ul className="space-y-1">
-              <li><Link href="/help">GST Billing Software</Link></li>
-              <li><Link href="/help">Stock Management</Link></li>
-              <li><Link href="/help">Invoice Generator</Link></li>
-              <li><Link href="/help">POS Billing System</Link></li>
+              <li><Link href="/billing-software">GST Billing Software</Link></li>
+              <li><Link href="/services/stock-management">Stock Management</Link></li>
+              <li><Link href="/services/invoice-generator">Invoice Generator</Link></li>
+              <li><Link href="/services/pos-billing-system">POS Billing System</Link></li>
             </ul>
           </div>
 
