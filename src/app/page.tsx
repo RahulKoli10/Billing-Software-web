@@ -336,25 +336,26 @@ export default function Home() {
       {/* Invoice */}
       <section className="w-full bg-white py-12">
         <div className="max-w-7xl mx-auto px-4 relative">
+
           {/* Header */}
           <div className="text-center max-w-4xl mx-auto text-black">
             <h2 className="text-3xl md:text-[42px] font-bold">Invoices</h2>
             <p className="mt-4 text-lg font-open">
               Create GST-ready invoices instantly, share them via WhatsApp or
-              Email, and track every payment all from India{`'`}s easiest GST
+              Email, and track every payment all from India{"'"}s easiest GST
               billing software.
             </p>
           </div>
 
-          {/* Left Scroll Button (desktop only) */}
+          {/* Left Scroll Button */}
           <button
             onClick={() => scroll("left")}
             aria-label="Scroll left"
             className="
         hidden md:flex
-        absolute left-1 top-78 border-2 -translate-y-1/2
+        absolute left-0 top-70
         z-10 w-10 h-10 rounded-full cursor-pointer
-        bg-white shadow-xl
+        bg-white shadow-md border
         items-center justify-center
         hover:bg-gray-100 transition
       "
@@ -362,15 +363,15 @@ export default function Home() {
             <Icon icon="mingcute:left-line" width="22" height="22" />
           </button>
 
-          {/* Right Scroll Button (desktop only) */}
+          {/* Right Scroll Button */}
           <button
             onClick={() => scroll("right")}
             aria-label="Scroll right"
             className="
         hidden md:flex
-        absolute right-0 top-78 border-2 -translate-y-1/2
+        absolute right-1 top-70
         z-10 w-10 h-10 rounded-full cursor-pointer
-        bg-white shadow-xl
+        bg-white shadow-md border
         items-center justify-center
         hover:bg-gray-100 transition
       "
@@ -382,25 +383,22 @@ export default function Home() {
           <div
             ref={scrollRef}
             className="
-        mt-10
-        flex gap-4 md:gap-6
-        overflow-x-auto
-        scroll-smooth
-        no-scrollbar
-        snap-x snap-mandatory
-        pb-4
-        px-2
+        mt-10 flex items-stretch gap-4 md:gap-6
+        overflow-x-auto scroll-smooth
+        no-scrollbar snap-x snap-mandatory
+        px-2 pb-4
       "
           >
             {invoices.map((item) => (
               <div
                 key={item.id}
                 className="
-            snap-center
-            min-w-65 sm:min-w-70 md:min-w-75
+            snap-center flex-shrink-0
+            w-[280px] md:w-[300px]
+            h-[300px]
             bg-white border border-gray-200
             rounded-xl shadow-sm
-            hover:shadow-md transition
+            overflow-hidden
           "
               >
                 <Image
@@ -408,12 +406,13 @@ export default function Home() {
                   alt={item.alt}
                   width={300}
                   height={420}
-                  className="w-full h-full rounded-xl"
+                  className="w-full h-full object-cover"
                   loading="lazy"
                 />
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
@@ -437,13 +436,13 @@ export default function Home() {
             {/* LEFT SIDE (Feature Cards) */}
             <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Card 1 */}
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 viewport={{ once: true }}
                 className="w-full rounded-2xl overflow-hidden"
-              >
+              > */}
                 <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
 
                   <div className="w-12 h-12 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
@@ -468,16 +467,16 @@ export default function Home() {
                   </p>
 
                 </div>
-              </motion.div>
+              {/* </motion.div> */}
 
               {/* Card 2 */}
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 viewport={{ once: true }}
                 className="w-full rounded-2xl overflow-hidden"
-              >
+              > */}
                 <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
 
                   <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
@@ -502,27 +501,27 @@ export default function Home() {
                   </p>
 
                 </div>
-              </motion.div>
+              {/* </motion.div> */}
 
               {/* Card 3 (Full width) */}
-                <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 md:col-span-2 transition duration-500 hover:scale-105 hover:shadow-lg">
+              <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 md:col-span-2 transition duration-500 hover:scale-105 hover:shadow-lg">
 
-                  <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
-                    <Icon icon="uit:rocket" width="28" height="28" className="group-hover:text-white" />
-                  </div>
-
-                  <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white transition duration-500">
-                    Real-Time Inventory
-                  </h3>
-
-                  <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
-                    Never run out of stock unexpectedly again. BissBill gives you
-                    live inventory tracking, low stock alerts, barcode support,
-                    and multi-warehouse management — all built into your billing
-                    software. Know exactly what you have, where it is, and when to reorder.
-                  </p>
-
+                <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
+                  <Icon icon="uit:rocket" width="28" height="28" className="group-hover:text-white" />
                 </div>
+
+                <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white transition duration-500">
+                  Real-Time Inventory
+                </h3>
+
+                <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
+                  Never run out of stock unexpectedly again. BissBill gives you
+                  live inventory tracking, low stock alerts, barcode support,
+                  and multi-warehouse management — all built into your billing
+                  software. Know exactly what you have, where it is, and when to reorder.
+                </p>
+
+              </div>
             </div>
 
             {/* RIGHT SIDE (CTA PANEL) */}
@@ -755,6 +754,13 @@ export default function Home() {
 
       {/* billing software Download  */}
       <section className="py-10 ">
+        <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true }}
+                className="w-full rounded-2xl overflow-hidden"
+              >
         <div className="max-w-7xl mx-auto px-5 py-8 rounded-xl bg-[#EFF1F8]">
           <div className="flex flex-col-reverse md:flex-row items-center gap-12  ">
             {/* Left Content */}
@@ -802,6 +808,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        </motion.div>
       </section>
       <Footer />
     </main>

@@ -100,6 +100,9 @@ export default function HelpCenterPage() {
               <p className="text-xl text-black">
                 <span className="font-medium">Phone:</span> +91 89798 91708
               </p>
+              <p className="text-xl text-black">
+                <span className="font-medium">Address:</span> GMS Rd, Haripuram, Kanwali, Dehradun, Uttarakhand 248001
+              </p>
             </div>
 
             <div>

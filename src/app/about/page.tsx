@@ -90,7 +90,7 @@ function Page() {
             </p>
             <a
               href="/"
-              className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-700 transition"
+              className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
             >
               Get Started Free
             </a>

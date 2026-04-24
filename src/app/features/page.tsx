@@ -56,6 +56,9 @@ export default function FeaturePage() {
                 </h3>
                 <p className="text-base mt-3">{item.cardDescription}</p>
                 </Link>
+                <button className="mt-4 bg-blue-600 cursor-pointer text-white py-2 px-5 rounded-sm hover:bg-blue-700 transition">
+                  Read More
+                </button>
               </div>
             ))}
           </div>
