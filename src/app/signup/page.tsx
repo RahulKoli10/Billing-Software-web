@@ -17,6 +17,7 @@ export default function SignupPage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -121,6 +122,16 @@ export default function SignupPage() {
               className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500"
             />
 
+            {/* Company Name */}
+            <input
+              type="text"
+              placeholder="Company Name"
+              required
+              value={company}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setCompany(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-blue-500"
+            />
+
             {/* Password */}
             <input
               type="password"
@@ -171,7 +182,7 @@ export default function SignupPage() {
               className={`w-full py-2 rounded-lg font-medium transition ${
                 loading || !passwordsMatch
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
+                  : "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
               }`}
             >
               {loading ? "Signing up..." : "Sign up"}
@@ -191,7 +202,7 @@ export default function SignupPage() {
                 (window.location.href =
                   buildApiUrl("/api/auth/google"))
               }
-              className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
+              className="w-full cursor-pointer border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
             >
               <Image
                 src="/google-icon.svg"

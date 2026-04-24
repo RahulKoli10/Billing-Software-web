@@ -13,6 +13,7 @@ function SigninPageContent() {
   const searchParams = useSearchParams();
 
   const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -95,6 +96,21 @@ function SigninPageContent() {
                 className="mt-1 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-blue-500"
               />
             </div>
+            {/* COMPANY NAME */}
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Company Name
+              </label>
+
+              <input
+                type="text"
+                required
+                placeholder="Enter company name"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                className="mt-1 w-full rounded-lg border px-4 py-2 focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
             {/* PASSWORD */}
             <div className="relative">
@@ -152,7 +168,7 @@ function SigninPageContent() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+              className="w-full bg-blue-600 cursor-pointer text-white py-2 rounded-lg hover:bg-blue-700 transition"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
@@ -173,7 +189,7 @@ function SigninPageContent() {
                   "/api/auth/google?redirect=%2Fauth%2Fcallback"
                 ))
               }
-              className="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50"
+              className="w-full border cursor-pointer border-gray-300 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50"
             >
               <Image
                 src="/google-icon.svg"

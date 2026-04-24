@@ -321,7 +321,7 @@ export default function DashboardHome() {
             <h4 className="text-sm font-bold text-gray-400 mb-1 uppercase tracking-widest">{stat.title}</h4>
             <div className="flex items-center gap-3">
 
-              <p className="text-xl text-black font-semibold font-headline truncate" title={stat.value}>{stat.value}</p>
+              <p className="text-xl text-black font-normal font-headline truncate" title={stat.value}>{stat.value}</p>
               {stat.title === "License Key" && (
                 <button 
                   onClick={(e) => { e.stopPropagation(); handleCopy(stat.value, 'license_stat'); }} 

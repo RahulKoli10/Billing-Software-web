@@ -14,6 +14,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { dot } from "node:test/reporters";
 import SliderPart from "./SliderPart";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const scrollToPricing = () => {
@@ -50,27 +51,42 @@ export default function Home() {
   const invoices = [
     {
       id: 1,
-      src: "/invoice2.png",
+      src: "/invoiceimg1.png",
       alt: "Professional invoice template",
     },
     {
       id: 2,
-      src: "/invoice3.png",
+      src: "/invoiceimg2.png",
       alt: "Modern GST invoice template",
     },
     {
       id: 3,
-      src: "/invoice4.png",
+      src: "/invoiceimg3.png",
       alt: "Business tax invoice template",
     },
     {
       id: 4,
-      src: "/invoice5.png",
+      src: "/invoiceimg4.png",
       alt: "Business tax invoice template",
     },
     {
       id: 5,
-      src: "/invoice1.png",
+      src: "/invoiceimg5.png",
+      alt: "Business tax invoice template",
+    },
+    {
+      id: 6,
+      src: "/invoiceimg6.png",
+      alt: "Business tax invoice template",
+    },
+    {
+      id: 7,
+      src: "/invoiceimg7.png",
+      alt: "Business tax invoice template",
+    },
+    {
+      id: 8,
+      src: "/invoiceimg8.png",
       alt: "Business tax invoice template",
     },
   ];
@@ -236,7 +252,13 @@ export default function Home() {
           </div>
 
           <div className="mt-16">
-            <div className="w-full rounded-2xl overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+              className="w-full rounded-2xl overflow-hidden"
+            >
               <Image
                 src="/HeroBilling.jpeg"
                 alt="Billing Dashboard"
@@ -244,7 +266,7 @@ export default function Home() {
                 height={700}
                 className="w-full h-auto"
               />
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -298,7 +320,7 @@ export default function Home() {
                     alt={item.title}
                     width={600}
                     height={400}
-                    className="w-full h-auto"
+                    className="w-full h-full"
                   />
                   <h3 className="text-2xl mt-5 font-semibold text-gray-900 font-open">
                     {item.title}
@@ -330,9 +352,9 @@ export default function Home() {
             aria-label="Scroll left"
             className="
         hidden md:flex
-        absolute left-1 top-90 -translate-y-1/2
+        absolute left-1 top-78 border-2 -translate-y-1/2
         z-10 w-10 h-10 rounded-full cursor-pointer
-        bg-white shadow-lg
+        bg-white shadow-xl
         items-center justify-center
         hover:bg-gray-100 transition
       "
@@ -346,9 +368,9 @@ export default function Home() {
             aria-label="Scroll right"
             className="
         hidden md:flex
-        absolute right-1 top-90 -translate-y-1/2
-        z-10 w-10 h-10 rounded-full
-        bg-white shadow-lg
+        absolute right-0 top-78 border-2 -translate-y-1/2
+        z-10 w-10 h-10 rounded-full cursor-pointer
+        bg-white shadow-xl
         items-center justify-center
         hover:bg-gray-100 transition
       "
@@ -386,7 +408,7 @@ export default function Home() {
                   alt={item.alt}
                   width={300}
                   height={420}
-                  className="w-full h-auto rounded-xl"
+                  className="w-full h-full rounded-xl"
                   loading="lazy"
                 />
               </div>
@@ -415,119 +437,143 @@ export default function Home() {
             {/* LEFT SIDE (Feature Cards) */}
             <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Card 1 */}
-              <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true }}
+                className="w-full rounded-2xl overflow-hidden"
+              >
+                <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
 
-                <div className="w-12 h-12 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
-                  <Icon
-                    icon="uit:rocket"
-                    width="28"
-                    height="28"
-                    className="group-hover:text-white"
-                  />
+                  <div className="w-12 h-12 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
+                    <Icon
+                      icon="uit:rocket"
+                      width="28"
+                      height="28"
+                      className="group-hover:text-white"
+                    />
+                  </div>
+
+                  <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white">
+                    Business Growth
+                  </h3>
+
+                  <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
+                    BissBill is designed to grow with your business. From your
+                    first invoice to managing multiple branches, our GST billing
+                    software scales with every stage of your journey giving you
+                    the tools to sell more, manage better, and earn more every
+                    single day.
+                  </p>
+
                 </div>
-
-                <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white">
-                  Business Growth
-                </h3>
-
-                <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
-                  BissBill is designed to grow with your business. From your
-                  first invoice to managing multiple branches, our GST billing
-                  software scales with every stage of your journey giving you
-                  the tools to sell more, manage better, and earn more every
-                  single day.
-                </p>
-
-              </div>
+              </motion.div>
 
               {/* Card 2 */}
-              <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true }}
+                className="w-full rounded-2xl overflow-hidden"
+              >
+                <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
 
-                <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
-                  <Icon
-                    icon="uit:rocket"
-                    width="28"
-                    height="28"
-                    className="group-hover:text-white"
-                  />
+                  <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
+                    <Icon
+                      icon="uit:rocket"
+                      width="28"
+                      height="28"
+                      className="group-hover:text-white"
+                    />
+                  </div>
+
+                  <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white">
+                    Faster Payments
+                  </h3>
+
+                  <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
+                    Stop chasing payments manually. BissBill lets you share
+                    invoices instantly via WhatsApp, SMS and Email, track
+                    outstanding dues in real time, and send payment reminders in
+                    one click so your cash flow stays healthy and collections stay
+                    on track.
+                  </p>
+
                 </div>
-
-                <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white">
-                  Faster Payments
-                </h3>
-
-                <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
-                  Stop chasing payments manually. BissBill lets you share
-                  invoices instantly via WhatsApp, SMS and Email, track
-                  outstanding dues in real time, and send payment reminders in
-                  one click so your cash flow stays healthy and collections stay
-                  on track.
-                </p>
-
-              </div>
+              </motion.div>
 
               {/* Card 3 (Full width) */}
-              <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 md:col-span-2 transition duration-500 hover:scale-105 hover:shadow-lg">
+                <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 md:col-span-2 transition duration-500 hover:scale-105 hover:shadow-lg">
 
-                <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
-                  <Icon icon="uit:rocket" width="28" height="28" className="group-hover:text-white" />
+                  <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
+                    <Icon icon="uit:rocket" width="28" height="28" className="group-hover:text-white" />
+                  </div>
+
+                  <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white transition duration-500">
+                    Real-Time Inventory
+                  </h3>
+
+                  <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
+                    Never run out of stock unexpectedly again. BissBill gives you
+                    live inventory tracking, low stock alerts, barcode support,
+                    and multi-warehouse management — all built into your billing
+                    software. Know exactly what you have, where it is, and when to reorder.
+                  </p>
+
                 </div>
-
-                <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white transition duration-500">
-                  Real-Time Inventory
-                </h3>
-
-                <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
-                  Never run out of stock unexpectedly again. BissBill gives you
-                  live inventory tracking, low stock alerts, barcode support,
-                  and multi-warehouse management — all built into your billing
-                  software. Know exactly what you have, where it is, and when to reorder.
-                </p>
-
-              </div>
             </div>
 
             {/* RIGHT SIDE (CTA PANEL) */}
-            <div className="bg-[#3a5ee1] rounded-xl p-8 text-white flex flex-col justify-between transition duration-500 hover:scale-105 hover:shadow-lg">
-              <div>
-                <div className="w-10 h-10 rounded-full border border-white flex items-center justify-center mb-6">
-                  <Icon icon="uit:rocket" width="28" height="28" />
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              viewport={{ once: true }}
+              className="w-full rounded-2xl overflow-hidden"
+            >
+              <div className="bg-[#3a5ee1] rounded-xl p-8 text-white flex flex-col justify-between transition duration-500 hover:scale-105 hover:shadow-lg">
+                <div>
+                  <div className="w-10 h-10 rounded-full border border-white flex items-center justify-center mb-6">
+                    <Icon icon="uit:rocket" width="28" height="28" />
+                  </div>
+
+                  <h3 className="text-2xl font-medium leading-snug">
+                    Free to Start 45% Features Included
+                  </h3>
+
+                  <p className="mt-4 text-sm text-[#E0E0E0]">
+                    Getting started with BissBill costs you nothing. Sign up for
+                    free and instantly unlock 45% of our powerful features —
+                    including GST invoicing, inventory tracking, and payment
+                    management. No credit card required, no hidden charges, no
+                    risk.
+                  </p>
+
+                  <p className="mt-4 text-sm text-[#E0E0E0]">
+                    Whether you{`'`}re a first-time business owner or switching
+                    from a Tally alternative billing software, BissBill makes the
+                    transition effortless. Try it free and see why thousands of
+                    Indian small businesses trust BissBill as their
+                    billing software.
+                  </p>
+                  <p className="mt-2 text-sm text-[#E0E0E0]">
+                    Ready to bill smarter? Join India{`'`}s growing community of
+                    smart business owners today.
+                  </p>
                 </div>
 
-                <h3 className="text-2xl font-medium leading-snug">
-                  Free to Start 45% Features Included
-                </h3>
-
-                <p className="mt-4 text-sm text-[#E0E0E0]">
-                  Getting started with BissBill costs you nothing. Sign up for
-                  free and instantly unlock 45% of our powerful features —
-                  including GST invoicing, inventory tracking, and payment
-                  management. No credit card required, no hidden charges, no
-                  risk.
-                </p>
-
-                <p className="mt-4 text-sm text-[#E0E0E0]">
-                  Whether you{`'`}re a first-time business owner or switching
-                  from a Tally alternative billing software, BissBill makes the
-                  transition effortless. Try it free and see why thousands of
-                  Indian small businesses trust BissBill as their
-                  billing software.
-                </p>
-                <p className="mt-2 text-sm text-[#E0E0E0]">
-                  Ready to bill smarter? Join India{`'`}s growing community of
-                  smart business owners today.
-                </p>
+                {!isLoggedIn && !authLoading && (
+                  <Link
+                    href="/login"
+                    className="mt-8 w-fit bg-white text-blue-600 hover:scale-105 hover:shadow-lg transition px-6 py-3 rounded-lg text-sm font-bold"
+                  >
+                    Log in / Sign up
+                  </Link>
+                )}
               </div>
-
-              {!isLoggedIn && !authLoading && (
-                <Link
-                  href="/login"
-                  className="mt-8 w-fit bg-white text-blue-600 hover:scale-105 hover:shadow-lg transition px-6 py-3 rounded-lg text-sm font-bold"
-                >
-                  Log in / Sign up
-                </Link>
-              )}
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

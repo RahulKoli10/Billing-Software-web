@@ -467,11 +467,11 @@ function CheckoutForm() {
 
               <span>
                 I agree to the{" "}
-                <a href="/terms" className="underline text-blue-600">
+                <a href="/term&condition" className="underline text-blue-600">
                   Terms & Conditions
                 </a>{" "}
                 and{" "}
-                <a href="/privacy" className="underline text-blue-600">
+                <a href="/term&condition" className="underline text-blue-600">
                   Privacy Policy
                 </a>
               </span>
