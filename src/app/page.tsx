@@ -326,6 +326,9 @@ export default function Home() {
                     {item.title}
                   </h3>
                   <p className="mt-3 text-base">{item.cardDescription}</p>
+                  <button className="mt-4 bg-blue-600 cursor-pointer text-white py-2 px-5 rounded-sm hover:bg-blue-700 transition">
+                  Read More
+                </button>
                 </Link>
               </div>
             ))}
