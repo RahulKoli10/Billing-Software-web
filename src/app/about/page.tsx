@@ -1,11 +1,17 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import Navbar from "../component/Navbar";
 import Footer from "../component/Footer";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
-import { FaCheckSquare } from "react-icons/fa";
-
+import { FaRupeeSign, FaChartLine } from "react-icons/fa";
+import { IoCubeSharp } from "react-icons/io5";
+import { FaFileInvoiceDollar, FaBarcode, FaDesktop, FaWhatsapp } from "react-icons/fa";
+import { FiZap, FiCloud, FiHeadphones } from "react-icons/fi"
+import { BsFilePost } from "react-icons/bs";
+import { GoShieldCheck } from "react-icons/go";
+import { IoIosSpeedometer } from "react-icons/io";
 function Page() {
   return (
     <>
@@ -27,16 +33,16 @@ function Page() {
         {/* Features Section */}
         <div className="flex lg:flex-row flex-col justify-between gap-10 lg:p-20 p-10">
           <div className="lg:w-1/2">
-            <img src="/about-us1.png" alt="" className="rounded-xl" />
+            <img src="/aboutus1.png" alt="" className="rounded-xl" />
           </div>
           <div className="lg:w-1/2 space-y-5">
             <h1 className="text-3xl font-bold">Built for Indian Businesses</h1>
             <p className="text-lg">BissBill is more than just a tool it’s a complete billing software India solution that covers everything your business needs:</p>
-            <ul className="list-disc space-y-5 font-bold">
-              <li>Create GST-compliant invoices instantly with our GST invoice software</li>
-              <li>Manage stock with billing software with inventory features</li>
-              <li>Track payments and outstanding dues in real-time</li>
-              <li>Access reports and insights to grow your business faster</li>
+            <ul className="space-y-5 font-bold">
+              <li className="flex items-center gap-5"><FaFileInvoiceDollar className="text-white text-2xl h-10 w-10 p-2 rounded-sm bg-indigo-600" />Create GST-compliant invoices instantly with our GST invoice software</li>
+              <li className="flex items-center gap-5"><IoCubeSharp className="text-white text-2xl h-10 w-10 p-2 rounded-sm bg-indigo-600" />Manage stock with billing software with inventory features</li>
+              <li className="flex items-center gap-5"><FaRupeeSign className="text-white text-2xl h-10 w-10 p-2 rounded-sm bg-indigo-600" />Track payments and outstanding dues in real-time</li>
+              <li className="flex items-center gap-5"><FaChartLine className="text-white text-2xl h-10 w-10 p-2 rounded-sm bg-indigo-600" />Access reports and insights to grow your business faster</li>
             </ul>
             <p className="text-lg">Whether you run a retail shop, wholesale business, or service company, BissBill works as a reliable online billing software India that simplifies your daily operations.</p>
           </div>
@@ -46,16 +52,16 @@ function Page() {
           <div className="flex lg:flex-row flex-col-reverse items-center justify-between gap-5 lg:p-20 ">
             <div className="lg:w-1/2">
               <ul className="font-bold space-y-10">
-                <li className="flex items-center gap-5"><FaCheckSquare className="text-indigo-600 text-2xl"/>Best GST billing software for small business India</li>
-                <li className="flex items-center gap-5"><FaCheckSquare className="text-indigo-600 text-2xl"/>GST billing software with inventory management</li>
-                <li className="flex items-center gap-5"><FaCheckSquare className="text-indigo-600 text-2xl"/>Billing software with barcode scanner India</li>
-                <li className="flex items-center gap-5"><FaCheckSquare className="text-indigo-600 text-2xl"/>Billing software with WhatsApp invoice sharing</li>
-                <li className="flex items-center gap-5"><FaCheckSquare className="text-indigo-600 text-2xl"/>Billing software for PC Windows India</li>
-                <li className="flex items-center gap-5"><FaCheckSquare className="text-indigo-600 text-2xl"/>POS billing software for retail shop India</li>
+                <li className="flex items-center gap-5"><FaFileInvoiceDollar className="text-white text-2xl h-10 w-10 p-2 rounded-sm bg-indigo-600" />Best GST billing software for small business India</li>
+                <li className="flex items-center gap-5"><IoCubeSharp className="text-white text-2xl h-10 w-10 p-2 rounded-sm bg-indigo-600" />GST billing software with inventory management</li>
+                <li className="flex items-center gap-5"><FaBarcode className="text-white text-2xl h-10 w-10 p-2 rounded-sm bg-indigo-600" />Billing software with barcode scanner India</li>
+                <li className="flex items-center gap-5"><FaWhatsapp className="text-white text-2xl h-10 w-10 p-2 rounded-sm bg-indigo-600" />Billing software with WhatsApp invoice sharing</li>
+                <li className="flex items-center gap-5"><FaDesktop className="text-white text-2xl h-10 w-10 p-2 rounded-sm bg-indigo-600" />Billing software for PC Windows India</li>
+                <li className="flex items-center gap-5"><BsFilePost className="text-white text-2xl h-10 w-10 p-2 rounded-sm bg-indigo-600" />POS billing software for retail shop India</li>
               </ul>
             </div>
             <div className="lg:w-1/2">
-              <img src="/about-us2.png" alt="" className="rounded-xl" />
+              <img src="/aboutus2.png" alt="" className="rounded-xl" />
             </div>
           </div>
         </section>
@@ -74,7 +80,30 @@ function Page() {
             <h1 className="font-bold">"With BissBill, billing is not just faster — it’s smarter."</h1>
           </div>
         </section>
-
+        <section className="p-10">
+          <div className="flex lg:flex-row flex-col justify-center items-center gap-6 text-2xl">
+            <div className="bg-indigo-100 p-10 w-60 flex flex-col gap-5 items-center text-sm rounded-lg font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <FiZap className="text-5xl" />
+              <h1>Simple & Easy</h1>
+            </div>
+            <div className="bg-indigo-100 p-10 w-60 flex flex-col gap-5 items-center text-sm rounded-lg font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <IoIosSpeedometer className="text-5xl" />
+              <h1>Fast & Efficient</h1>
+            </div>
+            <div className="bg-indigo-100 p-10 w-60 flex flex-col gap-5 items-center text-sm rounded-lg font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <GoShieldCheck className="text-5xl" />
+              <h1>100% GST Compliants</h1>
+            </div>
+            <div className="bg-indigo-100 p-10 w-60 flex flex-col gap-5 items-center text-sm rounded-lg font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <FiCloud className="text-5xl" />
+              <h1>Secure & Reliable</h1>
+            </div>
+            <div className="bg-indigo-100 p-10 w-60 flex flex-col gap-5 items-center text-sm rounded-lg font-bold transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <FiHeadphones className="text-5xl" />
+              <h1>Dedicated Supports</h1>
+            </div>
+          </div>
+        </section>
         {/* CTA Section */}
         <section className="py-16 text-center">
           <motion.div
@@ -88,12 +117,11 @@ function Page() {
             <p className="text-gray-600 mb-6">
               Create invoices, manage inventory, and grow your business — all in one place.
             </p>
-            <a
-              href="/"
-              className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
-            >
-              Get Started Free
-            </a>
+            <Link href="/download">
+              <button className="bg-indigo-600 text-white px-6 py-3 cursor-pointer rounded-lg font-semibold hover:bg-indigo-700 transition">
+                Get Started Free
+              </button>
+            </Link>
           </motion.div>
         </section>
       </div>

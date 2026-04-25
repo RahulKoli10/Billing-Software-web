@@ -9,9 +9,6 @@ import Footer from "./component/Footer";
 import { buildApiUrl } from "@/lib/api";
 import { featureItems } from "./features/featureData";
 import { useAuth } from "@/lib/useAuth";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { dot } from "node:test/reporters";
 import SliderPart from "./SliderPart";
 import { motion } from "framer-motion";
@@ -327,8 +324,8 @@ export default function Home() {
                   </h3>
                   <p className="mt-3 text-base">{item.cardDescription}</p>
                   <button className="mt-4 bg-blue-600 cursor-pointer text-white py-2 px-5 rounded-sm hover:bg-blue-700 transition">
-                  Read More
-                </button>
+                    Read More
+                  </button>
                 </Link>
               </div>
             ))}
@@ -351,71 +348,69 @@ export default function Home() {
           </div>
 
           {/* Left Scroll Button */}
-          <button
-            onClick={() => scroll("left")}
-            aria-label="Scroll left"
-            className="
-        hidden md:flex
-        absolute left-0 top-70
-        z-10 w-10 h-10 rounded-full cursor-pointer
-        bg-white shadow-md border
-        items-center justify-center
-        hover:bg-gray-100 transition
-      "
-          >
-            <Icon icon="mingcute:left-line" width="22" height="22" />
-          </button>
+          <div className="relative mt-14">
 
-          {/* Right Scroll Button */}
-          <button
-            onClick={() => scroll("right")}
-            aria-label="Scroll right"
-            className="
-        hidden md:flex
-        absolute right-1 top-70
-        z-10 w-10 h-10 rounded-full cursor-pointer
-        bg-white shadow-md border
-        items-center justify-center
-        hover:bg-gray-100 transition
-      "
-          >
-            <Icon icon="mingcute:right-line" width="22" height="22" />
-          </button>
+            {/* Left Button */}
+            <button
+              onClick={() => scroll("left")}
+              className="
+      hidden md:flex absolute -left-5 top-1/2 -translate-y-1/2
+      z-20 w-10 h-10 rounded-full
+      bg-gray-300 shadow-md border
+      items-center justify-center
+      hover:scale-105 transition
+    "
+            >
+              <Icon icon="mingcute:left-line" width="20" />
+            </button>
 
-          {/* Scroll Container */}
-          <div
-            ref={scrollRef}
-            className="
-        mt-10 flex items-stretch gap-4 md:gap-6
-        overflow-x-auto scroll-smooth
-        no-scrollbar snap-x snap-mandatory
-        px-2 pb-4
-      "
-          >
-            {invoices.map((item) => (
-              <div
-                key={item.id}
-                className="
-            snap-center flex-shrink-0
-            w-[280px] md:w-[300px]
-            h-[300px]
-            bg-white border border-gray-200
-            rounded-xl shadow-sm
-            overflow-hidden
-          "
-              >
-                <Image
-                  src={item.src}
-                  alt={item.alt}
-                  width={300}
-                  height={420}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-            ))}
+            {/* Right Button */}
+            <button
+              onClick={() => scroll("right")}
+              className="
+      hidden md:flex absolute -right-1 top-1/2 -translate-y-1/2
+      z-20 w-10 h-10 rounded-full
+      bg-gray-300 shadow-md border
+      items-center justify-center
+      hover:scale-105 transition cursor-pointer
+    "
+            >
+              <Icon icon="mingcute:right-line" width="20" />
+            </button>
+
+            {/* Scroll Container */}
+            <div
+              ref={scrollRef}
+              className="
+      flex gap-6 px-4
+      overflow-x-auto scroll-smooth
+      no-scrollbar snap-x snap-mandatory
+    "
+            >
+              {invoices.map((item) => (
+                <div
+                  key={item.id}
+                  className="
+          flex-shrink-0
+          lg:w-[calc(100%/3-11px)] w-[calc(100%/1-11px)]   /* 👈 3 cards exact fit */
+          h-[260px]
+          rounded-xl overflow-hidden
+          bg-white shadow
+          snap-start
+        "
+                >
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    width={300}
+                    height={260}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+
           </div>
-
         </div>
       </section>
 
@@ -446,30 +441,30 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="w-full rounded-2xl overflow-hidden"
               > */}
-                <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
+              <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
 
-                  <div className="w-12 h-12 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
-                    <Icon
-                      icon="uit:rocket"
-                      width="28"
-                      height="28"
-                      className="group-hover:text-white"
-                    />
-                  </div>
-
-                  <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white">
-                    Business Growth
-                  </h3>
-
-                  <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
-                    BissBill is designed to grow with your business. From your
-                    first invoice to managing multiple branches, our GST billing
-                    software scales with every stage of your journey giving you
-                    the tools to sell more, manage better, and earn more every
-                    single day.
-                  </p>
-
+                <div className="w-12 h-12 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
+                  <Icon
+                    icon="uit:rocket"
+                    width="28"
+                    height="28"
+                    className="group-hover:text-white"
+                  />
                 </div>
+
+                <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white">
+                  Business Growth
+                </h3>
+
+                <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
+                  BissBill is designed to grow with your business. From your
+                  first invoice to managing multiple branches, our GST billing
+                  software scales with every stage of your journey giving you
+                  the tools to sell more, manage better, and earn more every
+                  single day.
+                </p>
+
+              </div>
               {/* </motion.div> */}
 
               {/* Card 2 */}
@@ -480,30 +475,30 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="w-full rounded-2xl overflow-hidden"
               > */}
-                <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
+              <div className="bg-[#F4F7FF] group hover:bg-[#3a5ee1] rounded-xl p-6 transition duration-300 hover:scale-105 hover:shadow-lg">
 
-                  <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
-                    <Icon
-                      icon="uit:rocket"
-                      width="28"
-                      height="28"
-                      className="group-hover:text-white"
-                    />
-                  </div>
-
-                  <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white">
-                    Faster Payments
-                  </h3>
-
-                  <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
-                    Stop chasing payments manually. BissBill lets you share
-                    invoices instantly via WhatsApp, SMS and Email, track
-                    outstanding dues in real time, and send payment reminders in
-                    one click so your cash flow stays healthy and collections stay
-                    on track.
-                  </p>
-
+                <div className="w-10 h-10 rounded-full border flex items-center justify-center mb-4 group-hover:border-white">
+                  <Icon
+                    icon="uit:rocket"
+                    width="28"
+                    height="28"
+                    className="group-hover:text-white"
+                  />
                 </div>
+
+                <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-white">
+                  Faster Payments
+                </h3>
+
+                <p className="mt-2 text-sm text-[#202020] group-hover:text-white">
+                  Stop chasing payments manually. BissBill lets you share
+                  invoices instantly via WhatsApp, SMS and Email, track
+                  outstanding dues in real time, and send payment reminders in
+                  one click so your cash flow stays healthy and collections stay
+                  on track.
+                </p>
+
+              </div>
               {/* </motion.div> */}
 
               {/* Card 3 (Full width) */}
@@ -528,54 +523,54 @@ export default function Home() {
             </div>
 
             {/* RIGHT SIDE (CTA PANEL) */}
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
               viewport={{ once: true }}
               className="w-full rounded-2xl overflow-hidden"
-            >
-              <div className="bg-[#3a5ee1] rounded-xl p-8 text-white flex flex-col justify-between transition duration-500 hover:scale-105 hover:shadow-lg">
-                <div>
-                  <div className="w-10 h-10 rounded-full border border-white flex items-center justify-center mb-6">
-                    <Icon icon="uit:rocket" width="28" height="28" />
-                  </div>
-
-                  <h3 className="text-2xl font-medium leading-snug">
-                    Free to Start 45% Features Included
-                  </h3>
-
-                  <p className="mt-4 text-sm text-[#E0E0E0]">
-                    Getting started with BissBill costs you nothing. Sign up for
-                    free and instantly unlock 45% of our powerful features —
-                    including GST invoicing, inventory tracking, and payment
-                    management. No credit card required, no hidden charges, no
-                    risk.
-                  </p>
-
-                  <p className="mt-4 text-sm text-[#E0E0E0]">
-                    Whether you{`'`}re a first-time business owner or switching
-                    from a Tally alternative billing software, BissBill makes the
-                    transition effortless. Try it free and see why thousands of
-                    Indian small businesses trust BissBill as their
-                    billing software.
-                  </p>
-                  <p className="mt-2 text-sm text-[#E0E0E0]">
-                    Ready to bill smarter? Join India{`'`}s growing community of
-                    smart business owners today.
-                  </p>
+            > */}
+            <div className="bg-[#F4F7FF] rounded-xl p-8 text-black group hover:bg-[#3a5ee1] hover:text-white flex flex-col justify-between transition duration-500 hover:scale-105 hover:shadow-lg">
+              <div>
+                <div className="w-10 h-10 rounded-full border border-white flex items-center justify-center mb-6">
+                  <Icon icon="uit:rocket" width="28" height="28" />
                 </div>
 
-                {!isLoggedIn && !authLoading && (
-                  <Link
-                    href="/login"
-                    className="mt-8 w-fit bg-white text-blue-600 hover:scale-105 hover:shadow-lg transition px-6 py-3 rounded-lg text-sm font-bold"
-                  >
-                    Log in / Sign up
-                  </Link>
-                )}
+                <h3 className="text-2xl font-medium leading-snug">
+                  Free to Start 45% Features Included
+                </h3>
+
+                <p className="mt-4 text-sm text-black group-hover:text-white">
+                  Getting started with BissBill costs you nothing. Sign up for
+                  free and instantly unlock 45% of our powerful features —
+                  including GST invoicing, inventory tracking, and payment
+                  management. No credit card required, no hidden charges, no
+                  risk.
+                </p>
+
+                <p className="mt-4 text-sm text-black group-hover:text-white">
+                  Whether you{`'`}re a first-time business owner or switching
+                  from a Tally alternative billing software, BissBill makes the
+                  transition effortless. Try it free and see why thousands of
+                  Indian small businesses trust BissBill as their
+                  billing software.
+                </p>
+                <p className="mt-2 text-sm text-black group-hover:text-white">
+                  Ready to bill smarter? Join India{`'`}s growing community of
+                  smart business owners today.
+                </p>
               </div>
-            </motion.div>
+
+              {!isLoggedIn && !authLoading && (
+                <Link
+                  href="/login"
+                  className="mt-8 w-fit bg-[#3a5ee1] text-white group-hover:bg-white group-hover:text-[#3a5ee1] hover:scale-105 hover:shadow-lg transition px-6 py-3 rounded-lg text-sm font-bold"
+                >
+                  Log in / Sign up
+                </Link>
+              )}
+            </div>
+            {/* </motion.div> */}
           </div>
         </div>
       </section>
@@ -758,59 +753,59 @@ export default function Home() {
       {/* billing software Download  */}
       <section className="py-10 ">
         <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                viewport={{ once: true }}
-                className="w-full rounded-2xl overflow-hidden"
-              >
-        <div className="max-w-7xl mx-auto px-5 py-8 rounded-xl bg-[#EFF1F8]">
-          <div className="flex flex-col-reverse md:flex-row items-center gap-12  ">
-            {/* Left Content */}
-            <div className="flex-1">
-              <h2 className="text-2xl md:text-3xl font-bold text-black">
-                Ready to Make Billing Effortless?
-              </h2>
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true }}
+          className="w-full rounded-2xl overflow-hidden"
+        >
+          <div className="max-w-7xl mx-auto px-5 py-8 rounded-xl bg-[#EFF1F8]">
+            <div className="flex flex-col-reverse md:flex-row items-center gap-12  ">
+              {/* Left Content */}
+              <div className="flex-1">
+                <h2 className="text-2xl md:text-3xl font-bold text-black">
+                  Ready to Make Billing Effortless?
+                </h2>
 
-              <p className="mt-4 text-gray-700 leading-relaxed max-w-xl">
-                Create professional GST invoices, track payments, manage
-                inventory, and monitor your business — all from one simple,
-                secure billing platform. No stress, just smart billing built for
-                growing businesses.
-              </p>
+                <p className="mt-4 text-gray-700 leading-relaxed max-w-xl">
+                  Create professional GST invoices, track payments, manage
+                  inventory, and monitor your business — all from one simple,
+                  secure billing platform. No stress, just smart billing built for
+                  growing businesses.
+                </p>
 
-              {!isLoggedIn && !authLoading ? (
-                <Link
-                  href="/login"
-                  className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-                >
-                  Start Free{" "}
-                  <Icon icon="line-md:arrow-right" width="20" height="20" />
-                </Link>
-              ) : (
-                <Link
-                  href="#plan-pricing"
-                  className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-                >
-                  Go to Pricing{" "}
-                  <Icon icon="line-md:arrow-right" width="20" height="20" />
-                </Link>
-              )}
-            </div>
+                {!isLoggedIn && !authLoading ? (
+                  <Link
+                    href="/login"
+                    className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+                  >
+                    Start Free{" "}
+                    <Icon icon="line-md:arrow-right" width="20" height="20" />
+                  </Link>
+                ) : (
+                  <Link
+                    href="#plan-pricing"
+                    className="inline-flex items-center gap-1 mt-6 bg-[#0032FF] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+                  >
+                    Go to Pricing{" "}
+                    <Icon icon="line-md:arrow-right" width="20" height="20" />
+                  </Link>
+                )}
+              </div>
 
-            {/* Right Image */}
-            <div className="flex-1 flex justify-center">
-              <Image
-                src="/billing-invoice.png"
-                alt="Billing software dashboard preview"
-                width={650}
-                height={350}
-                className="rounded-xl shadow-lg"
-                priority
-              />
+              {/* Right Image */}
+              <div className="flex-1 flex justify-center">
+                <Image
+                  src="/billing-invoice.png"
+                  alt="Billing software dashboard preview"
+                  width={650}
+                  height={350}
+                  className="rounded-xl shadow-lg"
+                  priority
+                />
+              </div>
             </div>
           </div>
-        </div>
         </motion.div>
       </section>
       <Footer />
